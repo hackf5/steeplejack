@@ -1,0 +1,25 @@
+{
+    "terminal.integrated.profiles.windows": {
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": null,
+        "Git Bash": null,
+        "MSYS2 UCRT": {
+            "path": "cmd.exe",
+            "args": [
+                "/c",
+                "C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -ucrt64 -shell zsh"
+            ]
+        },
+    },
+    "terminal.integrated.defaultProfile.windows": "MSYS2 UCRT",
+    "cSpell.words": [
+        "GLSL",
+        "HLSL",
+        "MSYS",
+        "SPIR",
+        "ucrt"
+    ]
+}
