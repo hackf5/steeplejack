@@ -20,6 +20,7 @@
         "HLSL",
         "MSYS",
         "SPIR",
-        "ucrt"
+        "ucrt",
+        "vcpkg"
     ]
 }

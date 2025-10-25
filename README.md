@@ -39,17 +39,17 @@ cmake --preset wsl-debug
 cmake --build --preset wsl-debug
 ```
 
-### Convenience
+### CLI helper
 
-`build.sh` auto-detects whether it’s running in MSYS2 UCRT64 or WSL2 and builds the appropriate target.
+`steeplejack.sh` is a wrapper that auto-detects MSYS2 UCRT vs WSL2, selects the matching toolchain, and keeps separate Debug/Release build folders:
 
 ```bash
-./build.sh
+# Build (config defaults to debug; pass extra CMake cache args afterward)
+./steeplejack.sh build [debug|release] -DSTEEPLEJACK_WARNINGS_AS_ERRORS=ON
+
+# Clean the chosen configuration (keeps vcpkg-installed deps)
+./steeplejack.sh clean [debug|release]
 ```
-
-Any extra flags you pass (for example `-DSTEEPLEJACK_WARNINGS_AS_ERRORS=ON`) are forwarded to the underlying CMake configure step.
-
-`clean.sh` removes the generated build directories (but keeps `build/*/vcpkg_installed` so dependency downloads are preserved) and deletes stray `CMakeCache.txt` files if you need a fresh configure.
 
 ### vcpkg integration
 
@@ -66,7 +66,7 @@ Dependency management is handled through `vcpkg.json` (GLFW, GLM, spdlog, stb, V
    ```
 
    (WSL doesn’t need extra settings—its default `x64-linux` triplets already match what we expect.)
-5. Run `./build.sh` or a preset. When `VCPKG_ROOT` is set, the script automatically chains the platform toolchain file through vcpkg’s toolchain so manifest dependencies restore on first configure.
+5. Run `./steeplejack.sh build [debug|release]` or a preset. When `VCPKG_ROOT` is set, the script automatically chains the platform toolchain file through vcpkg’s toolchain so manifest dependencies restore on first configure.
 
 To drive CMake manually with vcpkg, pass the vcpkg toolchain and chainload ours, for example:
 
@@ -77,14 +77,14 @@ cmake -S . -B build/ucrt -G Ninja \
   -DVCPKG_TARGET_TRIPLET=x64-mingw-static
 ```
 
-The manifest currently pins `builtin-baseline` `3f1f8d497d4d45a7dc7cb6805ae0e21978b5de29`; update it whenever you intentionally roll the dependency set forward (`git -C "$VCPKG_ROOT" rev-parse HEAD` is a handy way to capture the version you want to standardize on).
+The manifest currently pins `builtin-baseline` `271a5b8850aa50f9a40269cbf3cf414b36e333d6`; update it whenever you intentionally roll the dependency set forward (`git -C "$VCPKG_ROOT" rev-parse HEAD` is a handy way to capture the version you want to standardize on).
 
 ### Running
 
-`run.sh` mirrors the same environment detection and runs the most recent build output, forwarding any extra arguments to the executable:
+`./steeplejack.sh run [debug|release] -- <game args>` mirrors the same environment detection and runs the most recent build output, forwarding any extra arguments to the executable:
 
 ```bash
-./run.sh --example-flag
+./steeplejack.sh run release --example-flag
 ```
 
 The current executable just instantiates a stub `steeplejack::Application`. As Vulkan code lands we will gate GPU-dependent targets so CI/WSL can still run core/unit tests.
