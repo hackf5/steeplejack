@@ -12,6 +12,8 @@
     "spdlog",
     "spirv-tools",
     "stb",
+    "vk-bootstrap",
+    "glslang",
     "vulkan",
     "volk",
     "vulkan-memory-allocator",

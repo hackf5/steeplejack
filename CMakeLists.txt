@@ -47,6 +47,34 @@ endfunction()
 
 steeplejack_enable_warnings(steeplejack_engine)
 
+# Dependencies via vcpkg
+find_package(Vulkan REQUIRED)
+find_package(glfw3 REQUIRED)
+find_package(spdlog REQUIRED)
+find_package(glm REQUIRED)
+find_package(vk-bootstrap REQUIRED)
+
+# Source includes for in-tree headers (vulkan wrappers under src/)
+target_include_directories(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
+
+# Link common libs
+target_link_libraries(steeplejack_engine
+    PRIVATE
+        Vulkan::Vulkan
+        glfw
+        spdlog::spdlog
+        glm::glm
+        vk-bootstrap::vk-bootstrap
+)
+
+# Add Vulkan wrapper sources
+file(GLOB_RECURSE STEEPLEJACK_VK_SOURCES CONFIGURE_DEPENDS
+    ${PROJECT_SOURCE_DIR}/src/vulkan/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/*context*.cpp
+    ${PROJECT_SOURCE_DIR}/src/vulkan_engine.cpp
+)
+target_sources(steeplejack_engine PRIVATE ${STEEPLEJACK_VK_SOURCES})
+
 add_executable(steeplejack
     src/main.cpp
 )
