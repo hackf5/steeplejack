@@ -7,7 +7,7 @@
     "enet",
     "glfw3",
     "glm",
-    "imgui",
+    { "name": "imgui", "features": ["glfw-binding", "vulkan-binding"] },
     "nlohmann-json",
     "spdlog",
     "spirv-tools",

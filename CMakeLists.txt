@@ -57,6 +57,7 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(vk-bootstrap REQUIRED)
 find_package(VulkanMemoryAllocator CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 # Source includes for levin headers
 target_include_directories(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
@@ -71,7 +72,7 @@ target_link_libraries(steeplejack_engine
         vk-bootstrap::vk-bootstrap
         GPUOpen::VulkanMemoryAllocator
         OpenGL::GL
-        imgui
+        imgui::imgui
         ${CMAKE_DL_LIBS}
 )
 
@@ -88,9 +89,9 @@ list(REMOVE_ITEM LEVIN_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
 target_sources(steeplejack_engine PRIVATE ${LEVIN_SOURCES})
 target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/third_party/stb_image.cpp)
 
+
 # Bring in imgui and assets
 find_package(OpenGL REQUIRED)
-add_subdirectory(submodules)
 add_executable(steeplejack
     src/main.cpp
 )
