@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg-tool/main/docs/vcpkg.schema.json",
+  "name": "steeplejack",
+  "version-string": "0.1.0",
+  "builtin-baseline": "271a5b8850aa50f9a40269cbf3cf414b36e333d6",
+  "dependencies": [
+    "enet",
+    "glfw3",
+    "glm",
+    "imgui",
+    "nlohmann-json",
+    "spdlog",
+    "spirv-tools",
+    "stb",
+    "vulkan",
+    "volk",
+    "vulkan-memory-allocator",
+    "catch2"
+  ]
+}
