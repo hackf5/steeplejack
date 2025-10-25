@@ -4,13 +4,15 @@
 #include <vma/vk_mem_alloc.h>
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/device.h"
+#include "device.h"
 
-namespace steeplejack {
-
-class Image : public NoCopyOrMove {
+namespace levin
+{
+class Image: public NoCopyOrMove
+{
 public:
-    struct ImageInfo {
+    struct ImageInfo
+    {
         const uint32_t width;
         const uint32_t height;
         const VkFormat format;
@@ -20,31 +22,32 @@ public:
     };
 
 private:
-    struct AllocationInfo {
+    struct AllocationInfo
+    {
         const VkImage image;
         const VmaAllocation allocation;
         const VmaAllocationInfo info;
     };
 
-    const Device& device_;
-    const ImageInfo info_;
-    const AllocationInfo alloc_;
+    const Device &m_device;
+    const ImageInfo m_image_info;
+    const AllocationInfo m_allocation_info;
 
     AllocationInfo create_allocation_info();
 
 public:
-    Image(const Device& device,
-          uint32_t width,
-          uint32_t height,
-          VkFormat format,
-          VkImageUsageFlags usage,
-          VkImageTiling tiling,
-          VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT);
+    Image(
+        const Device &device,
+        uint32_t width,
+        uint32_t height,
+        VkFormat format,
+        VkImageUsageFlags usage,
+        VkImageTiling tiling,
+        VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT);
     ~Image();
 
-    operator VkImage() const { return alloc_.image; }
-    const ImageInfo& image_info() const { return info_; }
+    operator VkImage() const { return m_allocation_info.image; }
+
+    const ImageInfo &image_info() const { return m_image_info; }
 };
-
-} // namespace steeplejack
-
+}

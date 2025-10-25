@@ -3,23 +3,26 @@
 #include <vulkan/vulkan.h>
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/device.h"
-#include "vulkan/image.h"
-#include "vulkan/image_view.h"
-#include "vulkan/swapchain.h"
 
-namespace steeplejack {
+#include "device.h"
+#include "image.h"
+#include "image_view.h"
+#include "swapchain.h"
 
-class Multisampler : public NoCopyOrMove {
+namespace levin
+{
+class Multisampler: public NoCopyOrMove
+{
 private:
-    const Device& device_;
-    const Image image_;
-    const ImageView image_view_;
+    const Device &m_device;
+    const Image m_image;
+    const ImageView m_image_view;
 
 public:
-    Multisampler(const Device& device, const Swapchain& swapchain);
-    VkImageView image_view() const { return image_view_; }
+    Multisampler(
+        const Device &device,
+        const Swapchain &swapchain);
+
+    VkImageView image_view() const { return m_image_view; }
 };
-
-} // namespace steeplejack
-
+}

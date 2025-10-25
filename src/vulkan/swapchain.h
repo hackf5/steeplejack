@@ -3,43 +3,55 @@
 #include <vector>
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/device.h"
+#include "device.h"
 
-namespace steeplejack {
-
-class Swapchain : NoCopyOrMove {
+namespace levin
+{
+class Swapchain: NoCopyOrMove
+{
 private:
-    const Device& device_;
-    vkb::Swapchain swapchain_{};
-    const std::vector<VkImage> images_;
-    const std::vector<VkImageView> image_views_;
-    const VkViewport viewport_;
-    const VkRect2D scissor_;
+    const Device &m_device;
+
+    vkb::Swapchain m_swapchain;
+    const std::vector<VkImage> m_swapchain_images;
+    const std::vector<VkImageView> m_swapchain_image_views;
+    const VkViewport m_viewport;
+    const VkRect2D m_scissor;
 
     vkb::Swapchain create_swapchain();
     VkViewport create_viewport();
     VkRect2D create_scissor();
 
 public:
-    explicit Swapchain(const Device& device);
+    Swapchain(const Device &device);
     ~Swapchain();
 
-    operator VkSwapchainKHR() const { return swapchain_.swapchain; }
-    VkExtent2D extent() const { return swapchain_.extent; }
-    float aspect_ratio() const {
-        return static_cast<float>(swapchain_.extent.width) / static_cast<float>(swapchain_.extent.height);
+    operator VkSwapchainKHR() const { return m_swapchain.swapchain; }
+
+    VkExtent2D extent() const { return m_swapchain.extent; }
+
+    float aspect_ratio() const
+    {
+        return static_cast<float>(m_swapchain.extent.width) /
+            static_cast<float>(m_swapchain.extent.height);
     }
-    uint32_t image_count() const { return swapchain_.image_count; }
-    VkFormat image_format() const { return swapchain_.image_format; }
-    const VkViewport& viewport() const { return viewport_; }
-    const VkRect2D& scissor() const { return scissor_; }
-    const VkImage& image(size_t idx) const { return images_[idx]; }
-    const VkImageView& image_view(size_t idx) const { return image_views_[idx]; }
-    void clip(VkCommandBuffer cmd) const {
-        vkCmdSetViewport(cmd, 0, 1, &viewport_);
-        vkCmdSetScissor(cmd, 0, 1, &scissor_);
+
+    uint32_t image_count() const { return m_swapchain.image_count; }
+
+    VkFormat image_format() const { return m_swapchain.image_format; }
+
+    const VkViewport &viewport() const { return m_viewport; }
+
+    const VkRect2D &scissor() const { return m_scissor; }
+
+    const VkImage &image(size_t image_index) const { return m_swapchain_images[image_index]; }
+
+    const VkImageView &image_view(size_t image_index) const { return m_swapchain_image_views[image_index]; }
+
+    void clip(VkCommandBuffer command_buffer) const
+    {
+        vkCmdSetViewport(command_buffer, 0, 1, &m_viewport);
+        vkCmdSetScissor(command_buffer, 0, 1, &m_scissor);
     }
 };
-
-} // namespace steeplejack
-
+}

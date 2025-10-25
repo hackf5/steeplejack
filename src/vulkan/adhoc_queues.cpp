@@ -1,99 +1,129 @@
-#include "vulkan/adhoc_queues.h"
+#include "adhoc_queues.h"
 
-#include <stdexcept>
 #include "spdlog/spdlog.h"
 
-using namespace steeplejack;
+using namespace levin;
 
-AdhocQueue::AdhocQueue(const Device& device, QueueFamily family)
-    : device_(device),
-      queue_(get_queue(family)),
-      command_pool_(create_command_pool(family)),
-      command_buffer_(create_command_buffer()) {}
-
-AdhocQueue::~AdhocQueue() {
-    spdlog::info("Destroying AdhocQueue");
-    vkFreeCommandBuffers(device_, command_pool_, 1, &command_buffer_);
-    vkDestroyCommandPool(device_, command_pool_, nullptr);
+AdhocQueue::AdhocQueue(
+    const Device &device,
+    QueueFamily family):
+    m_device(device),
+    m_queue(get_queue(family)),
+    m_command_pool(create_command_pool(family)),
+    m_command_buffer(create_command_buffer())
+{
 }
 
-VkQueue AdhocQueue::get_queue(QueueFamily family) const {
-    switch (family) {
-        case graphics:
-            return device_.graphics_queue();
-        case present:
-            return device_.present_queue();
-        case transfer:
-            return device_.transfer_queue();
-        default:
-            throw std::runtime_error("Invalid queue family");
+AdhocQueue::~AdhocQueue()
+{
+    spdlog::info("Destroying Buffer Transfer Queue");
+    vkFreeCommandBuffers(m_device, m_command_pool, 1, &m_command_buffer);
+    vkDestroyCommandPool(m_device, m_command_pool, nullptr);
+}
+
+VkQueue AdhocQueue::get_queue(QueueFamily family) const
+{
+    switch (family)
+    {
+    case graphics:
+        return m_device.graphics_queue();
+    case present:
+        return m_device.present_queue();
+    case transfer:
+        return m_device.transfer_queue();
+    default:
+        throw std::runtime_error("Invalid queue family");
     }
 }
 
-uint32_t AdhocQueue::get_queue_index(QueueFamily family) const {
-    switch (family) {
-        case graphics:
-            return device_.graphics_queue_index();
-        case present:
-            return device_.present_queue_index();
-        case transfer:
-            return device_.transfer_queue_index();
-        default:
-            throw std::runtime_error("Invalid queue family");
+uint32_t AdhocQueue::get_queue_index(QueueFamily family) const
+{
+    switch (family)
+    {
+    case graphics:
+        return m_device.graphics_queue_index();
+    case present:
+        return m_device.present_queue_index();
+    case transfer:
+        return m_device.transfer_queue_index();
+    default:
+        throw std::runtime_error("Invalid queue family");
     }
 }
 
-VkCommandPool AdhocQueue::create_command_pool(QueueFamily family) {
-    VkCommandPoolCreateInfo pool{};
-    pool.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    pool.queueFamilyIndex = get_queue_index(family);
-    pool.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-    VkCommandPool cp{};
-    if (vkCreateCommandPool(device_, &pool, nullptr, &cp) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to create command pool");
+VkCommandPool AdhocQueue::create_command_pool(QueueFamily family)
+{
+    VkCommandPoolCreateInfo pool_info = {};
+    pool_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    pool_info.queueFamilyIndex = get_queue_index(family);
+    pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+    VkCommandPool command_pool;
+    if (vkCreateCommandPool(m_device, &pool_info, nullptr, &command_pool) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create buffer transfer queue command pool");
     }
-    return cp;
+
+    return command_pool;
 }
 
-VkCommandBuffer AdhocQueue::create_command_buffer() {
-    VkCommandBufferAllocateInfo ai{};
-    ai.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    ai.commandPool = command_pool_;
-    ai.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    ai.commandBufferCount = 1;
-    VkCommandBuffer cb{};
-    if (vkAllocateCommandBuffers(device_, &ai, &cb) != VK_SUCCESS) {
+VkCommandBuffer AdhocQueue::create_command_buffer()
+{
+    VkCommandBufferAllocateInfo alloc_info = {};
+    alloc_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    alloc_info.commandPool = m_command_pool;
+    alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    alloc_info.commandBufferCount = 1;
+
+    VkCommandBuffer command_buffer;
+    if (vkAllocateCommandBuffers(m_device, &alloc_info, &command_buffer) != VK_SUCCESS)
+    {
         throw std::runtime_error("Failed to allocate command buffers");
     }
-    return cb;
+
+    return command_buffer;
 }
 
-VkCommandBuffer AdhocQueue::begin() const {
-    if (vkResetCommandBuffer(command_buffer_, 0) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to reset command buffer");
+VkCommandBuffer AdhocQueue::begin() const
+{
+    if (vkResetCommandBuffer(m_command_buffer, 0) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to reset transfer command buffer");
     }
-    VkCommandBufferBeginInfo bi{};
-    bi.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
-    if (vkBeginCommandBuffer(command_buffer_, &bi) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to begin recording command buffer");
+
+    VkCommandBufferBeginInfo begin_info = {};
+    begin_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
+
+    if (vkBeginCommandBuffer(m_command_buffer, &begin_info) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to begin recording transfer command buffer");
     }
-    return command_buffer_;
+
+    return m_command_buffer;
 }
 
-void AdhocQueue::submit_and_wait() const {
-    auto cb = command_buffer_;
-    if (vkEndCommandBuffer(cb) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to record command buffer");
+void AdhocQueue::submit_and_wait() const
+{
+    auto command_buffer = m_command_buffer;
+
+    if (vkEndCommandBuffer(command_buffer) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to record transfer command buffer");
     }
-    VkSubmitInfo si{};
-    si.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
-    si.commandBufferCount = 1;
-    si.pCommandBuffers = &cb;
-    if (vkQueueSubmit(queue_, 1, &si, VK_NULL_HANDLE) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to submit command buffer");
+
+    VkSubmitInfo submit_info = {};
+    submit_info.sType = VK_STRUCTURE_TYPE_SUBMIT_INFO;
+    submit_info.commandBufferCount = 1;
+    submit_info.pCommandBuffers = &command_buffer;
+
+    if (vkQueueSubmit(m_queue, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to submit transfer command buffer");
     }
-    if (vkQueueWaitIdle(queue_) != VK_SUCCESS) {
-        throw std::runtime_error("Failed to wait queue idle");
+
+    if (vkQueueWaitIdle(m_queue) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to wait for queue to become idle");
     }
 }
 

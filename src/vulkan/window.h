@@ -8,33 +8,37 @@
 
 #include "util/no_copy_or_move.h"
 
-namespace steeplejack {
-
-class Window : NoCopyOrMove {
+namespace levin
+{
+class Window: NoCopyOrMove
+{
 public:
-    using framebuffer_resize_callback_t = std::function<void(int, int)>;
+    typedef std::function<void(int, int)> framebuffer_resize_callback_t;
 
 private:
-    int width_;
-    int height_;
-    framebuffer_resize_callback_t framebuffer_resize_callback_;
-    GLFWwindow* window_{};
+    int m_width;
+    int m_height;
 
-    static void framebuffer_resize_callback(GLFWwindow* window, int width, int height);
+    framebuffer_resize_callback_t m_framebuffer_resize_callback;
+
+    GLFWwindow *m_window;
+
+    static void framebuffer_resize_callback(GLFWwindow *window, int width, int height);
 
 public:
-    Window(int width, int height, const std::string& title);
+    Window(int width, int height, const std::string &title);
     ~Window();
 
     VkSurfaceKHR create_window_surface(VkInstance instance) const;
 
-    operator GLFWwindow*() const { return window_; }
+    operator GLFWwindow *() const { return m_window; }
 
     void register_framebuffer_resize_callback(framebuffer_resize_callback_t callback);
-    bool should_close() const { return glfwWindowShouldClose(window_); }
+
+    bool should_close() const { return glfwWindowShouldClose(m_window); }
+
     void poll_events() const { glfwPollEvents(); }
+
     void wait_resize();
 };
-
-} // namespace steeplejack
-
+}

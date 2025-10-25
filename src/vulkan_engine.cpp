@@ -1,51 +1,100 @@
-#include "vulkan_engine.h"
-#include "vulkan_context_builder.h"
+#include <chrono>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 #include "spdlog/spdlog.h"
 
-using namespace steeplejack;
+#include "vulkan_context_builder.h"
+#include "vulkan_engine.h"
+#include "scenes/george.h"
 
-VulkanEngine::VulkanEngine(std::unique_ptr<VulkanContext> context) : context_(std::move(context)) {}
+using namespace levin;
 
-void VulkanEngine::run() {
+VulkanEngine::VulkanEngine(
+    std::unique_ptr<VulkanContext> context)
+    : m_context(std::move(context))
+{
+}
+
+void VulkanEngine::run()
+{
     spdlog::info("Vulkan Engine is running");
-    while (!context_->window().should_close()) {
-        context_->window().poll_events();
+
+    m_context->render_scene().load(
+        m_context->device(),
+        m_context->texture_factory(),
+        m_context->graphics_buffers());
+
+    while (!m_context->window().should_close())
+    {
+        m_context->window().poll_events();
         draw_frame();
     }
-    context_->device().wait_idle();
+
+    m_context->device().wait_idle();
 }
 
-void VulkanEngine::recreate_swapchain() {
-    context_->window().wait_resize();
-    context_->device().wait_idle();
-    auto c = VulkanContextBuilder(std::move(context_))
-                 .add_swapchain()
-                 .add_depth_buffer()
-                 .add_render_pass()
-                 .add_framebuffers()
-                 .build();
-    context_ = std::move(c);
+
+void VulkanEngine::recreate_swapchain()
+{
+    m_context->window().wait_resize();
+    m_context->device().wait_idle();
+
+    auto context = VulkanContextBuilder(std::move(m_context))
+        .add_swapchain()
+        .add_depth_buffer()
+        .add_render_pass()
+        .add_framebuffers()
+        .add_graphics_pipeline()
+        .add_gui()
+        .build();
+    m_context = std::move(context);
 }
 
-void VulkanEngine::draw_frame() {
-    auto framebuffer = context_->graphics_queue().prepare_framebuffer(current_frame_, context_->swapchain(),
-                                                                     context_->framebuffers());
-    if (!framebuffer) {
+void VulkanEngine::draw_frame()
+{
+    m_context->gui().begin_frame();
+
+    auto framebuffer = m_context->graphics_queue().prepare_framebuffer(
+        m_current_frame,
+        m_context->swapchain(),
+        m_context->framebuffers());
+
+    if (!framebuffer)
+    {
         recreate_swapchain();
         return;
     }
+
+    m_context->render_scene().update(
+        m_current_frame,
+        m_context->swapchain().aspect_ratio());
+
     render(framebuffer);
-    if (!context_->graphics_queue().present_framebuffer()) {
+
+    if (!m_context->graphics_queue().present_framebuffer())
+    {
         recreate_swapchain();
     }
+
     next_frame();
 }
 
-void VulkanEngine::render(VkFramebuffer framebuffer) {
-    auto cmd = context_->graphics_queue().begin_command();
-    context_->render_pass().begin(cmd, framebuffer);
-    // No pipeline/geometry yet; just clear and present
-    context_->render_pass().end(cmd);
-    context_->graphics_queue().submit_command();
+void VulkanEngine::render(VkFramebuffer framebuffer)
+{
+    auto command_buffer = m_context->graphics_queue().begin_command();
+
+    m_context->render_pass().begin(command_buffer, framebuffer);
+
+    m_context->graphics_pipeline().bind(command_buffer);
+    m_context->swapchain().clip(command_buffer);
+    m_context->graphics_buffers().bind(command_buffer);
+
+    m_context->render_scene().render(command_buffer, m_current_frame, m_context->graphics_pipeline());
+    m_context->gui().render(command_buffer);
+
+    m_context->render_pass().end(command_buffer);
+
+    m_context->graphics_queue().submit_command();
 }

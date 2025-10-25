@@ -37,12 +37,13 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "C_Cpp.default.compileCommands": "${workspaceFolder}/build/ucrt/debug/compile_commands.json",
     "cSpell.words": [
-        "GLSL",
-        "HLSL",
-        "MSYS",
-        "SPIR",
-        "ucrt",
-        "vcpkg"
+      "GLSL",
+      "HLSL",
+      "MSYS",
+      "SPIR",
+      "swapchain",
+      "ucrt",
+      "vcpkg"
     ],
     "chat.tools.terminal.terminalProfile.windows": {
         "path": "cmd.exe",

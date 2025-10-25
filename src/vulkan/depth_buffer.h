@@ -1,25 +1,28 @@
 #pragma once
 
+#include <memory>
+
 #include <vulkan/vulkan.h>
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/device.h"
-#include "vulkan/image.h"
-#include "vulkan/image_view.h"
-#include "vulkan/swapchain.h"
+#include "device.h"
+#include "image.h"
+#include "image_view.h"
+#include "swapchain.h"
 
-namespace steeplejack {
-
-class DepthBuffer : public NoCopyOrMove {
+namespace levin
+{
+class DepthBuffer: public NoCopyOrMove
+{
 private:
-    const Image image_;
-    const ImageView image_view_;
+    const Image m_image;
+    const ImageView m_image_view;
 
 public:
-    DepthBuffer(const Device& device, const Swapchain& swapchain);
-    VkImageView image_view() const { return image_view_; }
-    VkFormat format() const { return image_.image_info().format; }
+    DepthBuffer(const Device &device, const Swapchain &swapchain);
+
+    VkImageView image_view() const { return m_image_view; }
+
+    VkFormat format() const { return m_image.image_info().format; }
 };
-
-} // namespace steeplejack
-
+}

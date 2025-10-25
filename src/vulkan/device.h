@@ -3,25 +3,27 @@
 #include <memory>
 
 #include <vma/vk_mem_alloc.h>
-#include <VkBootstrap.h>
+
+#include "VkBootstrap.h"
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/window.h"
+#include "window.h"
 
-namespace steeplejack {
-
-class Device : NoCopyOrMove {
+namespace levin
+{
+class Device: NoCopyOrMove
+{
 private:
-    const Window& window_;
+    const Window &m_window;
 
-    const vkb::Instance instance_;
-    const VkSurfaceKHR surface_;
-    const vkb::Device device_;
-    const VmaAllocator allocator_;
+    const vkb::Instance m_instance;
+    const VkSurfaceKHR m_surface;
+    const vkb::Device m_device;
+    const VmaAllocator m_allocator;
 
-    const VkQueue graphics_queue_;
-    const VkQueue present_queue_;
-    const VkQueue transfer_queue_;
+    const VkQueue m_graphics_queue;
+    const VkQueue m_present_queue;
+    const VkQueue m_transfer_queue;
 
     vkb::Instance create_instance(bool enable_validation_layers);
     VkSurfaceKHR create_surface();
@@ -30,44 +32,52 @@ private:
     VkQueue create_queue(vkb::QueueType queue_type);
 
 public:
-    Device(const Window& window, bool enable_validation_layers);
+    Device(
+        const Window &window,
+        bool enable_validation_layers);
+
     ~Device();
 
     static const uint32_t max_frames_in_flight = 2;
 
-    operator const vkb::Device&() const { return device_; }
-    operator VkDevice() const { return device_.device; }
+    operator const vkb::Device &() const { return m_device; }
 
-    VkPhysicalDeviceProperties properties() const { return device_.physical_device.properties; }
+    operator VkDevice() const { return m_device.device; }
 
-    VkSampleCountFlagBits msaa_samples() const {
-        auto counts = device_.physical_device.properties.limits.framebufferColorSampleCounts &
-                      device_.physical_device.properties.limits.framebufferDepthSampleCounts;
+    VkPhysicalDeviceProperties  properties() const
+    {
+        return m_device.physical_device.properties;
+    }
+
+    VkSampleCountFlagBits msaa_samples() const
+    {
+        auto counts = m_device.physical_device.properties.limits.framebufferColorSampleCounts
+            & m_device.physical_device.properties.limits.framebufferDepthSampleCounts;
         if (counts & VK_SAMPLE_COUNT_64_BIT) return VK_SAMPLE_COUNT_64_BIT;
         if (counts & VK_SAMPLE_COUNT_32_BIT) return VK_SAMPLE_COUNT_32_BIT;
         if (counts & VK_SAMPLE_COUNT_16_BIT) return VK_SAMPLE_COUNT_16_BIT;
         if (counts & VK_SAMPLE_COUNT_8_BIT) return VK_SAMPLE_COUNT_8_BIT;
         if (counts & VK_SAMPLE_COUNT_4_BIT) return VK_SAMPLE_COUNT_4_BIT;
         if (counts & VK_SAMPLE_COUNT_2_BIT) return VK_SAMPLE_COUNT_2_BIT;
+
         return VK_SAMPLE_COUNT_1_BIT;
     }
 
-    VkInstance instance() const { return instance_.instance; }
-    VkPhysicalDevice physical_device() const { return device_.physical_device; }
+    VkInstance instance() const { return m_instance.instance; }
 
-    VkQueue graphics_queue() const { return graphics_queue_; }
-    uint32_t graphics_queue_index() const { return device_.get_queue_index(vkb::QueueType::graphics).value(); }
+    VkPhysicalDevice physical_device() const { return m_device.physical_device; }
 
-    VkQueue present_queue() const { return present_queue_; }
-    uint32_t present_queue_index() const { return device_.get_queue_index(vkb::QueueType::present).value(); }
+    VkQueue graphics_queue() const { return m_graphics_queue; }
+    uint32_t graphics_queue_index() const { return m_device.get_queue_index(vkb::QueueType::graphics).value(); }
 
-    VkQueue transfer_queue() const { return transfer_queue_; }
-    uint32_t transfer_queue_index() const { return device_.get_queue_index(vkb::QueueType::transfer).value(); }
+    VkQueue present_queue() const { return m_present_queue; }
+    uint32_t present_queue_index() const { return m_device.get_queue_index(vkb::QueueType::present).value(); }
 
-    void wait_idle() const { vkDeviceWaitIdle(device_); }
+    VkQueue transfer_queue() const { return m_transfer_queue; }
+    uint32_t transfer_queue_index() const { return m_device.get_queue_index(vkb::QueueType::transfer).value(); }
 
-    VmaAllocator allocator() const { return allocator_; }
+    void wait_idle() const { vkDeviceWaitIdle(m_device); }
+
+    VmaAllocator allocator() const { return m_allocator; }
 };
-
-} // namespace steeplejack
-
+}

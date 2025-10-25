@@ -27,6 +27,8 @@ env_name=$(steeplejack_detect_environment) || {
 }
 
 binary=$(steeplejack_binary_path "${env_name}" "${CONFIG}")
+bindir=$(dirname "${binary}")
+binname=$(basename "${binary}")
 label=$(steeplejack_env_label "${env_name}")
 
 if [[ ! -x "${binary}" ]]; then
@@ -36,8 +38,9 @@ fi
 
 printf '==> Running %s %s build: %s\n' "${label}" "${CONFIG}" "${binary}"
 
+cd "${bindir}"
 if [[ ${#RUN_ARGS[@]} -gt 0 ]]; then
-    exec "${binary}" "${RUN_ARGS[@]}"
+    exec "./${binname}" "${RUN_ARGS[@]}"
 else
-    exec "${binary}"
+    exec "./${binname}"
 fi

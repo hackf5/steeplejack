@@ -1,24 +1,33 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
 #include <vector>
+#include <vulkan/vulkan.h>
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/device.h"
+#include "device.h"
 
-namespace steeplejack {
-
-class AdhocQueue : NoCopyOrMove {
+namespace levin
+{
+class AdhocQueue: NoCopyOrMove
+{
 public:
-    enum QueueFamily { graphics, present, transfer };
+    enum QueueFamily
+    {
+        graphics,
+        present,
+        transfer
+    };
 
-    AdhocQueue(const Device& device, QueueFamily family);
+    AdhocQueue(
+        const Device &device,
+        QueueFamily family);
 
 private:
-    const Device& device_;
-    const VkQueue queue_;
-    const VkCommandPool command_pool_;
-    const VkCommandBuffer command_buffer_;
+    const Device &m_device;
+
+    const VkQueue m_queue;
+    const VkCommandPool m_command_pool;
+    const VkCommandBuffer m_command_buffer;
 
     VkQueue get_queue(QueueFamily family) const;
     uint32_t get_queue_index(QueueFamily family) const;
@@ -27,26 +36,28 @@ private:
 
 public:
     ~AdhocQueue();
+
     VkCommandBuffer begin() const;
     void submit_and_wait() const;
 };
 
-class AdhocQueues : NoCopyOrMove {
+class AdhocQueues: NoCopyOrMove
+{
 private:
-    const AdhocQueue transfer_;
-    const AdhocQueue graphics_;
-    const AdhocQueue present_;
+    const AdhocQueue m_transfer_queue;
+    const AdhocQueue m_graphics_queue;
+    const AdhocQueue m_present_queue;
 
 public:
-    explicit AdhocQueues(const Device& device)
-        : transfer_(device, AdhocQueue::transfer),
-          graphics_(device, AdhocQueue::graphics),
-          present_(device, AdhocQueue::present) {}
+    AdhocQueues(const Device &device):
+        m_transfer_queue(device, AdhocQueue::transfer),
+        m_graphics_queue(device, AdhocQueue::graphics),
+        m_present_queue(device, AdhocQueue::present)
+    {
+    }
 
-    const AdhocQueue& transfer() const { return transfer_; }
-    const AdhocQueue& graphics() const { return graphics_; }
-    const AdhocQueue& present() const { return present_; }
+    const AdhocQueue &transfer() const { return m_transfer_queue; }
+    const AdhocQueue &graphics() const { return m_graphics_queue; }
+    const AdhocQueue &present() const { return m_present_queue; }
 };
-
-} // namespace steeplejack
-
+}

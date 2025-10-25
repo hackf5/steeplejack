@@ -4,6 +4,9 @@ project(steeplejack VERSION 0.1.0 LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Ensure runtime output (for assets/shaders) is the build dir
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 option(STEEPLEJACK_BUILD_TESTS "Enable building test targets" ON)
 option(STEEPLEJACK_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" OFF)
 
@@ -54,7 +57,7 @@ find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(vk-bootstrap REQUIRED)
 
-# Source includes for in-tree headers (vulkan wrappers under src/)
+# Source includes for levin headers
 target_include_directories(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
 # Link common libs
@@ -65,22 +68,40 @@ target_link_libraries(steeplejack_engine
         spdlog::spdlog
         glm::glm
         vk-bootstrap::vk-bootstrap
+        OpenGL::GL
+        imgui
+        stb
+        ${CMAKE_DL_LIBS}
 )
 
-# Add Vulkan wrapper sources
-file(GLOB_RECURSE STEEPLEJACK_VK_SOURCES CONFIGURE_DEPENDS
+# Add levin sources (exclude any main.cpp)
+file(GLOB_RECURSE LEVIN_SOURCES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/src/vulkan/*.cpp
-    ${PROJECT_SOURCE_DIR}/src/*context*.cpp
+    ${PROJECT_SOURCE_DIR}/src/gui/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/model/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/scenes/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/vulkan_*context*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_engine.cpp
 )
-target_sources(steeplejack_engine PRIVATE ${STEEPLEJACK_VK_SOURCES})
+list(REMOVE_ITEM LEVIN_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
+target_sources(steeplejack_engine PRIVATE ${LEVIN_SOURCES})
 
+# Bring in imgui, stb, assets
+find_package(OpenGL REQUIRED)
+add_subdirectory(submodules)
+add_subdirectory(libs)
 add_executable(steeplejack
     src/main.cpp
 )
 target_link_libraries(steeplejack PRIVATE steeplejack_engine)
 target_compile_features(steeplejack PUBLIC cxx_std_23)
 steeplejack_enable_warnings(steeplejack)
+
+# Build shaders with glslangValidator into ${CMAKE_BINARY_DIR}/shaders
+add_subdirectory(shaders)
+
+# Assets after targets exist so add_dependencies() resolves
+add_subdirectory(assets)
 
 if (STEEPLEJACK_BUILD_TESTS)
     include(CTest)
