@@ -3,6 +3,7 @@
 #include <iterator>
 #include <ranges>
 #include <type_traits>
+#include <cstring>
 
 namespace levin
 {

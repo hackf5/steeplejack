@@ -56,6 +56,7 @@ find_package(glfw3 REQUIRED)
 find_package(spdlog REQUIRED)
 find_package(glm REQUIRED)
 find_package(vk-bootstrap REQUIRED)
+find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 
 # Source includes for levin headers
 target_include_directories(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
@@ -68,6 +69,7 @@ target_link_libraries(steeplejack_engine
         spdlog::spdlog
         glm::glm
         vk-bootstrap::vk-bootstrap
+        GPUOpen::VulkanMemoryAllocator
         OpenGL::GL
         imgui
         stb
