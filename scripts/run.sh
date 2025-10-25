@@ -30,7 +30,7 @@ binary=$(steeplejack_binary_path "${env_name}" "${CONFIG}")
 label=$(steeplejack_env_label "${env_name}")
 
 if [[ ! -x "${binary}" ]]; then
-    echo "Executable '${binary}' not found or not executable. Run ./steeplejack.sh build ${CONFIG} first." >&2
+    echo "Executable '${binary}' not found or not executable. Run ./sj.sh build ${CONFIG} first." >&2
     exit 1
 fi
 
