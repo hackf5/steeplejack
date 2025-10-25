@@ -15,6 +15,26 @@
         },
     },
     "terminal.integrated.defaultProfile.windows": "MSYS2 UCRT",
+    "cmake.configureOnOpen": false,
+    "cmake.configureEnvironment": {
+        "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+    },
+    "cmake.environment": {
+        "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+    },
+    "cmake.buildEnvironment": {
+        "PATH": "C:\\msys64\\ucrt64\\bin;C:\\msys64\\usr\\bin;${env:PATH}"
+    },
+    "cmake.additionalCompilerSearchDirs": [
+        "C:\\msys64\\ucrt64\\bin"
+    ],
+    "cmake.cmakePath": "C:\\msys64\\ucrt64\\bin\\cmake.exe",
+    "cmake.generator": "Ninja",
+    "cmake.preferredGenerators": [
+        "Ninja"
+    ],
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/ucrt/debug/compile_commands.json",
     "cSpell.words": [
         "GLSL",
         "HLSL",
@@ -22,5 +42,12 @@
         "SPIR",
         "ucrt",
         "vcpkg"
-    ]
+    ],
+    "chat.tools.terminal.terminalProfile.windows": {
+        "path": "cmd.exe",
+            "args": [
+                "/c",
+                "C:\\msys64\\msys2_shell.cmd -defterm -here -no-start -ucrt64 -shell zsh"
+            ]
+    }
 }

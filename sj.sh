@@ -8,12 +8,13 @@ SCRIPTS_DIR="${ROOT_DIR}/scripts"
 
 usage() {
     cat <<USAGE
-Usage: $(basename "$0") <build|clean|run> [debug|release] [-- extra args]
+Usage: $(basename "$0") <build|clean|run|test> [debug|release] [-- extra args]
 
 Commands:
   build [config]  Build the project (config defaults to debug). Extra args are passed to CMake configure.
   clean [config]  Clean build artifacts for the config.
   run   [config]  Execute the latest build for the config. Extra args are passed to the executable.
+  test  [config]  Build and run the test suite for the config.
 USAGE
     exit 1
 }
@@ -46,6 +47,9 @@ case "${command}" in
         ;;
     run)
         "${SCRIPTS_DIR}/run.sh" "${config}" "${extra_args[@]}"
+        ;;
+    test)
+        "${SCRIPTS_DIR}/test.sh" "${config}" "${extra_args[@]}"
         ;;
     *)
         usage

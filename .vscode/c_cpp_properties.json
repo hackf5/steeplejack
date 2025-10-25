@@ -1,0 +1,26 @@
+{
+    "configurations": [
+        {
+            "name": "MSYS2 UCRT",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include",
+                "C:/msys64/ucrt64/include/**",
+                "C:/msys64/ucrt64/lib/gcc/**",
+                "${workspaceFolder}/build/ucrt/vcpkg_installed/x64-mingw-dynamic/include/**"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "compilerPath": "C:/msys64/ucrt64/bin/g++.exe",
+            "cStandard": "c23",
+            "cppStandard": "c++23",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compileCommands": "${workspaceFolder}/build/ucrt/debug/compile_commands.json",
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}

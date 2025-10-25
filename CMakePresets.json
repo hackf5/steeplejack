@@ -8,7 +8,8 @@
       "binaryDir": "${sourceDir}/build/ucrt/debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_TOOLCHAIN_FILE": "cmake/toolchains/msys2-ucrt.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "cmake/toolchains/msys2-ucrt.cmake"
       }
     },
     {
@@ -18,7 +19,8 @@
       "binaryDir": "${sourceDir}/build/ucrt/release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_TOOLCHAIN_FILE": "cmake/toolchains/msys2-ucrt.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "cmake/toolchains/msys2-ucrt.cmake",
         "CMAKE_CXX_FLAGS_RELEASE": "-O3 -march=native"
       }
     },
@@ -29,7 +31,8 @@
       "binaryDir": "${sourceDir}/build/wsl/debug",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_TOOLCHAIN_FILE": "cmake/toolchains/wsl2-gcc.cmake"
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "cmake/toolchains/wsl2-gcc.cmake"
       }
     },
     {
@@ -39,7 +42,8 @@
       "binaryDir": "${sourceDir}/build/wsl/release",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_TOOLCHAIN_FILE": "cmake/toolchains/wsl2-gcc.cmake",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "VCPKG_CHAINLOAD_TOOLCHAIN_FILE": "cmake/toolchains/wsl2-gcc.cmake",
         "CMAKE_CXX_FLAGS_RELEASE": "-O3 -march=native"
       }
     }

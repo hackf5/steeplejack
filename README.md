@@ -14,6 +14,7 @@ Use the project task runner `sj.sh` at the repo root. It detects the host (MSYS2
 
 ```bash
 ./sj.sh build [debug|release]   # configure + build (defaults to debug)
+./sj.sh test  [debug|release]   # build + run tests for the config
 ./sj.sh run   [debug|release] -- <args>
 ./sj.sh clean [debug|release]
 ```

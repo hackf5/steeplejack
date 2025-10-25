@@ -55,6 +55,7 @@ target_compile_features(steeplejack PUBLIC cxx_std_23)
 steeplejack_enable_warnings(steeplejack)
 
 if (STEEPLEJACK_BUILD_TESTS)
+    include(CTest)
     enable_testing()
-    # add_subdirectory(tests) # Populate when tests exist.
+    add_subdirectory(tests)
 endif()
