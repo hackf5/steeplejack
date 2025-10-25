@@ -139,6 +139,8 @@ VkFramebuffer GraphicsQueue::prepare_framebuffer(
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR)
     {
+        m_swapchain = VK_NULL_HANDLE;
+        m_render_finished_semaphore = VK_NULL_HANDLE;
         return nullptr;
     }
 
@@ -175,6 +177,7 @@ VkCommandBuffer GraphicsQueue::begin_command() const
 void GraphicsQueue::submit_command() const
 {
     assert(m_swapchain != VK_NULL_HANDLE);
+    assert(m_render_finished_semaphore != VK_NULL_HANDLE);
 
     if (vkEndCommandBuffer(m_command_buffers[m_current_frame]) != VK_SUCCESS)
     {
@@ -211,6 +214,8 @@ void GraphicsQueue::submit_command() const
 bool GraphicsQueue::present_framebuffer()
 {
     assert(m_swapchain != VK_NULL_HANDLE);
+    assert(m_render_finished_semaphore != VK_NULL_HANDLE);
+
     auto swapchain = m_swapchain;
     auto render_finished_semaphore = m_render_finished_semaphore;
     m_swapchain = VK_NULL_HANDLE;
