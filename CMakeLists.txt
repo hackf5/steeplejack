@@ -72,7 +72,6 @@ target_link_libraries(steeplejack_engine
         GPUOpen::VulkanMemoryAllocator
         OpenGL::GL
         imgui
-        stb
         ${CMAKE_DL_LIBS}
 )
 
@@ -87,11 +86,11 @@ file(GLOB_RECURSE LEVIN_SOURCES CONFIGURE_DEPENDS
 )
 list(REMOVE_ITEM LEVIN_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
 target_sources(steeplejack_engine PRIVATE ${LEVIN_SOURCES})
+target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/third_party/stb_image.cpp)
 
-# Bring in imgui, stb, assets
+# Bring in imgui and assets
 find_package(OpenGL REQUIRED)
 add_subdirectory(submodules)
-add_subdirectory(libs)
 add_executable(steeplejack
     src/main.cpp
 )
