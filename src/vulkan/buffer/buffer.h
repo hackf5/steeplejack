@@ -43,7 +43,7 @@ public:
 
     VkDeviceSize size() const { return m_allocation_info.info.size; }
 
-    operator const VkBuffer() const { return m_allocation_info.buffer; }
+    operator VkBuffer() const { return m_allocation_info.buffer; }
 
     const VkBuffer* ptr() const { return &m_allocation_info.buffer; }
 

@@ -37,10 +37,10 @@ public:
     RenderScene(
         const Device &device,
         const std::string &vertex_shader,
-        const std::string &fragment_shader):
-        m_scene(device),
-        m_vertex_shader(vertex_shader),
-        m_fragment_shader(fragment_shader)
+        const std::string &fragment_shader)
+        : m_vertex_shader(vertex_shader)
+        , m_fragment_shader(fragment_shader)
+        , m_scene(device)
     {
     }
 

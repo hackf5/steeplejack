@@ -34,11 +34,9 @@ VkVertexInputAttributeDescription VertexInputState::create_attribute(
     uint32_t location,
     VertexComponent component)
 {
-    VkVertexInputAttributeDescription description(
-        {
-            .location = location,
-            .binding = binding.binding,
-        });
+    VkVertexInputAttributeDescription description{};
+    description.location = location;
+    description.binding = binding.binding;
 
     switch (component)
     {

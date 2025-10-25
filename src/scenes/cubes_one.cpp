@@ -39,7 +39,6 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
     CubesOne::face_t result;
     for (uint32_t vx = 0; vx < VERTEXES_PER_FACE; vx++)
     {
-        auto index = face * VERTEXES_PER_FACE + vx;
         auto &vertex = result[vx];
 
         vertex.pos = {
@@ -98,7 +97,7 @@ void CubesOne::load(
 
     auto &root_node = m_scene.model().root_node();
     auto &child1 = root_node.add_child();
-    auto &child2 = child1.add_child(std::make_unique<Mesh>(
+    child1.add_child(std::make_unique<Mesh>(
         device,
         primitives,
         texture_factory["george"]));
