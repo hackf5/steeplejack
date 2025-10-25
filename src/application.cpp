@@ -1,4 +1,4 @@
-#include "steeplejack/Application.hpp"
+#include "application.h"
 
 #include <iostream>
 #include "spdlog/spdlog.h"
@@ -9,12 +9,9 @@
 
 namespace steeplejack {
 
-Application::Application(AppConfig config) : config_(std::move(config)) {}
+Application::Application() {}
 
 int Application::run() {
-    std::cout << "Launching " << config_.name << " (" << config_.width << "x" << config_.height
-              << ")" << std::endl;
-
 #ifdef NDEBUG
     const bool enableValidationLayers = false;
     spdlog::set_level(spdlog::level::info);
@@ -36,7 +33,7 @@ int Application::run() {
         auto scene_factory = [](const Device &device) { return std::make_unique<CubesOne>(device); };
 
         auto context = VulkanContextBuilder()
-                           .add_window(config_.width, config_.height, config_.name)
+                           .add_window(1280, 720, "Steeplejack")
                            .add_device(enableValidationLayers)
                            .add_graphics_queue()
                            .add_adhoc_queues()

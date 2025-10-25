@@ -26,7 +26,7 @@ if (STEEPLEJACK_CXX_LATEST_FLAG)
 endif()
 
 add_library(steeplejack_engine STATIC
-    src/core/Application.cpp
+    src/application.cpp
 )
 target_include_directories(steeplejack_engine
     PUBLIC
@@ -71,7 +71,6 @@ target_link_libraries(steeplejack_engine
         glm::glm
         vk-bootstrap::vk-bootstrap
         GPUOpen::VulkanMemoryAllocator
-        OpenGL::GL
         imgui::imgui
         ${CMAKE_DL_LIBS}
 )
@@ -90,8 +89,7 @@ target_sources(steeplejack_engine PRIVATE ${LEVIN_SOURCES})
 target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/third_party/stb_image.cpp)
 
 
-# Bring in imgui and assets
-find_package(OpenGL REQUIRED)
+# Bring in assets
 add_executable(steeplejack
     src/main.cpp
 )
