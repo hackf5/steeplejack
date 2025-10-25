@@ -29,11 +29,33 @@ detect_environment() {
 
 configure_and_build() {
     local build_dir=$1
-    local toolchain=$2
+    local platform_toolchain=$2
     local label=$3
 
     printf '==> Configuring %s (%s)\n' "${label}" "${build_dir}"
-    cmake -S "${ROOT_DIR}" -B "${build_dir}" -G Ninja -D CMAKE_TOOLCHAIN_FILE="${toolchain}" "${CONFIG_ARGS[@]}"
+
+    local cmake_cmd=(cmake -S "${ROOT_DIR}" -B "${build_dir}" -G Ninja)
+
+    if [[ -n "${VCPKG_ROOT:-}" ]]; then
+        local vcpkg_toolchain="${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake"
+        if [[ ! -f "${vcpkg_toolchain}" ]]; then
+            echo "Requested VCPKG_ROOT (${VCPKG_ROOT}) does not contain scripts/buildsystems/vcpkg.cmake" >&2
+            exit 1
+        fi
+        cmake_cmd+=(
+            -DCMAKE_TOOLCHAIN_FILE="${vcpkg_toolchain}"
+            -DVCPKG_CHAINLOAD_TOOLCHAIN_FILE="${platform_toolchain}"
+        )
+    else
+        cmake_cmd+=(-DCMAKE_TOOLCHAIN_FILE="${platform_toolchain}")
+    fi
+
+    if [[ ${#CONFIG_ARGS[@]} -gt 0 ]]; then
+        cmake_cmd+=("${CONFIG_ARGS[@]}")
+    fi
+
+    "${cmake_cmd[@]}"
+
     printf '==> Building %s\n' "${label}"
     cmake --build "${build_dir}"
 }
