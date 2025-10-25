@@ -1,11 +1,6 @@
-#include "steeplejack/Application.hpp"
+#include "application.h"
 
 int main() {
-    steeplejack::AppConfig config;
-    config.name = "Steeplejack Prototype";
-    config.width = 1600;
-    config.height = 900;
-
-    steeplejack::Application app(config);
+    steeplejack::Application app;
     return app.run();
 }

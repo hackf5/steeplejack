@@ -24,4 +24,4 @@ Extra flags after the config go straight to CMake (for `build`) or the executabl
 ## Notes
 
 - Dependencies come from `vcpkg.json`. With `VCPKG_ROOT` set (per the docs), the build script pulls them automatically.
-- VS Code users can select any of the presets in `CMakePresets.json` (`ucrt-debug`, `wsl-release`, etc.) if they prefer the IDE workflow.
+- VS Code users can select any of the MSYS2 presets in `CMakePresets.json` (e.g., `ucrt-debug`) if they prefer the IDE workflow.

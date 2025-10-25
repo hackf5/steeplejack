@@ -7,13 +7,14 @@
     "enet",
     "glfw3",
     "glm",
-    "imgui",
+    { "name": "imgui", "features": ["glfw-binding", "vulkan-binding"] },
     "nlohmann-json",
     "spdlog",
     "spirv-tools",
     "stb",
+    "vk-bootstrap",
+    "glslang",
     "vulkan",
-    "volk",
     "vulkan-memory-allocator",
     "catch2"
   ]
