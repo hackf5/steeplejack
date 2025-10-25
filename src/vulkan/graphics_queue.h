@@ -19,18 +19,18 @@ private:
     const VkCommandPool m_command_pool;
 
     const std::vector<VkCommandBuffer> m_command_buffers;
-    const std::vector<VkSemaphore> m_image_available;
-    const std::vector<VkSemaphore> m_render_finished;
+    const std::vector<VkSemaphore> m_image_available; // per-frame
     const std::vector<VkFence> m_in_flight_fences;
 
     VkCommandPool create_command_pool();
     std::vector<VkCommandBuffer> create_command_buffers();
-    std::vector<VkSemaphore> create_semaphores();
+    std::vector<VkSemaphore> create_semaphores(size_t count);
     std::vector<VkFence> create_fences();
 
     uint32_t m_image_index = 0;
     uint32_t m_current_frame = 0;
     VkSwapchainKHR m_swapchain = VK_NULL_HANDLE;
+    VkSemaphore m_render_finished_semaphore = VK_NULL_HANDLE;
 
 public:
     GraphicsQueue(const Device &device);

@@ -11,8 +11,7 @@ GraphicsQueue::GraphicsQueue(const Device &device):
     m_graphics_queue(device.graphics_queue()),
     m_command_pool(create_command_pool()),
     m_command_buffers(create_command_buffers()),
-    m_image_available(create_semaphores()),
-    m_render_finished(create_semaphores()),
+    m_image_available(create_semaphores(Device::max_frames_in_flight)),
     m_in_flight_fences(create_fences())
 {
 }
@@ -24,11 +23,6 @@ GraphicsQueue::~GraphicsQueue()
     for (auto fence : m_in_flight_fences)
     {
         vkDestroyFence(m_device, fence, nullptr);
-    }
-
-    for (auto semaphore : m_render_finished)
-    {
-        vkDestroySemaphore(m_device, semaphore, nullptr);
     }
 
     for (auto semaphore : m_image_available)
@@ -76,11 +70,11 @@ std::vector<VkCommandBuffer> GraphicsQueue::create_command_buffers()
     return command_buffers;
 }
 
-std::vector<VkSemaphore> GraphicsQueue::create_semaphores()
+std::vector<VkSemaphore> GraphicsQueue::create_semaphores(size_t count)
 {
-    spdlog::info("Creating Semaphores");
+    spdlog::info("Creating {} Semaphores", count);
 
-    std::vector<VkSemaphore> semaphores(Device::max_frames_in_flight);
+    std::vector<VkSemaphore> semaphores(count);
     for (auto &semaphore : semaphores)
     {
         VkSemaphoreCreateInfo create_info {};
@@ -121,6 +115,7 @@ VkFramebuffer GraphicsQueue::prepare_framebuffer(
     const Framebuffers &framebuffers)
 {
     assert(m_swapchain == VK_NULL_HANDLE);
+    assert(m_render_finished_semaphore == VK_NULL_HANDLE);
 
     m_current_frame = current_frame;
     m_swapchain = swapchain;
@@ -146,10 +141,13 @@ VkFramebuffer GraphicsQueue::prepare_framebuffer(
     {
         return nullptr;
     }
+
     if (result != VK_SUCCESS && result != VK_SUBOPTIMAL_KHR)
     {
         throw std::runtime_error("Failed to acquire swap chain image");
     }
+
+    m_render_finished_semaphore = swapchain.render_finished(m_image_index);
 
     return framebuffers.get(m_image_index);
 }
@@ -194,7 +192,7 @@ void GraphicsQueue::submit_command() const
     submit_info.pWaitSemaphores = wait_semaphores;
     submit_info.pWaitDstStageMask = wait_stages;
 
-    VkSemaphore signal_semaphores[] = { m_render_finished[m_current_frame] };
+    VkSemaphore signal_semaphores[] = { m_render_finished_semaphore };
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = signal_semaphores;
 
@@ -214,12 +212,14 @@ bool GraphicsQueue::present_framebuffer()
 {
     assert(m_swapchain != VK_NULL_HANDLE);
     auto swapchain = m_swapchain;
+    auto render_finished_semaphore = m_render_finished_semaphore;
     m_swapchain = VK_NULL_HANDLE;
+    m_render_finished_semaphore = VK_NULL_HANDLE;
 
     VkPresentInfoKHR present_info {};
     present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-    VkSemaphore wait_semaphores[] = { m_render_finished[m_current_frame] };
+    VkSemaphore wait_semaphores[] = { render_finished_semaphore };
     present_info.waitSemaphoreCount = 1;
     present_info.pWaitSemaphores = wait_semaphores;
 

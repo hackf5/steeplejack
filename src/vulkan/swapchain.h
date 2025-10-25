@@ -15,12 +15,14 @@ private:
     vkb::Swapchain m_swapchain;
     const std::vector<VkImage> m_swapchain_images;
     const std::vector<VkImageView> m_swapchain_image_views;
+    const std::vector<VkSemaphore> m_render_finished;
     const VkViewport m_viewport;
     const VkRect2D m_scissor;
 
     vkb::Swapchain create_swapchain();
     VkViewport create_viewport();
     VkRect2D create_scissor();
+    std::vector<VkSemaphore> create_semaphores(size_t count);
 
 public:
     Swapchain(const Device &device);
@@ -47,6 +49,8 @@ public:
     const VkImage &image(size_t image_index) const { return m_swapchain_images[image_index]; }
 
     const VkImageView &image_view(size_t image_index) const { return m_swapchain_image_views[image_index]; }
+
+    VkSemaphore render_finished(size_t image_index) const { return m_render_finished[image_index]; }
 
     void clip(VkCommandBuffer command_buffer) const
     {

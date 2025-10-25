@@ -4,7 +4,6 @@
             "name": "MSYS2 UCRT",
             "includePath": [
                 "${workspaceFolder}/**",
-                "${workspaceFolder}/include",
                 "C:/msys64/ucrt64/include/**",
                 "C:/msys64/ucrt64/lib/gcc/**",
                 "${workspaceFolder}/build/ucrt/vcpkg_installed/x64-mingw-dynamic/include/**"
