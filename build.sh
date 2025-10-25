@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-UCRT_BUILD_DIR="${ROOT_DIR}/build-ucrt"
-WSL_BUILD_DIR="${ROOT_DIR}/build-wsl"
+UCRT_BUILD_DIR="${ROOT_DIR}/build/ucrt"
+WSL_BUILD_DIR="${ROOT_DIR}/build/wsl"
 
 CONFIG_ARGS=("$@")
 

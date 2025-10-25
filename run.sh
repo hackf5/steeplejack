@@ -3,8 +3,8 @@ set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 
-UCRT_BIN="${ROOT_DIR}/build-ucrt/steeplejack.exe"
-WSL_BIN="${ROOT_DIR}/build-wsl/steeplejack"
+UCRT_BIN="${ROOT_DIR}/build/ucrt/steeplejack.exe"
+WSL_BIN="${ROOT_DIR}/build/wsl/steeplejack"
 
 RUN_ARGS=("$@")
 

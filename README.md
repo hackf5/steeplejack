@@ -19,15 +19,15 @@ Requirements: CMake ≥ 3.24, Ninja, GCC (MSYS2 UCRT or WSL2), and the Vulkan SD
 ### MSYS2 UCRT64
 
 ```bash
-cmake -S . -B build-ucrt -G Ninja -D CMAKE_TOOLCHAIN_FILE=cmake/toolchains/msys2-ucrt.cmake
-cmake --build build-ucrt
+cmake -S . -B build/ucrt -G Ninja -D CMAKE_TOOLCHAIN_FILE=cmake/toolchains/msys2-ucrt.cmake
+cmake --build build/ucrt
 ```
 
 ### WSL2 (non-GPU)
 
 ```bash
-cmake -S . -B build-wsl -G Ninja -D CMAKE_TOOLCHAIN_FILE=cmake/toolchains/wsl2-gcc.cmake
-cmake --build build-wsl
+cmake -S . -B build/wsl -G Ninja -D CMAKE_TOOLCHAIN_FILE=cmake/toolchains/wsl2-gcc.cmake
+cmake --build build/wsl
 ```
 
 ### Convenience

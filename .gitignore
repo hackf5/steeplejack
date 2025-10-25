@@ -41,5 +41,4 @@
 *.dwo
 
 # build folders
-build-ucrt/
-build-wsl/
+build/
