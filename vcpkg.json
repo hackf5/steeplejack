@@ -15,7 +15,6 @@
     "vk-bootstrap",
     "glslang",
     "vulkan",
-    "volk",
     "vulkan-memory-allocator",
     "catch2"
   ]
