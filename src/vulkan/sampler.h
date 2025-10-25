@@ -4,7 +4,7 @@
 
 #include "device.h"
 
-namespace levin
+namespace steeplejack
 {
 class Sampler
 {

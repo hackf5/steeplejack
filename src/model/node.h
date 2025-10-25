@@ -14,7 +14,7 @@
 
 #include "mesh.h"
 
-namespace levin
+namespace steeplejack
 {
 class Node: NoCopyOrMove
 {

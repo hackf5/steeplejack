@@ -6,7 +6,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Gui::Gui(
     const Window &window,

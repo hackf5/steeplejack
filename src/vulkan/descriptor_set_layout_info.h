@@ -5,7 +5,7 @@
 
 #include <vulkan/vulkan.h>
 
-namespace levin
+namespace steeplejack
 {
 struct DescriptorSetLayoutInfo
 {

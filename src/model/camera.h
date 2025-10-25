@@ -13,7 +13,7 @@
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
 
-namespace levin
+namespace steeplejack
 {
 class Camera: NoCopyOrMove
 {

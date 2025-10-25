@@ -5,7 +5,7 @@
 #include <type_traits>
 #include <cstring>
 
-namespace levin
+namespace steeplejack
 {
 template <typename TIter>
 size_t total_bytes(TIter begin, TIter end)

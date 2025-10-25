@@ -15,7 +15,7 @@
 #include "util/memory.h"
 #include "util/no_copy_or_move.h"
 
-namespace levin
+namespace steeplejack
 {
 class GraphicsBuffers: NoCopyOrMove
 {

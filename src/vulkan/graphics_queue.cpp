@@ -4,7 +4,7 @@
 
 #include <spdlog/spdlog.h>
 
-using namespace levin;
+using namespace steeplejack;
 
 GraphicsQueue::GraphicsQueue(const Device &device):
     m_device(device),

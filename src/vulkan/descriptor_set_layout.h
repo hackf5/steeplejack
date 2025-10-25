@@ -10,7 +10,7 @@
 #include "vulkan/device.h"
 #include "descriptor_set_layout_info.h"
 
-namespace levin
+namespace steeplejack
 {
 class DescriptorSetLayout: NoCopyOrMove
 {

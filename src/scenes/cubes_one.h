@@ -12,7 +12,7 @@
 #include "vulkan/texture_factory.h"
 #include "vulkan/vertex.h"
 
-namespace levin
+namespace steeplejack
 {
 class CubesOne: public RenderScene
 {

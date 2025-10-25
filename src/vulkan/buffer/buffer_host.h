@@ -7,7 +7,7 @@
 #include "util/memory.h"
 #include "buffer.h"
 
-namespace levin
+namespace steeplejack
 {
 class BufferHost: public Buffer
 {

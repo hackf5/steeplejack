@@ -9,7 +9,7 @@
 #include "util/no_copy_or_move.h"
 #include "window.h"
 
-namespace levin
+namespace steeplejack
 {
 class Device: NoCopyOrMove
 {

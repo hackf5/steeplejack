@@ -4,7 +4,7 @@
 
 #include "buffer_host.h"
 
-namespace levin
+namespace steeplejack
 {
     class StagingBuffer: public BufferHost
     {

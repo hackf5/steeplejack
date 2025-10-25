@@ -10,7 +10,7 @@
 #include "vulkan/render_pass.h"
 #include "framerate.h"
 
-namespace levin
+namespace steeplejack
 {
 class Gui
 {

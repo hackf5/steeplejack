@@ -59,7 +59,7 @@ find_package(vk-bootstrap REQUIRED)
 find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
-# Source includes for levin headers
+# Source includes for steeplejack headers
 target_include_directories(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
 
 # Link common libs
@@ -75,8 +75,8 @@ target_link_libraries(steeplejack_engine
         ${CMAKE_DL_LIBS}
 )
 
-# Add levin sources (exclude any main.cpp)
-file(GLOB_RECURSE LEVIN_SOURCES CONFIGURE_DEPENDS
+# Add steeplejack sources (exclude any main.cpp)
+file(GLOB_RECURSE STEEPLEJACK_SOURCES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/src/vulkan/*.cpp
     ${PROJECT_SOURCE_DIR}/src/gui/*.cpp
     ${PROJECT_SOURCE_DIR}/src/model/*.cpp
@@ -84,8 +84,8 @@ file(GLOB_RECURSE LEVIN_SOURCES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/src/vulkan_*context*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_engine.cpp
 )
-list(REMOVE_ITEM LEVIN_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
-target_sources(steeplejack_engine PRIVATE ${LEVIN_SOURCES})
+list(REMOVE_ITEM STEEPLEJACK_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
+target_sources(steeplejack_engine PRIVATE ${STEEPLEJACK_SOURCES})
 target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/third_party/stb_image.cpp)
 
 

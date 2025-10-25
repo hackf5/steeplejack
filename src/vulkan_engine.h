@@ -7,7 +7,7 @@
 #include "vulkan_context.h"
 #include "scenes/render_scene.h"
 
-namespace levin
+namespace steeplejack
 {
 class VulkanEngine: NoCopyOrMove
 {

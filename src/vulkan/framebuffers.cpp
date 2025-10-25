@@ -5,7 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Framebuffers::Framebuffers(
     const Device &device,

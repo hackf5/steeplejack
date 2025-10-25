@@ -6,7 +6,7 @@
 #include "vulkan/descriptor_set_layout_builder.h"
 #include "vulkan_context.h"
 
-namespace levin
+namespace steeplejack
 {
 class VulkanContextBuilder: NoCopyOrMove
 {

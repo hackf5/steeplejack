@@ -6,7 +6,7 @@
 
 #include "util/no_copy_or_move.h"
 
-namespace levin
+namespace steeplejack
 {
 class Model: NoCopyOrMove
 {

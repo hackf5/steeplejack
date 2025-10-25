@@ -2,7 +2,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Multisampler::Multisampler(
   const Device &device,

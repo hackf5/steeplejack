@@ -21,7 +21,7 @@ int Application::run() {
 #endif
 
     try {
-        using namespace levin;
+        using namespace steeplejack;
 
         auto layout_builder = [](DescriptorSetLayoutBuilder &builder) {
             builder

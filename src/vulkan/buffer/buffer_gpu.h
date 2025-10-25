@@ -8,7 +8,7 @@
 #include "staging_buffer.h"
 #include "vulkan/adhoc_queues.h"
 
-namespace levin
+namespace steeplejack
 {
 class BufferGPU: public Buffer
 {

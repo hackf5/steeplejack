@@ -19,7 +19,7 @@
 #include "descriptor_set_layout.h"
 #include "graphics_pipeline.h"
 
-namespace levin
+namespace steeplejack
 {
 class Texture: public NoCopyOrMove
 {

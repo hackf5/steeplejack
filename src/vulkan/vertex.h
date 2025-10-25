@@ -7,7 +7,7 @@
 #include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
 
-namespace levin
+namespace steeplejack
 {
 enum class VertexComponent { Position, UV, Color };
 

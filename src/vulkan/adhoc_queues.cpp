@@ -2,7 +2,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 AdhocQueue::AdhocQueue(
     const Device &device,
@@ -126,4 +126,3 @@ void AdhocQueue::submit_and_wait() const
         throw std::runtime_error("Failed to wait for queue to become idle");
     }
 }
-

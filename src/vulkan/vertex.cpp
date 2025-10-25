@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-using namespace levin;
+using namespace steeplejack;
 
 const std::vector<VertexComponent> Vertex::ALL_COMPONENTS =
 {

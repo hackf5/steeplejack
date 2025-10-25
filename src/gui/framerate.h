@@ -3,7 +3,7 @@
 #include <chrono>
 #include <cmath>
 
-namespace levin
+namespace steeplejack
 {
 template <uint16_t Window>
 class RollingAverage

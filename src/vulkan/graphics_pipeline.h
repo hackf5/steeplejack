@@ -13,7 +13,7 @@
 #include "render_pass.h"
 #include "shader_module.h"
 
-namespace levin
+namespace steeplejack
 {
 class GraphicsPipeline: NoCopyOrMove
 {

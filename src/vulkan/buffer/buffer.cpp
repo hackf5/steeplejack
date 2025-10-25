@@ -2,7 +2,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Buffer::Buffer(
     const Device &device,

@@ -9,7 +9,7 @@
 #include "vulkan/device.h"
 #include "buffer_host.h"
 
-namespace levin
+namespace steeplejack
 {
 class UniformBuffer: NoCopyOrMove
 {

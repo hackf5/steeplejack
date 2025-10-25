@@ -10,7 +10,7 @@
 #include "descriptor_set_layout.h"
 #include "descriptor_set_layout_info.h"
 
-namespace levin
+namespace steeplejack
 {
 class DescriptorSetLayoutBuilder
 {

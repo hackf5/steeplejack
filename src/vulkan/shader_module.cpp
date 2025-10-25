@@ -4,7 +4,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 ShaderModule::ShaderModule(
     const Device &device,

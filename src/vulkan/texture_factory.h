@@ -11,7 +11,7 @@
 #include "vulkan/adhoc_queues.h"
 #include "vulkan/texture.h"
 
-namespace levin
+namespace steeplejack
 {
 class TextureFactory
 {

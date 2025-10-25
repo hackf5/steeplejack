@@ -2,7 +2,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Swapchain::Swapchain(const Device &device):
     m_device(device),

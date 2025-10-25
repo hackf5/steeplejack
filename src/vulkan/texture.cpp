@@ -5,7 +5,7 @@
 
 #include "buffer/staging_buffer.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Texture::Texture(
     const Device &device,

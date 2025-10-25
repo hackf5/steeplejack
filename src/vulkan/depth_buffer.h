@@ -10,7 +10,7 @@
 #include "image_view.h"
 #include "swapchain.h"
 
-namespace levin
+namespace steeplejack
 {
 class DepthBuffer: public NoCopyOrMove
 {

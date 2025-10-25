@@ -7,7 +7,7 @@
 #include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 
-namespace levin
+namespace steeplejack
 {
 class Buffer: NoCopyOrMove
 {

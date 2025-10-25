@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vulkan/vulkan.h>
 
-namespace levin
+namespace steeplejack
 {
 class Primitive
 {

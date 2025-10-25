@@ -37,9 +37,12 @@
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "C_Cpp.default.compileCommands": "${workspaceFolder}/build/ucrt/debug/compile_commands.json",
     "cSpell.words": [
+      "GLFW",
       "GLSL",
       "HLSL",
+      "msaa",
       "MSYS",
+      "Multisampler",
       "SPIR",
       "swapchain",
       "ucrt",

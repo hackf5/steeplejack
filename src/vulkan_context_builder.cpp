@@ -2,7 +2,7 @@
 
 #include <stdexcept>
 
-using namespace levin;
+using namespace steeplejack;
 
 VulkanContextBuilder &VulkanContextBuilder::add_window(int width, int height, const std::string &title)
 {

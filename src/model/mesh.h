@@ -14,7 +14,7 @@
 
 #include "primitive.h"
 
-namespace levin
+namespace steeplejack
 {
 class Mesh: NoCopyOrMove
 {

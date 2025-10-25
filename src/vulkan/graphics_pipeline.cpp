@@ -6,7 +6,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 GraphicsPipeline::GraphicsPipeline(
     const Device &device,

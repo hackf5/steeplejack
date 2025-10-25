@@ -5,7 +5,7 @@
 #include "device.h"
 #include "swapchain.h"
 
-namespace levin
+namespace steeplejack
 {
 class RenderPass: NoCopyOrMove
 {

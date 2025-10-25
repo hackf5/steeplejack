@@ -7,7 +7,7 @@
 #include "camera.h"
 #include "model.h"
 
-namespace levin
+namespace steeplejack
 {
 class Scene: public NoCopyOrMove
 {

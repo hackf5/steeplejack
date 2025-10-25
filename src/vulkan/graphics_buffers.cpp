@@ -2,7 +2,7 @@
 
 #include <type_traits>
 
-using namespace levin;
+using namespace steeplejack;
 
 const VkDeviceSize vertex_offsets[] = { 0 };
 

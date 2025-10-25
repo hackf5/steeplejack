@@ -5,7 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 RenderPass::RenderPass(
     const Device &device,

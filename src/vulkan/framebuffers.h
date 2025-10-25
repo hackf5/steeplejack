@@ -9,7 +9,7 @@
 #include "render_pass.h"
 #include "swapchain.h"
 
-namespace levin
+namespace steeplejack
 {
 class Framebuffers: NoCopyOrMove
 {

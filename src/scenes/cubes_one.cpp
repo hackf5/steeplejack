@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace levin;
+using namespace steeplejack;
 
 CubesOne::vertexes_t CubesOne::create_vertexes()
 {

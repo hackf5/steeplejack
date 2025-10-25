@@ -5,7 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 Device::Device(
     const Window &window,
@@ -36,7 +36,7 @@ vkb::Instance Device::create_instance(bool enable_validation_layers)
     spdlog::info("Creating Vulkan Instance");
 
     vkb::InstanceBuilder builder;
-    auto inst_ret = builder.set_app_name("Levin")
+    auto inst_ret = builder.set_app_name("Steeplejack")
         .request_validation_layers(enable_validation_layers)
         .use_default_debug_messenger()
         .build();

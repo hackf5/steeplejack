@@ -6,7 +6,7 @@
 #include "device.h"
 #include "image.h"
 
-namespace levin
+namespace steeplejack
 {
 class ImageView: public NoCopyOrMove
 {

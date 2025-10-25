@@ -9,7 +9,7 @@
 #include "vulkan/graphics_pipeline.h"
 #include "vulkan/texture_factory.h"
 
-namespace levin
+namespace steeplejack
 {
 class George: public RenderScene
 {

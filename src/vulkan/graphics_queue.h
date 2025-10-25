@@ -8,7 +8,7 @@
 #include "swapchain.h"
 #include "framebuffers.h"
 
-namespace levin
+namespace steeplejack
 {
 class GraphicsQueue: NoCopyOrMove
 {

@@ -3,9 +3,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-using namespace levin;
+using namespace steeplejack;
 
-const std::vector<levin::Vertex> vertexes = {
+const std::vector<steeplejack::Vertex> vertexes = {
     {
         .pos = {-0.5f, -0.5f, 0.0f},
         .uv = {1.0f, 0.0f},
@@ -28,7 +28,7 @@ const std::vector<levin::Vertex> vertexes = {
     },
 };
 
-const std::vector<levin::Vertex::index_t> indexes = {
+const std::vector<steeplejack::Vertex::index_t> indexes = {
     0, 1, 2, 2, 3, 0,
     0, 3, 2, 2, 1, 0,
 };

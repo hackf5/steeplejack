@@ -5,7 +5,7 @@
 
 #include "spdlog/spdlog.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 DescriptorSetLayout::DescriptorSetLayout(
     const Device &device,

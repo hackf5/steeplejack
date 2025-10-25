@@ -9,7 +9,7 @@
 #include "vulkan_engine.h"
 #include "scenes/george.h"
 
-using namespace levin;
+using namespace steeplejack;
 
 VulkanEngine::VulkanEngine(
     std::unique_ptr<VulkanContext> context)

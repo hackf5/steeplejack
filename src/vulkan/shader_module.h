@@ -5,7 +5,7 @@
 #include "util/no_copy_or_move.h"
 #include "device.h"
 
-namespace levin
+namespace steeplejack
 {
 class ShaderModule: NoCopyOrMove
 {

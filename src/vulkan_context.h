@@ -24,7 +24,7 @@
 
 #include "gui/gui.h"
 
-namespace levin
+namespace steeplejack
 {
 class VulkanContext: NoCopyOrMove
 {

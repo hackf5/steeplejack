@@ -4,7 +4,7 @@
 
 #include <spdlog/spdlog.h>
 
-using namespace levin;
+using namespace steeplejack;
 
 Window::Window(int width, int height, const std::string &title):
     m_width(width),
