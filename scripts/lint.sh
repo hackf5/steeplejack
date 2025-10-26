@@ -60,12 +60,17 @@ fi
 # Forward options to clang-tidy: -quiet and disable compiler warnings
 cmd+=( -- -quiet -extra-arg=-w )
 
-# Run and strip tidy's suppression hints to reduce noise
+# Run and simplify output: drop noise, show filenames instead of long runner lines
 {
   "${cmd[@]}" "${FILES[@]}"
-} 2>&1 | sed -u \
-  -e '/^Suppressed [0-9]\+ warnings/d' \
-  -e '/^Use -header-filter=.*/d' \
-  -e '/^[0-9]\+ warnings generated\.$/d'
+} 2>&1 | awk '
+  { sub(/\r$/, ""); }
+  /:[0-9]+:[0-9]+: (warning|error): / { print "\xE2\x9D\x8C", $0; next }
+  /^Suppressed [0-9]+ warnings/ { next }
+  /^Use -header-filter=/ { next }
+  /^[[:space:]]*[0-9]+ warnings generated\.$/ { next }
+  /^\[/ { print $NF; next }
+  { print }
+'
 
 echo "clang-tidy ${MODE} completed."
