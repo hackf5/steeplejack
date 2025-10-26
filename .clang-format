@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 Language: Cpp
-Standard: c++20
+Standard: Latest
 
 # Line width and indentation
 ColumnLimit: 120
@@ -37,4 +37,3 @@ NamespaceIndentation: None
 
 # ObjC/JS/etc excluded
 DisableFormat: false
-
