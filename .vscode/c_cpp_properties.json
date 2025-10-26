@@ -6,7 +6,7 @@
                 "${workspaceFolder}/**",
                 "C:/msys64/ucrt64/include/**",
                 "C:/msys64/ucrt64/lib/gcc/**",
-                "${workspaceFolder}/build/ucrt/vcpkg_installed/x64-mingw-dynamic/include/**"
+                "${workspaceFolder}/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/**"
             ],
             "defines": [
                 "_DEBUG",

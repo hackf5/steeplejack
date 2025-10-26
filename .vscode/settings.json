@@ -47,7 +47,8 @@
         "swapchain",
         "swapchains",
         "ucrt",
-        "vcpkg"
+        "vcpkg",
+        "Woxel"
     ],
     "chat.tools.terminal.terminalProfile.windows": {
         "path": "cmd.exe",
