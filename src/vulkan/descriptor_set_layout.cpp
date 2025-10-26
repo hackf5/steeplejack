@@ -1,19 +1,17 @@
 #include "descriptor_set_layout.h"
 
+#include "spdlog/spdlog.h"
+
 #include <array>
 #include <stdexcept>
 
-#include "spdlog/spdlog.h"
-
 using namespace steeplejack;
 
-DescriptorSetLayout::DescriptorSetLayout(
-    const Device &device,
-    std::vector<DescriptorSetLayoutInfo> layout_infos):
+DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::vector<DescriptorSetLayoutInfo> layout_infos) :
     m_device(device),
     m_layout_infos(layout_infos),
     m_descriptor_set_layout(create_descriptor_set_layout()),
-    m_descriptor_set_layouts({ m_descriptor_set_layout }),
+    m_descriptor_set_layouts({m_descriptor_set_layout}),
     m_write_descriptor_sets(create_write_descriptor_sets())
 {
 }
@@ -26,7 +24,7 @@ DescriptorSetLayout::~DescriptorSetLayout()
 VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
 {
     std::vector<VkDescriptorSetLayoutBinding> bindings;
-    for (const auto &info : m_layout_infos)
+    for (const auto& info : m_layout_infos)
     {
         VkDescriptorSetLayoutBinding binding = {};
         binding.binding = info.binding;
@@ -55,7 +53,7 @@ VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
 std::vector<VkWriteDescriptorSet> DescriptorSetLayout::create_write_descriptor_sets()
 {
     std::vector<VkWriteDescriptorSet> write_descriptor_sets;
-    for (const auto &info : m_layout_infos)
+    for (const auto& info : m_layout_infos)
     {
         VkWriteDescriptorSet write_descriptor_set = {};
         write_descriptor_set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;

@@ -2,14 +2,18 @@
 
 #include <array>
 #include <cstdint>
-#include <vector>
-
-#include <vulkan/vulkan.h>
 #include <glm/glm.hpp>
+#include <vector>
+#include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-enum class VertexComponent { Position, UV, Color };
+enum class VertexComponent
+{
+    Position,
+    UV,
+    Color
+};
 
 struct Vertex
 {
@@ -24,27 +28,21 @@ struct Vertex
     glm::vec4 color;
 };
 
-
 struct VertexInputState
 {
     VkVertexInputBindingDescription binding;
     std::vector<VkVertexInputAttributeDescription> attributes;
     VkPipelineVertexInputStateCreateInfo pipeline;
 
-    VertexInputState(
-        uint32_t binding,
-        const std::vector<VertexComponent> components);
+    VertexInputState(uint32_t binding, const std::vector<VertexComponent> components);
 
-private:
+  private:
     VkVertexInputBindingDescription create_binding(uint32_t binding);
 
-    VkVertexInputAttributeDescription create_attribute(
-        uint32_t location,
-        VertexComponent component);
+    VkVertexInputAttributeDescription create_attribute(uint32_t location, VertexComponent component);
 
-    std::vector<VkVertexInputAttributeDescription> create_attributes(
-        const std::vector<VertexComponent> components);
+    std::vector<VkVertexInputAttributeDescription> create_attributes(const std::vector<VertexComponent> components);
 
     VkPipelineVertexInputStateCreateInfo create_pipeline();
 };
-}
+} // namespace steeplejack

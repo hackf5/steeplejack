@@ -4,7 +4,7 @@
 
 using namespace steeplejack;
 
-Swapchain::Swapchain(const Device &device):
+Swapchain::Swapchain(const Device& device) :
     m_device(device),
     m_swapchain(create_swapchain()),
     m_swapchain_images(m_swapchain.get_images().value()),
@@ -36,11 +36,9 @@ vkb::Swapchain Swapchain::create_swapchain()
 {
     spdlog::info("Creating Swapchain");
 
-    vkb::SwapchainBuilder swapchain_builder { m_device };
+    vkb::SwapchainBuilder swapchain_builder{m_device};
 
-    auto swapchain_ret = swapchain_builder
-        .set_desired_present_mode(VK_PRESENT_MODE_MAILBOX_KHR)
-        .build();
+    auto swapchain_ret = swapchain_builder.set_desired_present_mode(VK_PRESENT_MODE_MAILBOX_KHR).build();
     if (!swapchain_ret)
     {
         throw std::runtime_error("Failed to create swapchain: " + swapchain_ret.error().message());
@@ -57,7 +55,7 @@ vkb::Swapchain Swapchain::create_swapchain()
 
 VkViewport Swapchain::create_viewport()
 {
-    VkViewport viewport {};
+    VkViewport viewport{};
     viewport.x = 0.0f;
     viewport.y = 0.0f;
     viewport.width = static_cast<float>(m_swapchain.extent.width);
@@ -70,8 +68,8 @@ VkViewport Swapchain::create_viewport()
 
 VkRect2D Swapchain::create_scissor()
 {
-    VkRect2D scissor {};
-    scissor.offset = { 0, 0 };
+    VkRect2D scissor{};
+    scissor.offset = {0, 0};
     scissor.extent = m_swapchain.extent;
 
     return scissor;
@@ -82,9 +80,9 @@ std::vector<VkSemaphore> Swapchain::create_semaphores(size_t count)
     spdlog::info("Creating {} Semaphores", count);
 
     std::vector<VkSemaphore> semaphores(count);
-    for (auto &semaphore : semaphores)
+    for (auto& semaphore : semaphores)
     {
-        VkSemaphoreCreateInfo create_info {};
+        VkSemaphoreCreateInfo create_info{};
         create_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
         if (vkCreateSemaphore(m_device, &create_info, nullptr, &semaphore) != VK_SUCCESS)

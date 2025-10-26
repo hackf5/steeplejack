@@ -1,6 +1,7 @@
 #include "application.h"
 
-int main() {
+int main()
+{
     steeplejack::Application app;
     return app.run();
 }

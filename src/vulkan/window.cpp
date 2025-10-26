@@ -1,14 +1,11 @@
 #include "window.h"
 
-#include <stdexcept>
-
 #include <spdlog/spdlog.h>
+#include <stdexcept>
 
 using namespace steeplejack;
 
-Window::Window(int width, int height, const std::string &title):
-    m_width(width),
-    m_height(height)
+Window::Window(int width, int height, const std::string& title) : m_width(width), m_height(height)
 {
     spdlog::info("Creating Window Components");
 
@@ -22,7 +19,7 @@ Window::Window(int width, int height, const std::string &title):
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         m_window = glfwCreateWindow(m_width, m_height, title.c_str(), nullptr, nullptr);
     }
-    catch (const std::exception &e)
+    catch (const std::exception& e)
     {
         this->~Window();
         throw;
@@ -36,9 +33,9 @@ Window::~Window()
     glfwTerminate();
 }
 
-void Window::framebuffer_resize_callback(GLFWwindow *window, int width, int height)
+void Window::framebuffer_resize_callback(GLFWwindow* window, int width, int height)
 {
-    auto app = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
+    auto app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
     if (app->m_framebuffer_resize_callback)
     {

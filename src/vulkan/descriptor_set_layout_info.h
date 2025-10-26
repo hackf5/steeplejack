@@ -2,7 +2,6 @@
 
 #include <cstdint>
 #include <vector>
-
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -13,4 +12,4 @@ struct DescriptorSetLayoutInfo
     const VkShaderStageFlags stage_flags;
     const uint32_t binding;
 };
-}
+} // namespace steeplejack

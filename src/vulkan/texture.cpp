@@ -1,17 +1,15 @@
 #include "texture.h"
 
-#include "stb_image.h"
-#include "spdlog/spdlog.h"
-
 #include "buffer/staging_buffer.h"
+#include "spdlog/spdlog.h"
+#include "stb_image.h"
 
 using namespace steeplejack;
 
-Texture::Texture(
-    const Device &device,
-    const Sampler &sampler,
-    const AdhocQueues &adhoc_queues,
-    const std::string &name):
+Texture::Texture(const Device& device,
+                 const Sampler& sampler,
+                 const AdhocQueues& adhoc_queues,
+                 const std::string& name) :
     m_device(device),
     m_name(name),
     m_image(create_image(adhoc_queues)),
@@ -20,10 +18,7 @@ Texture::Texture(
 {
 }
 
-std::unique_ptr<Buffer> Texture::create_staging_buffer(
-    const std::string &name,
-    int &width,
-    int &height)
+std::unique_ptr<Buffer> Texture::create_staging_buffer(const std::string& name, int& width, int& height)
 {
     auto file_name = "assets/textures/" + name;
 
@@ -36,47 +31,37 @@ std::unique_ptr<Buffer> Texture::create_staging_buffer(
         throw std::runtime_error("Failed to load image " + file_name + ": " + stbi_failure_reason());
     }
 
-    auto staging_buffer = std::make_unique<StagingBuffer>(
-        m_device,
-        pixels,
-        pixels + (width * height * channels));
+    auto staging_buffer = std::make_unique<StagingBuffer>(m_device, pixels, pixels + (width * height * channels));
 
     stbi_image_free(pixels);
 
     return staging_buffer;
 }
 
-std::unique_ptr<Image> Texture::create_image(const AdhocQueues &adhoc_queues)
+std::unique_ptr<Image> Texture::create_image(const AdhocQueues& adhoc_queues)
 {
     int width, height;
     auto staging_buffer = create_staging_buffer(m_name, width, height);
-    auto image = std::make_unique<Image>(
-        m_device,
-        width,
-        height,
-        VK_FORMAT_R8G8B8A8_SRGB,
-        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-        VK_IMAGE_TILING_OPTIMAL);
+    auto image = std::make_unique<Image>(m_device,
+                                         width,
+                                         height,
+                                         VK_FORMAT_R8G8B8A8_SRGB,
+                                         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+                                         VK_IMAGE_TILING_OPTIMAL);
 
-    transition_image_layout(
-        adhoc_queues,
-        VK_IMAGE_LAYOUT_UNDEFINED,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+    transition_image_layout(adhoc_queues, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
     copy_staging_buffer_to_image(*staging_buffer, adhoc_queues);
 
     transition_image_layout(
-        adhoc_queues,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        adhoc_queues, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     return image;
 }
 
-void Texture::transition_image_layout(
-    const AdhocQueues &adhoc_queues,
-    VkImageLayout old_layout,
-    VkImageLayout new_layout)
+void Texture::transition_image_layout(const AdhocQueues& adhoc_queues,
+                                      VkImageLayout old_layout,
+                                      VkImageLayout new_layout)
 {
     VkCommandBuffer command_buffer = adhoc_queues.graphics().begin();
 
@@ -96,8 +81,7 @@ void Texture::transition_image_layout(
     VkPipelineStageFlags source_stage;
     VkPipelineStageFlags destination_stage;
 
-    if (old_layout == VK_IMAGE_LAYOUT_UNDEFINED
-        && new_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
+    if (old_layout == VK_IMAGE_LAYOUT_UNDEFINED && new_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
     {
         barrier.srcAccessMask = 0;
         barrier.dstAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
@@ -105,8 +89,8 @@ void Texture::transition_image_layout(
         source_stage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
         destination_stage = VK_PIPELINE_STAGE_TRANSFER_BIT;
     }
-    else if (old_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL
-        && new_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    else if (old_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
+             new_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
     {
         barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
         barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -119,24 +103,12 @@ void Texture::transition_image_layout(
         throw std::invalid_argument("Unsupported layout transition");
     }
 
-    vkCmdPipelineBarrier(
-        command_buffer,
-        source_stage,
-        destination_stage,
-        0,
-        0,
-        nullptr,
-        0,
-        nullptr,
-        1,
-        &barrier);
+    vkCmdPipelineBarrier(command_buffer, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
 
     adhoc_queues.graphics().submit_and_wait();
 }
 
-void Texture::copy_staging_buffer_to_image(
-    const Buffer &staging_buffer,
-    const AdhocQueues &adhoc_queues)
+void Texture::copy_staging_buffer_to_image(const Buffer& staging_buffer, const AdhocQueues& adhoc_queues)
 {
     VkCommandBuffer command_buffer = adhoc_queues.transfer().begin();
 
@@ -164,18 +136,12 @@ void Texture::copy_staging_buffer_to_image(
     region.imageOffset = offset;
     region.imageExtent = extent;
 
-    vkCmdCopyBufferToImage(
-        command_buffer,
-        staging_buffer,
-        *m_image,
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        1,
-        &region);
+    vkCmdCopyBufferToImage(command_buffer, staging_buffer, *m_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
     adhoc_queues.transfer().submit_and_wait();
 }
 
-VkDescriptorImageInfo Texture::create_image_descriptor_info(const Sampler &sampler)
+VkDescriptorImageInfo Texture::create_image_descriptor_info(const Sampler& sampler)
 {
     VkDescriptorImageInfo image_info = {};
     image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;

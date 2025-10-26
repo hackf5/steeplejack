@@ -1,20 +1,18 @@
 #include "graphics_pipeline.h"
 
-#include <array>
-
+#include "spdlog/spdlog.h"
 #include "vertex.h"
 
-#include "spdlog/spdlog.h"
+#include <array>
 
 using namespace steeplejack;
 
-GraphicsPipeline::GraphicsPipeline(
-    const Device &device,
-    DescriptorSetLayout &descriptor_set_layout,
-    const Swapchain &swapchain,
-    const RenderPass &render_pass,
-    const std::string &vertex_shader,
-    const std::string &fragment_shader):
+GraphicsPipeline::GraphicsPipeline(const Device& device,
+                                   DescriptorSetLayout& descriptor_set_layout,
+                                   const Swapchain& swapchain,
+                                   const RenderPass& render_pass,
+                                   const std::string& vertex_shader,
+                                   const std::string& fragment_shader) :
     m_device(device),
     m_descriptor_set_layout(descriptor_set_layout),
     m_pipeline_layout(create_pipeline_layout(descriptor_set_layout)),
@@ -30,8 +28,7 @@ GraphicsPipeline::~GraphicsPipeline()
     vkDestroyPipelineLayout(m_device, m_pipeline_layout, nullptr);
 }
 
-VkPipelineLayout GraphicsPipeline::create_pipeline_layout(
-    const DescriptorSetLayout &descriptor_set_layout)
+VkPipelineLayout GraphicsPipeline::create_pipeline_layout(const DescriptorSetLayout& descriptor_set_layout)
 {
     spdlog::info("Creating Graphics Pipeline Layout");
 
@@ -52,11 +49,10 @@ VkPipelineLayout GraphicsPipeline::create_pipeline_layout(
     return pipeline_layout;
 }
 
-VkPipeline GraphicsPipeline::create_pipeline(
-    const Swapchain &swapchain,
-    const RenderPass &render_pass,
-    const std::string &vertex_shader,
-    const std::string &fragment_shader)
+VkPipeline GraphicsPipeline::create_pipeline(const Swapchain& swapchain,
+                                             const RenderPass& render_pass,
+                                             const std::string& vertex_shader,
+                                             const std::string& fragment_shader)
 {
     spdlog::info("Creating Graphics Pipeline");
 
@@ -102,9 +98,8 @@ VkPipeline GraphicsPipeline::create_pipeline(
     return pipeline;
 }
 
-std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_stages(
-    const ShaderModule &vertex_shader,
-    const ShaderModule &fragment_shader)
+std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_stages(const ShaderModule& vertex_shader,
+                                                                                    const ShaderModule& fragment_shader)
 {
     VkPipelineShaderStageCreateInfo vert_stage_info = {};
     vert_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -118,7 +113,7 @@ std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_sta
     frag_stage_info.module = fragment_shader;
     frag_stage_info.pName = "main";
 
-    return { vert_stage_info, frag_stage_info };
+    return {vert_stage_info, frag_stage_info};
 }
 
 VkPipelineInputAssemblyStateCreateInfo GraphicsPipeline::create_input_assembly_state()
@@ -131,7 +126,7 @@ VkPipelineInputAssemblyStateCreateInfo GraphicsPipeline::create_input_assembly_s
     return result;
 }
 
-VkPipelineViewportStateCreateInfo GraphicsPipeline::create_viewport_state(const Swapchain &swapchain)
+VkPipelineViewportStateCreateInfo GraphicsPipeline::create_viewport_state(const Swapchain& swapchain)
 {
     VkPipelineViewportStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -172,16 +167,14 @@ VkPipelineColorBlendAttachmentState GraphicsPipeline::create_color_blend_attachm
 {
     VkPipelineColorBlendAttachmentState result = {};
     result.blendEnable = VK_FALSE;
-    result.colorWriteMask = VK_COLOR_COMPONENT_R_BIT
-        | VK_COLOR_COMPONENT_G_BIT
-        | VK_COLOR_COMPONENT_B_BIT
-        | VK_COLOR_COMPONENT_A_BIT;
+    result.colorWriteMask =
+        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
 
     return result;
 }
 
-VkPipelineColorBlendStateCreateInfo GraphicsPipeline::create_color_blend_state(
-    const VkPipelineColorBlendAttachmentState &color_blend_attachment)
+VkPipelineColorBlendStateCreateInfo
+GraphicsPipeline::create_color_blend_state(const VkPipelineColorBlendAttachmentState& color_blend_attachment)
 {
     VkPipelineColorBlendStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -199,15 +192,11 @@ VkPipelineColorBlendStateCreateInfo GraphicsPipeline::create_color_blend_state(
 
 std::vector<VkDynamicState> GraphicsPipeline::create_dynamic_states()
 {
-    return
-    {
-        VK_DYNAMIC_STATE_VIEWPORT,
-        VK_DYNAMIC_STATE_SCISSOR
-    };
+    return {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 }
 
-VkPipelineDynamicStateCreateInfo GraphicsPipeline::create_dynamic_state(
-    const std::vector<VkDynamicState> &dynamic_states)
+VkPipelineDynamicStateCreateInfo
+GraphicsPipeline::create_dynamic_state(const std::vector<VkDynamicState>& dynamic_states)
 {
     VkPipelineDynamicStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -240,7 +229,6 @@ PFN_vkCmdPushDescriptorSetKHR GraphicsPipeline::fetch_vkCmdPushDescriptorSetKHR(
     if (!result)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");
-
     }
 
     return result;

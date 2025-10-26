@@ -1,6 +1,6 @@
 BasedOnStyle: LLVM
 Language: Cpp
-Standard: Latest
+Standard: c++20
 
 # Line width and indentation
 ColumnLimit: 120

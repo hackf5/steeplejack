@@ -36,6 +36,9 @@
     ],
     "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
     "C_Cpp.default.compileCommands": "${workspaceFolder}/build/ucrt/debug/compile_commands.json",
+    "C_Cpp.formatting": "clangFormat",
+    "C_Cpp.clang_format_style": "file",
+    "C_Cpp.clang_format_path": "C:\\msys64\\ucrt64\\bin\\clang-format.exe",
     "cSpell.words": [
         "GLFW",
         "GLSL",

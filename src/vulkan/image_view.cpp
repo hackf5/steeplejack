@@ -4,14 +4,8 @@
 
 using namespace steeplejack;
 
-ImageView::ImageView(
-    const Device &device,
-    const Image &image,
-    VkImageAspectFlags aspect_mask):
-    m_device(device),
-    m_image(image),
-    m_aspect_mask(aspect_mask),
-    m_image_view(create_image_view())
+ImageView::ImageView(const Device& device, const Image& image, VkImageAspectFlags aspect_mask) :
+    m_device(device), m_image(image), m_aspect_mask(aspect_mask), m_image_view(create_image_view())
 {
 }
 

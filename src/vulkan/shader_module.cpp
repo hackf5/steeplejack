@@ -1,17 +1,13 @@
 #include "shader_module.h"
 
-#include <fstream>
-
 #include "spdlog/spdlog.h"
+
+#include <fstream>
 
 using namespace steeplejack;
 
-ShaderModule::ShaderModule(
-    const Device &device,
-    const std::string &name):
-    m_device(device),
-    m_name(name),
-    m_shader_module(create_shader_module())
+ShaderModule::ShaderModule(const Device& device, const std::string& name) :
+    m_device(device), m_name(name), m_shader_module(create_shader_module())
 {
 }
 
@@ -21,7 +17,7 @@ ShaderModule::~ShaderModule()
     vkDestroyShaderModule(m_device, m_shader_module, nullptr);
 }
 
-std::vector<char> ShaderModule::read_file(const std::string &name)
+std::vector<char> ShaderModule::read_file(const std::string& name)
 {
     auto file_name = "shaders/" + name + ".spv";
     std::ifstream file(file_name, std::ios::ate | std::ios::binary);
@@ -47,10 +43,10 @@ VkShaderModule ShaderModule::create_shader_module()
 
     auto code = read_file(m_name);
 
-    VkShaderModuleCreateInfo shader_module_info {};
+    VkShaderModuleCreateInfo shader_module_info{};
     shader_module_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
     shader_module_info.codeSize = code.size();
-    shader_module_info.pCode = reinterpret_cast<const uint32_t *>(code.data());
+    shader_module_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
     VkShaderModule shader_module;
     if (vkCreateShaderModule(m_device, &shader_module_info, nullptr, &shader_module) != VK_SUCCESS)

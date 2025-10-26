@@ -1,16 +1,12 @@
 #include "sampler.h"
 
-#include <stdexcept>
-
 #include "spdlog/spdlog.h"
+
+#include <stdexcept>
 
 using namespace steeplejack;
 
-Sampler::Sampler(const Device &device):
-    m_device(device),
-    m_sampler(create_sampler())
-{
-}
+Sampler::Sampler(const Device& device) : m_device(device), m_sampler(create_sampler()) {}
 
 Sampler::~Sampler()
 {

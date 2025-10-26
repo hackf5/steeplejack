@@ -4,9 +4,7 @@
 
 using namespace steeplejack;
 
-AdhocQueue::AdhocQueue(
-    const Device &device,
-    QueueFamily family):
+AdhocQueue::AdhocQueue(const Device& device, QueueFamily family) :
     m_device(device),
     m_queue(get_queue(family)),
     m_command_pool(create_command_pool(family)),

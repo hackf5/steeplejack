@@ -1,10 +1,9 @@
 #include "cubes_one.h"
 
 #include <functional>
-#include <numeric>
-
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <numeric>
 
 using namespace steeplejack;
 
@@ -22,9 +21,9 @@ CubesOne::vertexes_t CubesOne::create_vertexes()
 CubesOne::indexes_t CubesOne::create_indexes()
 {
     return {
-        0, 2, 1, 2, 3, 1, // bottom
-        4, 5, 6, 6, 5, 7, // top
-        8, 10, 9, 10, 11, 9, // front
+        0,  2,  1,  2,  3,  1,  // bottom
+        4,  5,  6,  6,  5,  7,  // top
+        8,  10, 9,  10, 11, 9,  // front
         13, 14, 12, 13, 15, 14, // back
         17, 18, 16, 17, 19, 18, // left
         20, 22, 21, 22, 23, 21, // right
@@ -39,7 +38,7 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
     CubesOne::face_t result;
     for (uint32_t vx = 0; vx < VERTEXES_PER_FACE; vx++)
     {
-        auto &vertex = result[vx];
+        auto& vertex = result[vx];
 
         vertex.pos = {
             (vx & 1) ? max : min,
@@ -77,11 +76,7 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
     return result;
 }
 
-
-void CubesOne::load(
-    const Device &device,
-    TextureFactory &texture_factory,
-    GraphicsBuffers &graphics_buffers)
+void CubesOne::load(const Device& device, TextureFactory& texture_factory, GraphicsBuffers& graphics_buffers)
 {
     texture_factory.clear();
     texture_factory.load_texture("george", "george.png");
@@ -89,45 +84,37 @@ void CubesOne::load(
     graphics_buffers.load_vertexes(m_vertexes);
     graphics_buffers.load_indexes(m_indexes);
 
-    std::vector<Primitive> primitives = {
-        {0, static_cast<uint32_t>(m_indexes.size())}
-    };
+    std::vector<Primitive> primitives = {{0, static_cast<uint32_t>(m_indexes.size())}};
 
     std::vector<Primitive> empty = {};
 
-    auto &root_node = m_scene.model().root_node();
-    auto &child1 = root_node.add_child();
-    child1.add_child(std::make_unique<Mesh>(
-        device,
-        primitives,
-        texture_factory["george"]));
+    auto& root_node = m_scene.model().root_node();
+    auto& child1 = root_node.add_child();
+    child1.add_child(std::make_unique<Mesh>(device, primitives, texture_factory["george"]));
 
-    auto &camera = m_scene.camera();
+    auto& camera = m_scene.camera();
     camera.target() = glm::vec3(0.0f, 0.0f, 0.0f);
     camera.clip_far() = 10.0f;
     camera.clip_near() = 0.1f;
     camera.fov() = 60.0f;
 }
 
-void CubesOne::update(
-    uint32_t frame_index,
-    float aspect_ratio,
-    float time)
+void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
 {
     auto rotation_x = glm::rotate(glm::mat4(1.0f), time * glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
     auto rotation_y = glm::rotate(glm::mat4(1.0f), time * glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
     auto rotation_z = glm::rotate(glm::mat4(1.0f), time * glm::radians(30.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
-    auto &camera = m_scene.camera();
+    auto& camera = m_scene.camera();
     camera.position() = glm::vec3(2.0f, 2.0f, 2.0f);
     camera.aspect_ratio() = aspect_ratio;
 
-    auto &node = m_scene.model().root_node();
+    auto& node = m_scene.model().root_node();
     node.rotation() = rotation_x;
-    for (auto &child : node.children())
+    for (auto& child : node.children())
     {
         child->rotation() = rotation_y;
-        for (auto &grandchild : child->children())
+        for (auto& grandchild : child->children())
         {
             grandchild->rotation() = rotation_z;
         }

@@ -1,19 +1,14 @@
 #include "render_pass.h"
 
+#include "spdlog/spdlog.h"
+
 #include <array>
 #include <stdexcept>
 
-#include "spdlog/spdlog.h"
-
 using namespace steeplejack;
 
-RenderPass::RenderPass(
-    const Device &device,
-    const Swapchain &swapchain,
-    const DepthBuffer &depth_buffer):
-    m_device(device),
-    m_swapchain(swapchain),
-    m_render_pass(create_render_pass(depth_buffer))
+RenderPass::RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer) :
+    m_device(device), m_swapchain(swapchain), m_render_pass(create_render_pass(depth_buffer))
 {
 }
 
@@ -23,7 +18,7 @@ RenderPass::~RenderPass()
     vkDestroyRenderPass(m_device, m_render_pass, nullptr);
 }
 
-VkRenderPass RenderPass::create_render_pass(const DepthBuffer &depth_buffer) const
+VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) const
 {
     spdlog::info("Creating Render Pass");
 
@@ -55,7 +50,7 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer &depth_buffer) con
     depth_attachment_ref.attachment = 1;
     depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-    VkAttachmentDescription color_attachment_resolve {};
+    VkAttachmentDescription color_attachment_resolve{};
     color_attachment_resolve.format = m_swapchain.image_format();
     color_attachment_resolve.samples = VK_SAMPLE_COUNT_1_BIT;
     color_attachment_resolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -65,11 +60,11 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer &depth_buffer) con
     color_attachment_resolve.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
     color_attachment_resolve.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
-    VkAttachmentReference color_attachment_resolve_ref {};
+    VkAttachmentReference color_attachment_resolve_ref{};
     color_attachment_resolve_ref.attachment = 2;
     color_attachment_resolve_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
-    std::array<VkAttachmentDescription, 3> attachments = { color_attachment, depth_attachment, color_attachment_resolve };
+    std::array<VkAttachmentDescription, 3> attachments = {color_attachment, depth_attachment, color_attachment_resolve};
 
     VkSubpassDescription subpass = {};
     subpass.pipelineBindPoint = VK_PIPELINE_BIND_POINT_GRAPHICS;
@@ -81,9 +76,11 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer &depth_buffer) con
     VkSubpassDependency dependency = {};
     dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
     dependency.dstSubpass = 0;
-    dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.srcStageMask =
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     dependency.srcAccessMask = 0;
-    dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
+    dependency.dstStageMask =
+        VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT | VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT;
     dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
 
     VkRenderPassCreateInfo render_pass_info = {};
@@ -110,18 +107,14 @@ void RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     render_pass_info.renderPass = m_render_pass;
     render_pass_info.framebuffer = framebuffer;
-    render_pass_info.renderArea.offset = { 0, 0 };
+    render_pass_info.renderArea.offset = {0, 0};
     render_pass_info.renderArea.extent = m_swapchain.extent();
 
-    std::array<VkClearValue, 2> clear_values {};
-    clear_values[0].color = { {0.0f, 0.0f, 0.0f, 1.0f} };
-    clear_values[1].depthStencil = { 1.0f, 0 };
+    std::array<VkClearValue, 2> clear_values{};
+    clear_values[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
+    clear_values[1].depthStencil = {1.0f, 0};
     render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
     render_pass_info.pClearValues = clear_values.data();
 
-    vkCmdBeginRenderPass(
-        command_buffer,
-        &render_pass_info,
-        VK_SUBPASS_CONTENTS_INLINE);
+    vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 };
-

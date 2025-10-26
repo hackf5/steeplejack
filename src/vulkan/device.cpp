@@ -1,16 +1,14 @@
 #define VMA_IMPLEMENTATION
-#include <vma/vk_mem_alloc.h>
-
 #include "device.h"
 
 #include "spdlog/spdlog.h"
 
+#include <vma/vk_mem_alloc.h>
+
 using namespace steeplejack;
 
-Device::Device(
-    const Window &window,
-    bool enable_validation_layers)
-    : m_window(window),
+Device::Device(const Window& window, bool enable_validation_layers) :
+    m_window(window),
     m_instance(create_instance(enable_validation_layers)),
     m_surface(create_surface()),
     m_device(create_device()),
@@ -37,9 +35,9 @@ vkb::Instance Device::create_instance(bool enable_validation_layers)
 
     vkb::InstanceBuilder builder;
     auto inst_ret = builder.set_app_name("Steeplejack")
-        .request_validation_layers(enable_validation_layers)
-        .use_default_debug_messenger()
-        .build();
+                        .request_validation_layers(enable_validation_layers)
+                        .use_default_debug_messenger()
+                        .build();
     if (!inst_ret)
     {
         throw std::runtime_error("Failed to create Vulkan Instance: " + inst_ret.error().message());
@@ -60,13 +58,13 @@ vkb::Device Device::create_device()
     VkPhysicalDeviceFeatures required_features = {};
     required_features.samplerAnisotropy = VK_TRUE;
 
-    vkb::PhysicalDeviceSelector selector { m_instance };
+    vkb::PhysicalDeviceSelector selector{m_instance};
     auto phys_ret = selector.set_surface(m_surface)
-        .set_minimum_version(1, 3)
-        .require_dedicated_transfer_queue()
-        .set_required_features(required_features)
-        .add_required_extension(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME)
-        .select();
+                        .set_minimum_version(1, 3)
+                        .require_dedicated_transfer_queue()
+                        .set_required_features(required_features)
+                        .add_required_extension(VK_KHR_PUSH_DESCRIPTOR_EXTENSION_NAME)
+                        .select();
     if (!phys_ret)
     {
         throw std::runtime_error("Failed to select Vulkan Physical Device: " + phys_ret.error().message());
@@ -74,7 +72,7 @@ vkb::Device Device::create_device()
 
     spdlog::info("Creating Vulkan Device");
 
-    vkb::DeviceBuilder device_builder { phys_ret.value() };
+    vkb::DeviceBuilder device_builder{phys_ret.value()};
     auto dev_ret = device_builder.build();
     if (!dev_ret)
     {

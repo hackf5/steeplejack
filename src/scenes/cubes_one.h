@@ -1,22 +1,21 @@
 #pragma once
 
-#include <array>
-
-#include <glm/glm.hpp>
-
-#include "util/no_copy_or_move.h"
 #include "render_scene.h"
+#include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
 #include "vulkan/texture_factory.h"
 #include "vulkan/vertex.h"
 
+#include <array>
+#include <glm/glm.hpp>
+
 namespace steeplejack
 {
-class CubesOne: public RenderScene
+class CubesOne : public RenderScene
 {
-private:
+  private:
     constexpr static const uint32_t FACES_COUNT = 6;
     constexpr static const uint32_t VERTEXES_PER_FACE = 4;
     constexpr static const uint32_t INDEXES_PER_FACE = 6;
@@ -35,25 +34,18 @@ private:
 
     face_t create_face(uint32_t face);
 
-protected:
-    void update(
-        uint32_t frame_index,
-        float aspect_ratio,
-        float time)
-        override;
+  protected:
+    void update(uint32_t frame_index, float aspect_ratio, float time) override;
 
-public:
-    CubesOne(const Device &device):
+  public:
+    CubesOne(const Device& device) :
         RenderScene(device, "cubes_one.vert", "cubes_one.frag"),
         m_indexes(create_indexes()),
         m_vertexes(create_vertexes())
     {
     }
 
-    virtual void load(
-        const Device &device,
-        TextureFactory &texture_factory,
-        GraphicsBuffers &graphics_buffers)
-        override;
+    virtual void
+    load(const Device& device, TextureFactory& texture_factory, GraphicsBuffers& graphics_buffers) override;
 };
-}
+} // namespace steeplejack

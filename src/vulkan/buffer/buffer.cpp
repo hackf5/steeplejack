@@ -4,12 +4,11 @@
 
 using namespace steeplejack;
 
-Buffer::Buffer(
-    const Device &device,
-    VkDeviceSize size,
-    VkBufferUsageFlags usage,
-    VmaMemoryUsage memory_usage,
-    VmaAllocationCreateFlags allocation_flags):
+Buffer::Buffer(const Device& device,
+               VkDeviceSize size,
+               VkBufferUsageFlags usage,
+               VmaMemoryUsage memory_usage,
+               VmaAllocationCreateFlags allocation_flags) :
     m_allocator(device.allocator()),
     m_usage(usage),
     m_memory_usage(memory_usage),
@@ -44,15 +43,10 @@ Buffer::AllocationInfo Buffer::create_allocation_info(VkDeviceSize size)
         throw std::runtime_error("Failed to create buffer");
     }
 
-    return { buffer, allocation, allocation_info };
+    return {buffer, allocation, allocation_info};
 }
 
 VkDescriptorBufferInfo Buffer::create_descriptor_info() const
 {
-    return
-    {
-        .buffer = m_allocation_info.buffer,
-        .offset = 0,
-        .range = m_allocation_info.info.size
-    };
+    return {.buffer = m_allocation_info.buffer, .offset = 0, .range = m_allocation_info.info.size};
 }

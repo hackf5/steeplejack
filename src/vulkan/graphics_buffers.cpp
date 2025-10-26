@@ -4,15 +4,10 @@
 
 using namespace steeplejack;
 
-const VkDeviceSize vertex_offsets[] = { 0 };
+const VkDeviceSize vertex_offsets[] = {0};
 
-GraphicsBuffers::GraphicsBuffers(
-    const Device &device,
-    const AdhocQueues &adhoc_queues):
-    m_device(device),
-    m_adhoc_queues(adhoc_queues),
-    m_vertex_buffer(nullptr),
-    m_index_buffer(nullptr)
+GraphicsBuffers::GraphicsBuffers(const Device& device, const AdhocQueues& adhoc_queues) :
+    m_device(device), m_adhoc_queues(adhoc_queues), m_vertex_buffer(nullptr), m_index_buffer(nullptr)
 {
 }
 
