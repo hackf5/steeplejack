@@ -8,13 +8,14 @@ SCRIPTS_DIR="${ROOT_DIR}/scripts"
 
 usage() {
     cat <<USAGE
-Usage: $(basename "$0") <build|clean|run|test> [debug|release] [-- extra args]
+Usage: $(basename "$0") <build|clean|run|test|format> [debug|release] [-- extra args]
 
 Commands:
   build [config]  Build the project (config defaults to debug). Extra args are passed to CMake configure.
   clean [config]  Clean build artifacts for the config.
   run   [config]  Execute the latest build for the config. Extra args are passed to the executable.
   test  [config]  Build and run the test suite for the config.
+  format [mode]   Run clang-format. mode: fix (default) or check.
 USAGE
     exit 1
 }
@@ -50,6 +51,10 @@ case "${command}" in
         ;;
     test)
         "${SCRIPTS_DIR}/test.sh" "${config}" "${extra_args[@]}"
+        ;;
+    format)
+        # format does not use config in the same way; pass any extra args
+        "${SCRIPTS_DIR}/format.sh" "${extra_args[@]}"
         ;;
     *)
         usage
