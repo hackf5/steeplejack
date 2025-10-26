@@ -39,7 +39,7 @@ Point each environment at the shared checkout so the helper scripts can find vcp
 
 ## Installing dependencies
 
-You don’t need to call vcpkg manually—`./sj.sh build ...` runs CMake with `vcpkg.json`, which automatically installs the manifest dependencies on first configure for each triplet.
+You don’t need to call vcpkg manually—`./sj build ...` runs CMake with `vcpkg.json`, which automatically installs the manifest dependencies on first configure for each triplet.
 
 If you prefer to prefetch them (e.g., before heading offline), run:
 
@@ -64,4 +64,4 @@ The repo pins `builtin-baseline` `271a5b8850aa50f9a40269cbf3cf414b36e333d6`. Whe
 - **Missing `versions/baseline.json`**: make sure your local vcpkg clone actually contains the requested baseline (`git -C $VCPKG_ROOT fetch --all` or re-clone).
 - **Triplet mismatch**: if CMake complains about `*_x64-mingw-static.list` files while you expect dynamic builds, confirm `VCPKG_DEFAULT_TRIPLET` is set in your MSYS shell (and restart the terminal so the variable is active).
 
-Once vcpkg is configured, the `sj.sh` task runner takes care of calling the right triplet/toolchain, so you can focus on writing code.
+Once vcpkg is configured, the `sj` task runner takes care of calling the right triplet/toolchain, so you can focus on writing code.
