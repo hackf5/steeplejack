@@ -7,6 +7,8 @@ Checks: >
   ,cert-*
   ,cppcoreguidelines-*
   ,hicpp-*
+  ,-hicpp-signed-bitwise
+  ,-hicpp-vararg
   ,modernize-*
   ,-modernize-use-trailing-return-type
   ,performance-*
@@ -26,6 +28,7 @@ Checks: >
   ,-zircon-*
   # Vulkan allowances (tighten later if desired)
   ,-cppcoreguidelines-pro-type-reinterpret-cast
+  ,-cppcoreguidelines-pro-type-vararg
 
 WarningsAsErrors: ''
 HeaderFilterRegex: '^(src|include)/'
