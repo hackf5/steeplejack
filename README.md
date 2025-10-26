@@ -10,13 +10,13 @@ Experimental C++/Vulkan playground for Windows. Everything builds via MSYS2 UCRT
 
 ## Build / Run
 
-Use the project task runner `sj.sh` at the repo root. It detects the host (MSYS2 UCRT vs WSL2), selects the right toolchain, keeps separate Debug/Release build folders, chains through vcpkg when `VCPKG_ROOT` is set, and preserves dependency caches on clean.
+Use the project task runner `sj` at the repo root. It detects the host (MSYS2 UCRT vs WSL2), selects the right toolchain, keeps separate Debug/Release build folders, chains through vcpkg when `VCPKG_ROOT` is set, and preserves dependency caches on clean.
 
 ```bash
-./sj.sh build [debug|release]   # configure + build (defaults to debug)
-./sj.sh test  [debug|release]   # build + run tests for the config
-./sj.sh run   [debug|release] -- <args>
-./sj.sh clean [debug|release]
+./sj build [debug|release]   # configure + build (defaults to debug)
+./sj test  [debug|release]   # build + run tests for the config
+./sj run   [debug|release] -- <args>
+./sj clean [debug|release]
 ```
 
 Extra flags after the config go straight to CMake (for `build`) or the executable (for `run`).

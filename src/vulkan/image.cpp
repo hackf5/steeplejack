@@ -4,16 +4,16 @@
 
 using namespace steeplejack;
 
-Image::Image(
-    const Device &device,
-    uint32_t width,
-    uint32_t height,
-    VkFormat format,
-    VkImageUsageFlags usage,
-    VkImageTiling tiling,
-    VkSampleCountFlagBits samples):
+Image::Image(const Device& device,
+             uint32_t width,
+             uint32_t height,
+             VkFormat format,
+             VkImageUsageFlags usage,
+             VkImageTiling tiling,
+             VkSampleCountFlagBits samples) :
     m_device(device),
-    m_image_info({ width, height, format, usage, tiling, samples }),
+    m_image_info(
+        {.width = width, .height = height, .format = format, .usage = usage, .tiling = tiling, .samples = samples}),
     m_allocation_info(create_allocation_info())
 {
 }
@@ -22,10 +22,7 @@ Image::~Image()
 {
     spdlog::info("Destroying image");
 
-    vmaDestroyImage(
-        m_device.allocator(),
-        m_allocation_info.image,
-        m_allocation_info.allocation);
+    vmaDestroyImage(m_device.allocator(), m_allocation_info.image, m_allocation_info.allocation);
 }
 
 Image::AllocationInfo Image::create_allocation_info()
@@ -49,23 +46,18 @@ Image::AllocationInfo Image::create_allocation_info()
     VmaAllocationCreateInfo image_alloc_info = {};
     image_alloc_info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
 
-    VkImage image;
-    VmaAllocation allocation;
+    VkImage image = nullptr;
+    VmaAllocation allocation = nullptr;
     VmaAllocationInfo allocation_info;
-    if (vmaCreateImage(
-        m_device.allocator(),
-        &image_info,
-        &image_alloc_info,
-        &image,
-        &allocation,
-        &allocation_info) != VK_SUCCESS)
+    if (vmaCreateImage(m_device.allocator(), &image_info, &image_alloc_info, &image, &allocation, &allocation_info) !=
+        VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create image");
     }
 
     return {
-        image,
-        allocation,
-        allocation_info,
+        .image = image,
+        .allocation = allocation,
+        .info = allocation_info,
     };
 }

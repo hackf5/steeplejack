@@ -4,14 +4,14 @@ namespace steeplejack
 {
 class NoCopyOrMove
 {
-public:
-    NoCopyOrMove(const NoCopyOrMove &) = delete;
-    NoCopyOrMove &operator=(const NoCopyOrMove &) = delete;
-    NoCopyOrMove(NoCopyOrMove &&) = delete;
-    NoCopyOrMove &operator=(NoCopyOrMove &&) = delete;
+  public:
+    NoCopyOrMove(const NoCopyOrMove&) = delete;
+    NoCopyOrMove& operator=(const NoCopyOrMove&) = delete;
+    NoCopyOrMove(NoCopyOrMove&&) = delete;
+    NoCopyOrMove& operator=(NoCopyOrMove&&) = delete;
 
-protected:
+  protected:
     NoCopyOrMove() = default;
     ~NoCopyOrMove() = default;
 };
-}
+} // namespace steeplejack
