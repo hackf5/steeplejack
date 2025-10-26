@@ -1,0 +1,40 @@
+BasedOnStyle: LLVM
+Language: Cpp
+Standard: c++20
+
+# Line width and indentation
+ColumnLimit: 120
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+ContinuationIndentWidth: 4
+
+# Braces and constructors
+BreakBeforeBraces: Allman
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+BreakConstructorInitializers: AfterColon
+ConstructorInitializerIndentWidth: 4
+
+# Spacing and alignment
+SpaceBeforeParens: ControlStatements
+PointerAlignment: Left
+ReferenceAlignment: Left
+DerivePointerAlignment: false
+AlignAfterOpenBracket: Align
+AlignOperands: true
+BinPackParameters: false
+BinPackArguments: false
+
+# Includes
+SortIncludes: true
+IncludeBlocks: Regroup
+
+# Namespaces
+NamespaceIndentation: None
+
+# ObjC/JS/etc excluded
+DisableFormat: false
+
