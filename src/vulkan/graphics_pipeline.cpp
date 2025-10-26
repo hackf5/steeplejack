@@ -167,8 +167,8 @@ VkPipelineColorBlendAttachmentState GraphicsPipeline::create_color_blend_attachm
 {
     VkPipelineColorBlendAttachmentState result = {};
     result.blendEnable = VK_FALSE;
-    result.colorWriteMask = static_cast<VkColorComponentFlags>(
-        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
+    result.colorWriteMask = static_cast<VkColorComponentFlags>(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
+                                                               VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
     return result;
 }
@@ -225,8 +225,8 @@ VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::create_depth_stencil_sta
 
 PFN_vkCmdPushDescriptorSetKHR GraphicsPipeline::fetch_vkCmdPushDescriptorSetKHR()
 {
-    auto result = reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(
-        vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR"));
+    auto result =
+        reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR"));
     if (result == nullptr)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");

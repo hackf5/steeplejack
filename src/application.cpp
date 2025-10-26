@@ -11,7 +11,7 @@ namespace
 {
 constexpr int kWindowWidth = 1280;
 constexpr int kWindowHeight = 720;
-}
+} // namespace
 
 namespace steeplejack
 {

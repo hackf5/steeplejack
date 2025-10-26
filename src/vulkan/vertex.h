@@ -2,9 +2,9 @@
 
 #include <array>
 #include <cstdint>
+#include <glm/glm.hpp>
 #include <span>
 #include <vector>
-#include <glm/glm.hpp>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
