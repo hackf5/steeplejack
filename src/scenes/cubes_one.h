@@ -13,7 +13,7 @@
 
 namespace steeplejack
 {
-class CubesOne : public RenderScene
+class CubesOne final : public RenderScene
 {
   private:
     constexpr static const uint32_t FACES_COUNT = 6;

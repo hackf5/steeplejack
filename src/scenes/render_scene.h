@@ -36,6 +36,8 @@ class RenderScene : NoCopyOrMove
     {
     }
 
+    virtual ~RenderScene() = default;
+
     const std::string& vertex_shader() const
     {
         return m_vertex_shader;
