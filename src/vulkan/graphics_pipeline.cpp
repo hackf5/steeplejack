@@ -225,7 +225,8 @@ VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::create_depth_stencil_sta
 
 PFN_vkCmdPushDescriptorSetKHR GraphicsPipeline::fetch_vkCmdPushDescriptorSetKHR()
 {
-    auto result = (PFN_vkCmdPushDescriptorSetKHR)vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR");
+    auto result = reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(
+        vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR"));
     if (result == nullptr)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");

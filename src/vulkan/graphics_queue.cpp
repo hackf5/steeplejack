@@ -20,12 +20,12 @@ GraphicsQueue::~GraphicsQueue()
 {
     spdlog::info("Destroying Graphics Commands");
 
-    for (auto fence : m_in_flight_fences)
+    for (auto* fence : m_in_flight_fences)
     {
         vkDestroyFence(m_device, fence, nullptr);
     }
 
-    for (auto semaphore : m_image_available)
+    for (auto* semaphore : m_image_available)
     {
         vkDestroySemaphore(m_device, semaphore, nullptr);
     }
@@ -204,8 +204,8 @@ bool GraphicsQueue::present_framebuffer()
     assert(m_swapchain != VK_NULL_HANDLE);
     assert(m_render_finished_semaphore != VK_NULL_HANDLE);
 
-    auto swapchain = m_swapchain;
-    auto render_finished_semaphore = m_render_finished_semaphore;
+    auto* swapchain = m_swapchain;
+    auto* render_finished_semaphore = m_render_finished_semaphore;
     m_swapchain = VK_NULL_HANDLE;
     m_render_finished_semaphore = VK_NULL_HANDLE;
 
