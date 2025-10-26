@@ -1,12 +1,12 @@
 #pragma once
 
-#include <memory>
-
+#include "gui/gui.h"
+#include "model/scene.h"
+#include "scenes/render_scene.h"
 #include "util/no_copy_or_move.h"
-
 #include "vulkan/adhoc_queues.h"
-#include "vulkan/descriptor_set_layout.h"
 #include "vulkan/depth_buffer.h"
+#include "vulkan/descriptor_set_layout.h"
 #include "vulkan/device.h"
 #include "vulkan/framebuffers.h"
 #include "vulkan/graphics_buffers.h"
@@ -16,19 +16,16 @@
 #include "vulkan/sampler.h"
 #include "vulkan/swapchain.h"
 #include "vulkan/texture_factory.h"
-#include "vulkan/window.h"
 #include "vulkan/vertex.h"
+#include "vulkan/window.h"
 
-#include "model/scene.h"
-#include "scenes/render_scene.h"
-
-#include "gui/gui.h"
+#include <memory>
 
 namespace steeplejack
 {
-class VulkanContext: NoCopyOrMove
+class VulkanContext : NoCopyOrMove
 {
-private:
+  private:
     std::unique_ptr<Window> m_window;
     std::unique_ptr<Device> m_device;
     std::unique_ptr<AdhocQueues> m_adhoc_queues;
@@ -45,43 +42,103 @@ private:
     std::unique_ptr<GraphicsPipeline> m_graphics_pipeline;
     std::unique_ptr<Gui> m_gui;
 
-public:
+  public:
     VulkanContext() = default;
 
-    Window &window() { return *m_window; }
+    Window& window()
+    {
+        return *m_window;
+    }
 
-    const Device &device() const { return *m_device; }
+    const Device& device() const
+    {
+        return *m_device;
+    }
 
-    const AdhocQueues &adhoc_queues() const { return *m_adhoc_queues; }
+    const AdhocQueues& adhoc_queues() const
+    {
+        return *m_adhoc_queues;
+    }
 
-    GraphicsQueue &graphics_queue() { return *m_graphics_queue; }
-    const GraphicsQueue &graphics_queue() const { return *m_graphics_queue; }
+    GraphicsQueue& graphics_queue()
+    {
+        return *m_graphics_queue;
+    }
+    const GraphicsQueue& graphics_queue() const
+    {
+        return *m_graphics_queue;
+    }
 
-    const DescriptorSetLayout &descriptor_set_layout() const { return *m_descriptor_set_layout; }
-    DescriptorSetLayout &descriptor_set_layout() { return *m_descriptor_set_layout; }
+    const DescriptorSetLayout& descriptor_set_layout() const
+    {
+        return *m_descriptor_set_layout;
+    }
+    DescriptorSetLayout& descriptor_set_layout()
+    {
+        return *m_descriptor_set_layout;
+    }
 
-    const GraphicsBuffers &graphics_buffers() const { return *m_graphics_buffers; }
-    GraphicsBuffers &graphics_buffers() { return *m_graphics_buffers; }
+    const GraphicsBuffers& graphics_buffers() const
+    {
+        return *m_graphics_buffers;
+    }
+    GraphicsBuffers& graphics_buffers()
+    {
+        return *m_graphics_buffers;
+    }
 
-    const Sampler &sampler() const { return *m_sampler; }
+    const Sampler& sampler() const
+    {
+        return *m_sampler;
+    }
 
-    const RenderScene &render_scene() const { return *m_render_scene; }
-    RenderScene &render_scene() { return *m_render_scene; }
+    const RenderScene& render_scene() const
+    {
+        return *m_render_scene;
+    }
+    RenderScene& render_scene()
+    {
+        return *m_render_scene;
+    }
 
-    TextureFactory &texture_factory() { return *m_texture_factory; }
+    TextureFactory& texture_factory()
+    {
+        return *m_texture_factory;
+    }
 
-    const Swapchain &swapchain() const { return *m_swapchain; }
+    const Swapchain& swapchain() const
+    {
+        return *m_swapchain;
+    }
 
-    const RenderPass &render_pass() const { return *m_render_pass; }
+    const RenderPass& render_pass() const
+    {
+        return *m_render_pass;
+    }
 
-    const Framebuffers &framebuffers() const { return *m_framebuffers; }
+    const Framebuffers& framebuffers() const
+    {
+        return *m_framebuffers;
+    }
 
-    const GraphicsPipeline &graphics_pipeline() const { return *m_graphics_pipeline; }
-    GraphicsPipeline &graphics_pipeline() { return *m_graphics_pipeline; }
+    const GraphicsPipeline& graphics_pipeline() const
+    {
+        return *m_graphics_pipeline;
+    }
+    GraphicsPipeline& graphics_pipeline()
+    {
+        return *m_graphics_pipeline;
+    }
 
-    const Gui &gui() const { return *m_gui; }
-    Gui &gui() { return *m_gui; }
+    const Gui& gui() const
+    {
+        return *m_gui;
+    }
+    Gui& gui()
+    {
+        return *m_gui;
+    }
 
     friend class VulkanContextBuilder;
 };
-}
+} // namespace steeplejack

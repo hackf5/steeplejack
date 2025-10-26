@@ -1,17 +1,16 @@
 #include "framebuffers.h"
 
+#include "spdlog/spdlog.h"
+
 #include <array>
 #include <stdexcept>
 
-#include "spdlog/spdlog.h"
-
 using namespace steeplejack;
 
-Framebuffers::Framebuffers(
-    const Device &device,
-    const Swapchain &swapchain,
-    const RenderPass &render_pass,
-    const DepthBuffer &depth_buffer):
+Framebuffers::Framebuffers(const Device& device,
+                           const Swapchain& swapchain,
+                           const RenderPass& render_pass,
+                           const DepthBuffer& depth_buffer) :
     m_device(device),
     m_multisampler(device, swapchain),
     m_framebuffers(create_framebuffers(swapchain, render_pass, depth_buffer))
@@ -20,27 +19,25 @@ Framebuffers::Framebuffers(
 
 Framebuffers::~Framebuffers()
 {
-    for (auto framebuffer : m_framebuffers)
+    for (auto* framebuffer : m_framebuffers)
     {
         vkDestroyFramebuffer(m_device, framebuffer, nullptr);
     }
 }
 
-std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
-    const Swapchain &swapchain,
-    const RenderPass &render_pass,
-    const DepthBuffer &depth_buffer)
+std::vector<VkFramebuffer> Framebuffers::create_framebuffers(const Swapchain& swapchain,
+                                                             const RenderPass& render_pass,
+                                                             const DepthBuffer& depth_buffer)
 {
     std::vector<VkFramebuffer> framebuffers;
     framebuffers.resize(swapchain.image_count());
 
     for (size_t i = 0; i < swapchain.image_count(); i++)
     {
-        auto attachments = std::array<VkImageView, 3>
-        {
+        auto attachments = std::array<VkImageView, 3>{
             m_multisampler.image_view(),
-                depth_buffer.image_view(),
-                swapchain.image_view(i),
+            depth_buffer.image_view(),
+            swapchain.image_view(i),
         };
 
         VkFramebufferCreateInfo framebuffer_info = {};
@@ -52,7 +49,7 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
         framebuffer_info.height = swapchain.extent().height;
         framebuffer_info.layers = 1;
 
-        VkFramebuffer framebuffer;
+        VkFramebuffer framebuffer = nullptr;
         if (vkCreateFramebuffer(m_device, &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create framebuffer");

@@ -4,9 +4,7 @@
 
 using namespace steeplejack;
 
-AdhocQueue::AdhocQueue(
-    const Device &device,
-    QueueFamily family):
+AdhocQueue::AdhocQueue(const Device& device, QueueFamily family) :
     m_device(device),
     m_queue(get_queue(family)),
     m_command_pool(create_command_pool(family)),
@@ -58,7 +56,7 @@ VkCommandPool AdhocQueue::create_command_pool(QueueFamily family)
     pool_info.queueFamilyIndex = get_queue_index(family);
     pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-    VkCommandPool command_pool;
+    VkCommandPool command_pool = nullptr;
     if (vkCreateCommandPool(m_device, &pool_info, nullptr, &command_pool) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create buffer transfer queue command pool");
@@ -75,7 +73,7 @@ VkCommandBuffer AdhocQueue::create_command_buffer()
     alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
     alloc_info.commandBufferCount = 1;
 
-    VkCommandBuffer command_buffer;
+    VkCommandBuffer command_buffer = nullptr;
     if (vkAllocateCommandBuffers(m_device, &alloc_info, &command_buffer) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to allocate command buffers");
@@ -104,7 +102,7 @@ VkCommandBuffer AdhocQueue::begin() const
 
 void AdhocQueue::submit_and_wait() const
 {
-    auto command_buffer = m_command_buffer;
+    auto* command_buffer = m_command_buffer;
 
     if (vkEndCommandBuffer(command_buffer) != VK_SUCCESS)
     {

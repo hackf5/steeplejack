@@ -1,40 +1,50 @@
 #include "application.h"
 
-#include <iostream>
+#include "scenes/cubes_one.h"
 #include "spdlog/spdlog.h"
-
 #include "vulkan_context_builder.h"
 #include "vulkan_engine.h"
-#include "scenes/cubes_one.h"
 
-namespace steeplejack {
+#include <iostream>
 
-Application::Application() {}
+namespace
+{
+constexpr int kWindowWidth = 1280;
+constexpr int kWindowHeight = 720;
+}
 
-int Application::run() {
+namespace steeplejack
+{
+
+Application::Application() = default;
+
+int Application::run()
+{
 #ifdef NDEBUG
     const bool enableValidationLayers = false;
     spdlog::set_level(spdlog::level::info);
 #else
-    const bool enableValidationLayers = true;
+    const bool enable_validation_layers = true;
     spdlog::set_level(spdlog::level::debug);
 #endif
 
-    try {
+    try
+    {
         using namespace steeplejack;
 
-        auto layout_builder = [](DescriptorSetLayoutBuilder &builder) {
+        auto layout_builder = [](DescriptorSetLayoutBuilder& builder)
+        {
             builder
-                .add_uniform_buffer() // camera
-                .add_uniform_buffer() // model
+                .add_uniform_buffer()          // camera
+                .add_uniform_buffer()          // model
                 .add_combined_image_sampler(); // texture
         };
 
-        auto scene_factory = [](const Device &device) { return std::make_unique<CubesOne>(device); };
+        auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };
 
         auto context = VulkanContextBuilder()
-                           .add_window(1280, 720, "Steeplejack")
-                           .add_device(enableValidationLayers)
+                           .add_window(kWindowWidth, kWindowHeight, "Steeplejack")
+                           .add_device(enable_validation_layers)
                            .add_graphics_queue()
                            .add_adhoc_queues()
                            .add_graphics_buffers()
@@ -51,7 +61,9 @@ int Application::run() {
                            .build();
 
         VulkanEngine(std::move(context)).run();
-    } catch (const std::exception& e) {
+    }
+    catch (const std::exception& e)
+    {
         spdlog::error("Fatal: {}", e.what());
         return 1;
     }
@@ -59,4 +71,4 @@ int Application::run() {
     return 0;
 }
 
-}  // namespace steeplejack
+} // namespace steeplejack

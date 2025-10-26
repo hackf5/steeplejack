@@ -1,20 +1,18 @@
 #include "graphics_pipeline.h"
 
-#include <array>
-
+#include "spdlog/spdlog.h"
 #include "vertex.h"
 
-#include "spdlog/spdlog.h"
+#include <array>
 
 using namespace steeplejack;
 
-GraphicsPipeline::GraphicsPipeline(
-    const Device &device,
-    DescriptorSetLayout &descriptor_set_layout,
-    const Swapchain &swapchain,
-    const RenderPass &render_pass,
-    const std::string &vertex_shader,
-    const std::string &fragment_shader):
+GraphicsPipeline::GraphicsPipeline(const Device& device,
+                                   DescriptorSetLayout& descriptor_set_layout,
+                                   const Swapchain& swapchain,
+                                   const RenderPass& render_pass,
+                                   const std::string& vertex_shader,
+                                   const std::string& fragment_shader) :
     m_device(device),
     m_descriptor_set_layout(descriptor_set_layout),
     m_pipeline_layout(create_pipeline_layout(descriptor_set_layout)),
@@ -30,8 +28,7 @@ GraphicsPipeline::~GraphicsPipeline()
     vkDestroyPipelineLayout(m_device, m_pipeline_layout, nullptr);
 }
 
-VkPipelineLayout GraphicsPipeline::create_pipeline_layout(
-    const DescriptorSetLayout &descriptor_set_layout)
+VkPipelineLayout GraphicsPipeline::create_pipeline_layout(const DescriptorSetLayout& descriptor_set_layout)
 {
     spdlog::info("Creating Graphics Pipeline Layout");
 
@@ -43,7 +40,7 @@ VkPipelineLayout GraphicsPipeline::create_pipeline_layout(
     pipeline_layout_info.pushConstantRangeCount = 0;
     pipeline_layout_info.pPushConstantRanges = nullptr;
 
-    VkPipelineLayout pipeline_layout;
+    VkPipelineLayout pipeline_layout = nullptr;
     if (vkCreatePipelineLayout(m_device, &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline layout");
@@ -52,15 +49,14 @@ VkPipelineLayout GraphicsPipeline::create_pipeline_layout(
     return pipeline_layout;
 }
 
-VkPipeline GraphicsPipeline::create_pipeline(
-    const Swapchain &swapchain,
-    const RenderPass &render_pass,
-    const std::string &vertex_shader,
-    const std::string &fragment_shader)
+VkPipeline GraphicsPipeline::create_pipeline(const Swapchain& swapchain,
+                                             const RenderPass& render_pass,
+                                             const std::string& vertex_shader,
+                                             const std::string& fragment_shader)
 {
     spdlog::info("Creating Graphics Pipeline");
 
-    auto vertex_input_state = VertexInputState(0, Vertex::ALL_COMPONENTS);
+    auto vertex_input_state = VertexInputState(0, Vertex::kAllComponents);
 
     auto vertex_shader_module = ShaderModule(m_device, vertex_shader);
     auto fragment_shader_module = ShaderModule(m_device, fragment_shader);
@@ -93,7 +89,7 @@ VkPipeline GraphicsPipeline::create_pipeline(
     pipeline_info.subpass = 0;
     pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
-    VkPipeline pipeline;
+    VkPipeline pipeline = nullptr;
     if (vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline");
@@ -102,9 +98,8 @@ VkPipeline GraphicsPipeline::create_pipeline(
     return pipeline;
 }
 
-std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_stages(
-    const ShaderModule &vertex_shader,
-    const ShaderModule &fragment_shader)
+std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_stages(const ShaderModule& vertex_shader,
+                                                                                    const ShaderModule& fragment_shader)
 {
     VkPipelineShaderStageCreateInfo vert_stage_info = {};
     vert_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -118,7 +113,7 @@ std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_sta
     frag_stage_info.module = fragment_shader;
     frag_stage_info.pName = "main";
 
-    return { vert_stage_info, frag_stage_info };
+    return {vert_stage_info, frag_stage_info};
 }
 
 VkPipelineInputAssemblyStateCreateInfo GraphicsPipeline::create_input_assembly_state()
@@ -131,7 +126,7 @@ VkPipelineInputAssemblyStateCreateInfo GraphicsPipeline::create_input_assembly_s
     return result;
 }
 
-VkPipelineViewportStateCreateInfo GraphicsPipeline::create_viewport_state(const Swapchain &swapchain)
+VkPipelineViewportStateCreateInfo GraphicsPipeline::create_viewport_state(const Swapchain& swapchain)
 {
     VkPipelineViewportStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
@@ -150,7 +145,7 @@ VkPipelineRasterizationStateCreateInfo GraphicsPipeline::create_rasterization_st
     result.depthClampEnable = VK_FALSE;
     result.rasterizerDiscardEnable = VK_FALSE;
     result.polygonMode = VK_POLYGON_MODE_FILL;
-    result.lineWidth = 1.0f;
+    result.lineWidth = 1.0F;
     result.cullMode = VK_CULL_MODE_BACK_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     result.depthBiasEnable = VK_FALSE;
@@ -172,16 +167,14 @@ VkPipelineColorBlendAttachmentState GraphicsPipeline::create_color_blend_attachm
 {
     VkPipelineColorBlendAttachmentState result = {};
     result.blendEnable = VK_FALSE;
-    result.colorWriteMask = VK_COLOR_COMPONENT_R_BIT
-        | VK_COLOR_COMPONENT_G_BIT
-        | VK_COLOR_COMPONENT_B_BIT
-        | VK_COLOR_COMPONENT_A_BIT;
+    result.colorWriteMask = static_cast<VkColorComponentFlags>(
+        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
     return result;
 }
 
-VkPipelineColorBlendStateCreateInfo GraphicsPipeline::create_color_blend_state(
-    const VkPipelineColorBlendAttachmentState &color_blend_attachment)
+VkPipelineColorBlendStateCreateInfo
+GraphicsPipeline::create_color_blend_state(const VkPipelineColorBlendAttachmentState& color_blend_attachment)
 {
     VkPipelineColorBlendStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;
@@ -189,25 +182,21 @@ VkPipelineColorBlendStateCreateInfo GraphicsPipeline::create_color_blend_state(
     result.logicOp = VK_LOGIC_OP_COPY;
     result.attachmentCount = 1;
     result.pAttachments = &color_blend_attachment;
-    result.blendConstants[0] = 0.0f;
-    result.blendConstants[1] = 0.0f;
-    result.blendConstants[2] = 0.0f;
-    result.blendConstants[3] = 0.0f;
+    result.blendConstants[0] = 0.0F;
+    result.blendConstants[1] = 0.0F;
+    result.blendConstants[2] = 0.0F;
+    result.blendConstants[3] = 0.0F;
 
     return result;
 }
 
 std::vector<VkDynamicState> GraphicsPipeline::create_dynamic_states()
 {
-    return
-    {
-        VK_DYNAMIC_STATE_VIEWPORT,
-        VK_DYNAMIC_STATE_SCISSOR
-    };
+    return {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
 }
 
-VkPipelineDynamicStateCreateInfo GraphicsPipeline::create_dynamic_state(
-    const std::vector<VkDynamicState> &dynamic_states)
+VkPipelineDynamicStateCreateInfo
+GraphicsPipeline::create_dynamic_state(const std::vector<VkDynamicState>& dynamic_states)
 {
     VkPipelineDynamicStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO;
@@ -226,8 +215,8 @@ VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::create_depth_stencil_sta
     result.depthCompareOp = VK_COMPARE_OP_LESS;
     result.depthBoundsTestEnable = VK_FALSE;
     result.stencilTestEnable = VK_FALSE;
-    result.minDepthBounds = 0.0f;
-    result.maxDepthBounds = 1.0f;
+    result.minDepthBounds = 0.0F;
+    result.maxDepthBounds = 1.0F;
     result.front = {};
     result.back = {};
 
@@ -236,11 +225,11 @@ VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::create_depth_stencil_sta
 
 PFN_vkCmdPushDescriptorSetKHR GraphicsPipeline::fetch_vkCmdPushDescriptorSetKHR()
 {
-    auto result = (PFN_vkCmdPushDescriptorSetKHR)vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR");
-    if (!result)
+    auto result = reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(
+        vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR"));
+    if (result == nullptr)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");
-
     }
 
     return result;

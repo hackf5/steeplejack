@@ -1,17 +1,17 @@
 #pragma once
 
+#include "scenes/render_scene.h"
+#include "util/no_copy_or_move.h"
+#include "vulkan_context.h"
+
 #include <memory>
 #include <vulkan/vulkan.h>
 
-#include "util/no_copy_or_move.h"
-#include "vulkan_context.h"
-#include "scenes/render_scene.h"
-
 namespace steeplejack
 {
-class VulkanEngine: NoCopyOrMove
+class VulkanEngine : NoCopyOrMove
 {
-private:
+  private:
     std::unique_ptr<VulkanContext> m_context;
 
     uint32_t m_current_frame = 0;
@@ -25,9 +25,9 @@ private:
         m_current_frame = (m_current_frame + 1) % Device::max_frames_in_flight;
     }
 
-public:
+  public:
     VulkanEngine(std::unique_ptr<VulkanContext> context);
 
     void run();
 };
-}
+} // namespace steeplejack

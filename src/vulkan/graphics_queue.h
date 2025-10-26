@@ -1,19 +1,19 @@
 #pragma once
 
+#include "device.h"
+#include "framebuffers.h"
+#include "swapchain.h"
+#include "util/no_copy_or_move.h"
+
 #include <memory>
 #include <vector>
 
-#include "util/no_copy_or_move.h"
-#include "device.h"
-#include "swapchain.h"
-#include "framebuffers.h"
-
 namespace steeplejack
 {
-class GraphicsQueue: NoCopyOrMove
+class GraphicsQueue : NoCopyOrMove
 {
-private:
-    const Device &m_device;
+  private:
+    const Device& m_device;
 
     const VkQueue m_graphics_queue;
     const VkCommandPool m_command_pool;
@@ -32,17 +32,15 @@ private:
     VkSwapchainKHR m_swapchain = VK_NULL_HANDLE;
     VkSemaphore m_render_finished_semaphore = VK_NULL_HANDLE;
 
-public:
-    GraphicsQueue(const Device &device);
+  public:
+    GraphicsQueue(const Device& device);
     ~GraphicsQueue();
 
-    VkFramebuffer prepare_framebuffer(
-        uint32_t current_frame,
-        const Swapchain &swapchain,
-        const Framebuffers &framebuffers);
+    VkFramebuffer
+    prepare_framebuffer(uint32_t current_frame, const Swapchain& swapchain, const Framebuffers& framebuffers);
 
     VkCommandBuffer begin_command() const;
     void submit_command() const;
     bool present_framebuffer();
 };
-}
+} // namespace steeplejack

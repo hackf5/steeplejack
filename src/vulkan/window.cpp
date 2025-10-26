@@ -1,14 +1,12 @@
 #include "window.h"
 
-#include <stdexcept>
-
 #include <spdlog/spdlog.h>
+#include <stdexcept>
+#include <utility>
 
 using namespace steeplejack;
 
-Window::Window(int width, int height, const std::string &title):
-    m_width(width),
-    m_height(height)
+Window::Window(int width, int height, const std::string& title) : m_width(width), m_height(height)
 {
     spdlog::info("Creating Window Components");
 
@@ -22,7 +20,7 @@ Window::Window(int width, int height, const std::string &title):
         glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
         m_window = glfwCreateWindow(m_width, m_height, title.c_str(), nullptr, nullptr);
     }
-    catch (const std::exception &e)
+    catch (const std::exception& e)
     {
         this->~Window();
         throw;
@@ -36,9 +34,9 @@ Window::~Window()
     glfwTerminate();
 }
 
-void Window::framebuffer_resize_callback(GLFWwindow *window, int width, int height)
+void Window::framebuffer_resize_callback(GLFWwindow* window, int width, int height)
 {
-    auto app = reinterpret_cast<Window *>(glfwGetWindowUserPointer(window));
+    auto* app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
     if (app->m_framebuffer_resize_callback)
     {
@@ -50,7 +48,7 @@ VkSurfaceKHR Window::create_window_surface(VkInstance instance) const
 {
     spdlog::info("Creating Window Surface");
 
-    VkSurfaceKHR surface;
+    VkSurfaceKHR surface = nullptr;
     if (glfwCreateWindowSurface(instance, m_window, nullptr, &surface) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create window surface");
@@ -61,7 +59,7 @@ VkSurfaceKHR Window::create_window_surface(VkInstance instance) const
 
 void Window::register_framebuffer_resize_callback(framebuffer_resize_callback_t callback)
 {
-    m_framebuffer_resize_callback = callback;
+    m_framebuffer_resize_callback = std::move(callback);
 }
 
 void Window::wait_resize()

@@ -2,12 +2,14 @@
 
 #include <string>
 
-namespace steeplejack {
+namespace steeplejack
+{
 
-class Application {
-public:
+class Application
+{
+  public:
     Application();
-    int run();
+    static int run();
 };
 
-}  // namespace steeplejack
+} // namespace steeplejack

@@ -4,14 +4,8 @@
 
 using namespace steeplejack;
 
-ImageView::ImageView(
-    const Device &device,
-    const Image &image,
-    VkImageAspectFlags aspect_mask):
-    m_device(device),
-    m_image(image),
-    m_aspect_mask(aspect_mask),
-    m_image_view(create_image_view())
+ImageView::ImageView(const Device& device, const Image& image, VkImageAspectFlags aspect_mask) :
+    m_device(device), m_image(image), m_aspect_mask(aspect_mask), m_image_view(create_image_view())
 {
 }
 
@@ -39,7 +33,7 @@ VkImageView ImageView::create_image_view()
     image_view_info.subresourceRange.baseArrayLayer = 0;
     image_view_info.subresourceRange.layerCount = 1;
 
-    VkImageView image_view;
+    VkImageView image_view = nullptr;
     if (vkCreateImageView(m_device, &image_view_info, nullptr, &image_view) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create image view");
