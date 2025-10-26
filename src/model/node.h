@@ -82,7 +82,7 @@ class Node : NoCopyOrMove
         if (m_matrix_dirty)
         {
             m_matrix = glm::translate(glm::mat4(1.0f), m_translation) * glm::mat4_cast(m_rotation) *
-                       glm::scale(glm::mat4(1.0f), m_scale);
+                glm::scale(glm::mat4(1.0f), m_scale);
             m_matrix_dirty = false;
         }
 

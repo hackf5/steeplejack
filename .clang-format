@@ -24,7 +24,7 @@ PointerAlignment: Left
 ReferenceAlignment: Left
 DerivePointerAlignment: false
 AlignAfterOpenBracket: Align
-AlignOperands: true
+AlignOperands: false
 BinPackParameters: false
 BinPackArguments: false
 

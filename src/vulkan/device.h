@@ -54,7 +54,7 @@ class Device : NoCopyOrMove
     VkSampleCountFlagBits msaa_samples() const
     {
         auto counts = m_device.physical_device.properties.limits.framebufferColorSampleCounts &
-                      m_device.physical_device.properties.limits.framebufferDepthSampleCounts;
+            m_device.physical_device.properties.limits.framebufferDepthSampleCounts;
         if (counts & VK_SAMPLE_COUNT_64_BIT)
             return VK_SAMPLE_COUNT_64_BIT;
         if (counts & VK_SAMPLE_COUNT_32_BIT)
