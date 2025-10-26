@@ -7,7 +7,7 @@ using namespace steeplejack;
 const std::vector<VertexComponent> Vertex::ALL_COMPONENTS = {
     VertexComponent::Position, VertexComponent::UV, VertexComponent::Color};
 
-VertexInputState::VertexInputState(uint32_t binding, const std::vector<VertexComponent> components) :
+VertexInputState::VertexInputState(uint32_t binding, const std::vector<VertexComponent>& components) :
     binding(create_binding(binding)), attributes(create_attributes(components)), pipeline(create_pipeline())
 {
 }
@@ -21,7 +21,7 @@ VkVertexInputBindingDescription VertexInputState::create_binding(uint32_t bindin
     });
 }
 
-VkVertexInputAttributeDescription VertexInputState::create_attribute(uint32_t location, VertexComponent component)
+VkVertexInputAttributeDescription VertexInputState::create_attribute(uint32_t location, VertexComponent component) const
 {
     VkVertexInputAttributeDescription description{};
     description.location = location;
@@ -49,9 +49,10 @@ VkVertexInputAttributeDescription VertexInputState::create_attribute(uint32_t lo
 }
 
 std::vector<VkVertexInputAttributeDescription>
-VertexInputState::create_attributes(const std::vector<VertexComponent> components)
+VertexInputState::create_attributes(const std::vector<VertexComponent>& components)
 {
     std::vector<VkVertexInputAttributeDescription> descriptions;
+    descriptions.reserve(components.size());
     for (uint32_t location = 0; location < components.size(); location++)
     {
         descriptions.push_back(create_attribute(location, components[location]));

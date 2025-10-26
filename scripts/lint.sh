@@ -6,17 +6,17 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "${SCRIPT_DIR}/lib/common.sh"
 
-MODE=${1:-run}
+MODE=${1:-fix}
 case "${MODE}" in
-  run|fix) ;;
+  check|fix) ;;
   *)
-    echo "Unknown mode '${MODE}'. Use 'run' (default) or 'fix'." >&2
+    echo "Unknown mode '${MODE}'. Use 'fix' (default) or 'check'." >&2
     exit 1
     ;;
 esac
 
-if ! command -v clang-tidy >/dev/null 2>&1; then
-  echo "clang-tidy not found in PATH. On MSYS2 UCRT, install: mingw-w64-ucrt-x86_64-clang-tools-extra" >&2
+if ! command -v run-clang-tidy.py >/dev/null 2>&1 && ! command -v run-clang-tidy >/dev/null 2>&1; then
+  echo "run-clang-tidy not found. On MSYS2 UCRT, install: mingw-w64-ucrt-x86_64-clang-tools-extra" >&2
   exit 127
 fi
 
@@ -43,12 +43,29 @@ if [[ ${#FILES[@]} -eq 0 ]]; then
   exit 0
 fi
 
-cmd=(clang-tidy -p "${build_dir}")
-if [[ "${MODE}" == "fix" ]]; then
-  cmd+=(--fix --format --format-style=file)
+# Compute parallel jobs (prefer nproc, then getconf)
+jobs=$(nproc 2>/dev/null || getconf _NPROCESSORS_ONLN 2>/dev/null || echo 4)
+
+# Prefer run-clang-tidy if available for native parallel execution
+if command -v run-clang-tidy.py >/dev/null 2>&1; then
+  runner=run-clang-tidy.py
+else
+  runner=run-clang-tidy
 fi
 
-printf '%s\0' "${FILES[@]}" | xargs -0 -n 20 "${cmd[@]}"
+cmd=("${runner}" -p "${build_dir}" -j "${jobs}" -header-filter='^(src|include)/' -quiet)
+if [[ "${MODE}" == "fix" ]]; then
+  cmd+=( -fix -format )
+fi
+# Forward options to clang-tidy: -quiet and disable compiler warnings
+cmd+=( -- -quiet -extra-arg=-w )
+
+# Run and strip tidy's suppression hints to reduce noise
+{
+  "${cmd[@]}" "${FILES[@]}"
+} 2>&1 | sed -u \
+  -e '/^Suppressed [0-9]\+ warnings/d' \
+  -e '/^Use -header-filter=.*/d' \
+  -e '/^[0-9]\+ warnings generated\.$/d'
 
 echo "clang-tidy ${MODE} completed."
-

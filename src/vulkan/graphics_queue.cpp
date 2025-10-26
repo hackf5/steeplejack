@@ -19,12 +19,12 @@ GraphicsQueue::~GraphicsQueue()
 {
     spdlog::info("Destroying Graphics Commands");
 
-    for (auto fence : m_in_flight_fences)
+    for (auto* fence : m_in_flight_fences)
     {
         vkDestroyFence(m_device, fence, nullptr);
     }
 
-    for (auto semaphore : m_image_available)
+    for (auto* semaphore : m_image_available)
     {
         vkDestroySemaphore(m_device, semaphore, nullptr);
     }
@@ -41,7 +41,7 @@ VkCommandPool GraphicsQueue::create_command_pool()
     create_info.queueFamilyIndex = m_device.graphics_queue_index();
     create_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
-    VkCommandPool command_pool;
+    VkCommandPool command_pool = nullptr;
     if (vkCreateCommandPool(m_device, &create_info, nullptr, &command_pool) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create command pool");
@@ -121,12 +121,12 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
 
     vkResetFences(m_device, 1, &m_in_flight_fences[m_current_frame]);
 
-    VkResult result = vkAcquireNextImageKHR(m_device,
-                                            swapchain,
-                                            std::numeric_limits<uint64_t>::max(),
-                                            m_image_available[m_current_frame],
-                                            VK_NULL_HANDLE,
-                                            &m_image_index);
+    VkResult const result = vkAcquireNextImageKHR(m_device,
+                                                  swapchain,
+                                                  std::numeric_limits<uint64_t>::max(),
+                                                  m_image_available[m_current_frame],
+                                                  VK_NULL_HANDLE,
+                                                  &m_image_index);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR)
     {
@@ -180,13 +180,13 @@ void GraphicsQueue::submit_command() const
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_command_buffers[m_current_frame];
 
-    VkSemaphore wait_semaphores[] = {m_image_available[m_current_frame]};
+    VkSemaphore const wait_semaphores[] = {m_image_available[m_current_frame]};
     VkPipelineStageFlags wait_stages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     submit_info.waitSemaphoreCount = 1;
     submit_info.pWaitSemaphores = wait_semaphores;
     submit_info.pWaitDstStageMask = wait_stages;
 
-    VkSemaphore signal_semaphores[] = {m_render_finished_semaphore};
+    VkSemaphore const signal_semaphores[] = {m_render_finished_semaphore};
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = signal_semaphores;
 
@@ -203,30 +203,30 @@ bool GraphicsQueue::present_framebuffer()
     assert(m_swapchain != VK_NULL_HANDLE);
     assert(m_render_finished_semaphore != VK_NULL_HANDLE);
 
-    auto swapchain = m_swapchain;
-    auto render_finished_semaphore = m_render_finished_semaphore;
+    auto* swapchain = m_swapchain;
+    auto* render_finished_semaphore = m_render_finished_semaphore;
     m_swapchain = VK_NULL_HANDLE;
     m_render_finished_semaphore = VK_NULL_HANDLE;
 
     VkPresentInfoKHR present_info{};
     present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-    VkSemaphore wait_semaphores[] = {render_finished_semaphore};
+    VkSemaphore const wait_semaphores[] = {render_finished_semaphore};
     present_info.waitSemaphoreCount = 1;
     present_info.pWaitSemaphores = wait_semaphores;
 
-    VkSwapchainKHR swapchains[] = {swapchain};
+    VkSwapchainKHR const swapchains[] = {swapchain};
     present_info.swapchainCount = 1;
     present_info.pSwapchains = swapchains;
     present_info.pImageIndices = &m_image_index;
 
-    VkResult result = vkQueuePresentKHR(m_graphics_queue, &present_info);
+    VkResult const result = vkQueuePresentKHR(m_graphics_queue, &present_info);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR)
     {
         return false;
     }
-    else if (result != VK_SUCCESS)
+    if (result != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to present swap chain image");
     }

@@ -38,7 +38,7 @@ class Texture : public NoCopyOrMove
     void copy_staging_buffer_to_image(const Buffer& staging_buffer, const AdhocQueues& adhoc_queues);
 
   public:
-    Texture(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues, const std::string& name);
+    Texture(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues, std::string name);
 
     VkDescriptorImageInfo* descriptor()
     {

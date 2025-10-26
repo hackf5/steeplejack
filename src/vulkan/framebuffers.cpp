@@ -19,7 +19,7 @@ Framebuffers::Framebuffers(const Device& device,
 
 Framebuffers::~Framebuffers()
 {
-    for (auto framebuffer : m_framebuffers)
+    for (auto* framebuffer : m_framebuffers)
     {
         vkDestroyFramebuffer(m_device, framebuffer, nullptr);
     }
@@ -49,7 +49,7 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(const Swapchain& sw
         framebuffer_info.height = swapchain.extent().height;
         framebuffer_info.layers = 1;
 
-        VkFramebuffer framebuffer;
+        VkFramebuffer framebuffer = nullptr;
         if (vkCreateFramebuffer(m_device, &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create framebuffer");

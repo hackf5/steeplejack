@@ -4,12 +4,13 @@
 
 #include <array>
 #include <stdexcept>
+#include <utility>
 
 using namespace steeplejack;
 
 DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::vector<DescriptorSetLayoutInfo> layout_infos) :
     m_device(device),
-    m_layout_infos(layout_infos),
+    m_layout_infos(std::move(std::move(layout_infos))),
     m_descriptor_set_layout(create_descriptor_set_layout()),
     m_descriptor_set_layouts({m_descriptor_set_layout}),
     m_write_descriptor_sets(create_write_descriptor_sets())
@@ -41,7 +42,7 @@ VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
     layout_info.bindingCount = static_cast<uint32_t>(bindings.size());
     layout_info.pBindings = bindings.data();
 
-    VkDescriptorSetLayout layout;
+    VkDescriptorSetLayout layout = nullptr;
     if (vkCreateDescriptorSetLayout(m_device, &layout_info, nullptr, &layout) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create descriptor set layout");

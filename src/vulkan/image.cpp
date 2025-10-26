@@ -12,7 +12,8 @@ Image::Image(const Device& device,
              VkImageTiling tiling,
              VkSampleCountFlagBits samples) :
     m_device(device),
-    m_image_info({width, height, format, usage, tiling, samples}),
+    m_image_info(
+        {.width = width, .height = height, .format = format, .usage = usage, .tiling = tiling, .samples = samples}),
     m_allocation_info(create_allocation_info())
 {
 }
@@ -45,8 +46,8 @@ Image::AllocationInfo Image::create_allocation_info()
     VmaAllocationCreateInfo image_alloc_info = {};
     image_alloc_info.usage = VMA_MEMORY_USAGE_GPU_ONLY;
 
-    VkImage image;
-    VmaAllocation allocation;
+    VkImage image = nullptr;
+    VmaAllocation allocation = nullptr;
     VmaAllocationInfo allocation_info;
     if (vmaCreateImage(m_device.allocator(), &image_info, &image_alloc_info, &image, &allocation, &allocation_info) !=
         VK_SUCCESS)
@@ -55,8 +56,8 @@ Image::AllocationInfo Image::create_allocation_info()
     }
 
     return {
-        image,
-        allocation,
-        allocation_info,
+        .image = image,
+        .allocation = allocation,
+        .info = allocation_info,
     };
 }

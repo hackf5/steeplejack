@@ -20,13 +20,13 @@ class VulkanContextBuilder : NoCopyOrMove
 
     VulkanContextBuilder& add_window(int width, int height, const std::string& title);
 
-    VulkanContextBuilder& add_device(bool enable_validation_layers = true);
+    VulkanContextBuilder& add_device(bool enableValidationLayers = true);
 
     VulkanContextBuilder& add_adhoc_queues();
 
     VulkanContextBuilder& add_graphics_queue();
 
-    VulkanContextBuilder& add_descriptor_set_layout(std::function<void(DescriptorSetLayoutBuilder&)> configure);
+    VulkanContextBuilder& add_descriptor_set_layout(const std::function<void(DescriptorSetLayoutBuilder&)>& configure);
 
     VulkanContextBuilder& add_graphics_buffers();
 
@@ -34,7 +34,7 @@ class VulkanContextBuilder : NoCopyOrMove
 
     VulkanContextBuilder& add_texture_factory();
 
-    VulkanContextBuilder& add_scene(std::function<std::unique_ptr<RenderScene>(const Device&)> scene_factory);
+    VulkanContextBuilder& add_scene(const std::function<std::unique_ptr<RenderScene>(const Device&)>& scene_factory);
 
     VulkanContextBuilder& add_swapchain();
 

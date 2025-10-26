@@ -4,14 +4,14 @@
 #include "spdlog/spdlog.h"
 #include "stb_image.h"
 
+#include <cstddef>
+#include <utility>
+
 using namespace steeplejack;
 
-Texture::Texture(const Device& device,
-                 const Sampler& sampler,
-                 const AdhocQueues& adhoc_queues,
-                 const std::string& name) :
+Texture::Texture(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues, std::string name) :
     m_device(device),
-    m_name(name),
+    m_name(std::move(name)),
     m_image(create_image(adhoc_queues)),
     m_image_view(m_device, *m_image, VK_IMAGE_ASPECT_COLOR_BIT),
     m_image_descriptor_info(create_image_descriptor_info(sampler))
@@ -23,15 +23,16 @@ std::unique_ptr<Buffer> Texture::create_staging_buffer(const std::string& name, 
     auto file_name = "assets/textures/" + name;
 
     spdlog::info("Loading image: {}", file_name);
-    int channels;
-    auto pixels = stbi_load(file_name.c_str(), &width, &height, &channels, STBI_rgb_alpha);
+    int channels = 0;
+    auto* pixels = stbi_load(file_name.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
-    if (!pixels)
+    if (pixels == nullptr)
     {
         throw std::runtime_error("Failed to load image " + file_name + ": " + stbi_failure_reason());
     }
 
-    auto staging_buffer = std::make_unique<StagingBuffer>(m_device, pixels, pixels + (width * height * channels));
+    auto staging_buffer =
+        std::make_unique<StagingBuffer>(m_device, pixels, pixels + (static_cast<ptrdiff_t>(width * height * channels)));
 
     stbi_image_free(pixels);
 
@@ -40,7 +41,8 @@ std::unique_ptr<Buffer> Texture::create_staging_buffer(const std::string& name, 
 
 std::unique_ptr<Image> Texture::create_image(const AdhocQueues& adhoc_queues)
 {
-    int width, height;
+    int width = 0;
+    int height = 0;
     auto staging_buffer = create_staging_buffer(m_name, width, height);
     auto image = std::make_unique<Image>(m_device,
                                          width,
@@ -78,8 +80,8 @@ void Texture::transition_image_layout(const AdhocQueues& adhoc_queues,
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount = 1;
 
-    VkPipelineStageFlags source_stage;
-    VkPipelineStageFlags destination_stage;
+    VkPipelineStageFlags source_stage = 0;
+    VkPipelineStageFlags destination_stage = 0;
 
     if (old_layout == VK_IMAGE_LAYOUT_UNDEFINED && new_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
     {

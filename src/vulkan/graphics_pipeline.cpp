@@ -40,7 +40,7 @@ VkPipelineLayout GraphicsPipeline::create_pipeline_layout(const DescriptorSetLay
     pipeline_layout_info.pushConstantRangeCount = 0;
     pipeline_layout_info.pPushConstantRanges = nullptr;
 
-    VkPipelineLayout pipeline_layout;
+    VkPipelineLayout pipeline_layout = nullptr;
     if (vkCreatePipelineLayout(m_device, &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline layout");
@@ -89,7 +89,7 @@ VkPipeline GraphicsPipeline::create_pipeline(const Swapchain& swapchain,
     pipeline_info.subpass = 0;
     pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
 
-    VkPipeline pipeline;
+    VkPipeline pipeline = nullptr;
     if (vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline");
@@ -145,7 +145,7 @@ VkPipelineRasterizationStateCreateInfo GraphicsPipeline::create_rasterization_st
     result.depthClampEnable = VK_FALSE;
     result.rasterizerDiscardEnable = VK_FALSE;
     result.polygonMode = VK_POLYGON_MODE_FILL;
-    result.lineWidth = 1.0f;
+    result.lineWidth = 1.0F;
     result.cullMode = VK_CULL_MODE_BACK_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     result.depthBiasEnable = VK_FALSE;
@@ -182,10 +182,10 @@ GraphicsPipeline::create_color_blend_state(const VkPipelineColorBlendAttachmentS
     result.logicOp = VK_LOGIC_OP_COPY;
     result.attachmentCount = 1;
     result.pAttachments = &color_blend_attachment;
-    result.blendConstants[0] = 0.0f;
-    result.blendConstants[1] = 0.0f;
-    result.blendConstants[2] = 0.0f;
-    result.blendConstants[3] = 0.0f;
+    result.blendConstants[0] = 0.0F;
+    result.blendConstants[1] = 0.0F;
+    result.blendConstants[2] = 0.0F;
+    result.blendConstants[3] = 0.0F;
 
     return result;
 }
@@ -215,8 +215,8 @@ VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::create_depth_stencil_sta
     result.depthCompareOp = VK_COMPARE_OP_LESS;
     result.depthBoundsTestEnable = VK_FALSE;
     result.stencilTestEnable = VK_FALSE;
-    result.minDepthBounds = 0.0f;
-    result.maxDepthBounds = 1.0f;
+    result.minDepthBounds = 0.0F;
+    result.maxDepthBounds = 1.0F;
     result.front = {};
     result.back = {};
 
@@ -226,7 +226,7 @@ VkPipelineDepthStencilStateCreateInfo GraphicsPipeline::create_depth_stencil_sta
 PFN_vkCmdPushDescriptorSetKHR GraphicsPipeline::fetch_vkCmdPushDescriptorSetKHR()
 {
     auto result = (PFN_vkCmdPushDescriptorSetKHR)vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR");
-    if (!result)
+    if (result == nullptr)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");
     }

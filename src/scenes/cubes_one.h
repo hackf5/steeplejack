@@ -29,10 +29,10 @@ class CubesOne final : public RenderScene
     const indexes_t m_indexes;
     const vertexes_t m_vertexes;
 
-    indexes_t create_indexes();
-    vertexes_t create_vertexes();
+    static indexes_t create_indexes();
+    static vertexes_t create_vertexes();
 
-    face_t create_face(uint32_t face);
+    static face_t create_face(uint32_t face);
 
   protected:
     void update(uint32_t frame_index, float aspect_ratio, float time) override;

@@ -20,8 +20,8 @@ class Swapchain : NoCopyOrMove
     const VkRect2D m_scissor;
 
     vkb::Swapchain create_swapchain();
-    VkViewport create_viewport();
-    VkRect2D create_scissor();
+    VkViewport create_viewport() const;
+    VkRect2D create_scissor() const;
     std::vector<VkSemaphore> create_semaphores(size_t count);
 
   public:

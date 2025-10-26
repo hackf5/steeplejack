@@ -92,7 +92,7 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) con
     render_pass_info.dependencyCount = 1;
     render_pass_info.pDependencies = &dependency;
 
-    VkRenderPass render_pass;
+    VkRenderPass render_pass = nullptr;
     if (vkCreateRenderPass(m_device, &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create render pass");
@@ -107,12 +107,12 @@ void RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
     render_pass_info.renderPass = m_render_pass;
     render_pass_info.framebuffer = framebuffer;
-    render_pass_info.renderArea.offset = {0, 0};
+    render_pass_info.renderArea.offset = {.x = 0, .y = 0};
     render_pass_info.renderArea.extent = m_swapchain.extent();
 
     std::array<VkClearValue, 2> clear_values{};
-    clear_values[0].color = {{0.0f, 0.0f, 0.0f, 1.0f}};
-    clear_values[1].depthStencil = {1.0f, 0};
+    clear_values[0].color = {{0.0F, 0.0F, 0.0F, 1.0F}};
+    clear_values[1].depthStencil = {.depth = 1.0F, .stencil = 0};
     render_pass_info.clearValueCount = static_cast<uint32_t>(clear_values.size());
     render_pass_info.pClearValues = clear_values.data();
 

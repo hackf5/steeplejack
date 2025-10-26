@@ -32,11 +32,11 @@ VkSampler Sampler::create_sampler()
     sampler_info.compareEnable = VK_FALSE;
     sampler_info.compareOp = VK_COMPARE_OP_ALWAYS;
     sampler_info.mipmapMode = VK_SAMPLER_MIPMAP_MODE_LINEAR;
-    sampler_info.mipLodBias = 0.0f;
-    sampler_info.minLod = 0.0f;
-    sampler_info.maxLod = 0.0f;
+    sampler_info.mipLodBias = 0.0F;
+    sampler_info.minLod = 0.0F;
+    sampler_info.maxLod = 0.0F;
 
-    VkSampler sampler;
+    VkSampler sampler = nullptr;
     if (vkCreateSampler(m_device, &sampler_info, nullptr, &sampler) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create sampler");

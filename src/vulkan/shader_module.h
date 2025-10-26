@@ -21,7 +21,7 @@ class ShaderModule : NoCopyOrMove
     VkShaderModule create_shader_module();
 
   public:
-    ShaderModule(const Device& device, const std::string& name);
+    ShaderModule(const Device& device, std::string name);
     ~ShaderModule();
 
     const std::string& name() const

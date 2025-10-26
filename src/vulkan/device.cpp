@@ -72,7 +72,7 @@ vkb::Device Device::create_device()
 
     spdlog::info("Creating Vulkan Device");
 
-    vkb::DeviceBuilder device_builder{phys_ret.value()};
+    vkb::DeviceBuilder const device_builder{phys_ret.value()};
     auto dev_ret = device_builder.build();
     if (!dev_ret)
     {
@@ -91,7 +91,7 @@ VmaAllocator Device::create_allocator()
     allocator_info.device = m_device.device;
     allocator_info.instance = m_instance.instance;
 
-    VmaAllocator allocator;
+    VmaAllocator allocator = nullptr;
     if (vmaCreateAllocator(&allocator_info, &allocator) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create Vulkan Memory Allocator");

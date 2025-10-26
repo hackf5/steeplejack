@@ -9,7 +9,7 @@ class Application
 {
   public:
     Application();
-    int run();
+    static int run();
 };
 
 } // namespace steeplejack

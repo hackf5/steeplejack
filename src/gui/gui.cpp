@@ -59,7 +59,7 @@ VkDescriptorPool Gui::create_descriptor_pool()
     pool_info.poolSizeCount = static_cast<uint32_t>(std::size(pool_sizes));
     pool_info.pPoolSizes = pool_sizes;
 
-    VkDescriptorPool descriptor_pool;
+    VkDescriptorPool descriptor_pool = nullptr;
     if (vkCreateDescriptorPool(m_device, &pool_info, nullptr, &descriptor_pool) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create descriptor pool");
@@ -100,7 +100,7 @@ void Gui::begin_frame()
     ImGui::End();
 }
 
-void Gui::render(VkCommandBuffer command_buffer) const
+void Gui::render(VkCommandBuffer command_buffer)
 {
     ImGui::Render();
     ImGui_ImplVulkan_RenderDrawData(ImGui::GetDrawData(), command_buffer);

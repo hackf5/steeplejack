@@ -28,6 +28,6 @@ class Gui
     ~Gui();
 
     void begin_frame();
-    void render(VkCommandBuffer command_buffer) const;
+    static void render(VkCommandBuffer command_buffer);
 };
 } // namespace steeplejack

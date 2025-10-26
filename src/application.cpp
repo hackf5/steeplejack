@@ -10,7 +10,7 @@
 namespace steeplejack
 {
 
-Application::Application() {}
+Application::Application() = default;
 
 int Application::run()
 {
@@ -18,7 +18,7 @@ int Application::run()
     const bool enableValidationLayers = false;
     spdlog::set_level(spdlog::level::info);
 #else
-    const bool enableValidationLayers = true;
+    const bool enable_validation_layers = true;
     spdlog::set_level(spdlog::level::debug);
 #endif
 
@@ -38,7 +38,7 @@ int Application::run()
 
         auto context = VulkanContextBuilder()
                            .add_window(1280, 720, "Steeplejack")
-                           .add_device(enableValidationLayers)
+                           .add_device(enable_validation_layers)
                            .add_graphics_queue()
                            .add_adhoc_queues()
                            .add_graphics_buffers()

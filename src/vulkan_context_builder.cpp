@@ -29,7 +29,7 @@ VulkanContextBuilder& VulkanContextBuilder::add_graphics_queue()
 }
 
 VulkanContextBuilder&
-VulkanContextBuilder::add_descriptor_set_layout(std::function<void(DescriptorSetLayoutBuilder&)> configure)
+VulkanContextBuilder::add_descriptor_set_layout(const std::function<void(DescriptorSetLayoutBuilder&)>& configure)
 {
     DescriptorSetLayoutBuilder builder;
     configure(builder);
@@ -57,7 +57,7 @@ VulkanContextBuilder& VulkanContextBuilder::add_texture_factory()
 }
 
 VulkanContextBuilder&
-VulkanContextBuilder::add_scene(std::function<std::unique_ptr<RenderScene>(const Device&)> scene_factory)
+VulkanContextBuilder::add_scene(const std::function<std::unique_ptr<RenderScene>(const Device&)>& scene_factory)
 {
     m_context->m_render_scene.reset();
     m_context->m_render_scene = scene_factory(*m_context->m_device);
@@ -66,7 +66,7 @@ VulkanContextBuilder::add_scene(std::function<std::unique_ptr<RenderScene>(const
 
 VulkanContextBuilder& VulkanContextBuilder::add_swapchain()
 {
-    if (m_context->m_swapchain.get() != nullptr)
+    if (m_context->m_swapchain != nullptr)
     {
         m_context->m_gui.reset();
         m_context->m_graphics_pipeline.reset();

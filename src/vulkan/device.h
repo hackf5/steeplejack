@@ -23,7 +23,7 @@ class Device : NoCopyOrMove
     const VkQueue m_present_queue;
     const VkQueue m_transfer_queue;
 
-    vkb::Instance create_instance(bool enable_validation_layers);
+    static vkb::Instance create_instance(bool enable_validation_layers);
     VkSurfaceKHR create_surface();
     vkb::Device create_device();
     VmaAllocator create_allocator();

@@ -19,12 +19,12 @@ Swapchain::~Swapchain()
 {
     spdlog::info("Destroying Swapchain");
 
-    for (auto semaphore : m_render_finished)
+    for (auto* semaphore : m_render_finished)
     {
         vkDestroySemaphore(m_device, semaphore, nullptr);
     }
 
-    for (auto image_view : m_swapchain_image_views)
+    for (auto* image_view : m_swapchain_image_views)
     {
         vkDestroyImageView(m_device, image_view, nullptr);
     }
@@ -53,23 +53,23 @@ vkb::Swapchain Swapchain::create_swapchain()
     return swapchain;
 }
 
-VkViewport Swapchain::create_viewport()
+VkViewport Swapchain::create_viewport() const
 {
     VkViewport viewport{};
-    viewport.x = 0.0f;
-    viewport.y = 0.0f;
+    viewport.x = 0.0F;
+    viewport.y = 0.0F;
     viewport.width = static_cast<float>(m_swapchain.extent.width);
     viewport.height = static_cast<float>(m_swapchain.extent.height);
-    viewport.minDepth = 0.0f;
-    viewport.maxDepth = 1.0f;
+    viewport.minDepth = 0.0F;
+    viewport.maxDepth = 1.0F;
 
     return viewport;
 }
 
-VkRect2D Swapchain::create_scissor()
+VkRect2D Swapchain::create_scissor() const
 {
     VkRect2D scissor{};
-    scissor.offset = {0, 0};
+    scissor.offset = {.x = 0, .y = 0};
     scissor.extent = m_swapchain.extent;
 
     return scissor;

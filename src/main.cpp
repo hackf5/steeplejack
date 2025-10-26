@@ -2,6 +2,6 @@
 
 int main()
 {
-    steeplejack::Application app;
-    return app.run();
+    steeplejack::Application const app;
+    return steeplejack::Application::run();
 }

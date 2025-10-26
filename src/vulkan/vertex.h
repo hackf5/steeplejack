@@ -34,14 +34,14 @@ struct VertexInputState
     std::vector<VkVertexInputAttributeDescription> attributes;
     VkPipelineVertexInputStateCreateInfo pipeline;
 
-    VertexInputState(uint32_t binding, const std::vector<VertexComponent> components);
+    VertexInputState(uint32_t binding, const std::vector<VertexComponent>& components);
 
   private:
-    VkVertexInputBindingDescription create_binding(uint32_t binding);
+    static VkVertexInputBindingDescription create_binding(uint32_t binding);
 
-    VkVertexInputAttributeDescription create_attribute(uint32_t location, VertexComponent component);
+    VkVertexInputAttributeDescription create_attribute(uint32_t location, VertexComponent component) const;
 
-    std::vector<VkVertexInputAttributeDescription> create_attributes(const std::vector<VertexComponent> components);
+    std::vector<VkVertexInputAttributeDescription> create_attributes(const std::vector<VertexComponent>& components);
 
     VkPipelineVertexInputStateCreateInfo create_pipeline();
 };

@@ -32,27 +32,27 @@ class GraphicsPipeline : NoCopyOrMove
                                const std::string& vertex_shader,
                                const std::string& fragment_shader);
 
-    std::vector<VkPipelineShaderStageCreateInfo> create_shader_stages(const ShaderModule& vertex_shader,
-                                                                      const ShaderModule& fragment_shader);
+    static std::vector<VkPipelineShaderStageCreateInfo> create_shader_stages(const ShaderModule& vertex_shader,
+                                                                             const ShaderModule& fragment_shader);
 
-    VkPipelineInputAssemblyStateCreateInfo create_input_assembly_state();
+    static VkPipelineInputAssemblyStateCreateInfo create_input_assembly_state();
 
-    VkPipelineViewportStateCreateInfo create_viewport_state(const Swapchain& swapchain);
+    static VkPipelineViewportStateCreateInfo create_viewport_state(const Swapchain& swapchain);
 
-    VkPipelineRasterizationStateCreateInfo create_rasterization_state();
+    static VkPipelineRasterizationStateCreateInfo create_rasterization_state();
 
     VkPipelineMultisampleStateCreateInfo create_multisample_state();
 
-    VkPipelineColorBlendAttachmentState create_color_blend_attachment_state();
+    static VkPipelineColorBlendAttachmentState create_color_blend_attachment_state();
 
-    VkPipelineColorBlendStateCreateInfo
+    static VkPipelineColorBlendStateCreateInfo
     create_color_blend_state(const VkPipelineColorBlendAttachmentState& color_blend_attachment_state);
 
-    std::vector<VkDynamicState> create_dynamic_states();
+    static std::vector<VkDynamicState> create_dynamic_states();
 
-    VkPipelineDynamicStateCreateInfo create_dynamic_state(const std::vector<VkDynamicState>& dynamic_states);
+    static VkPipelineDynamicStateCreateInfo create_dynamic_state(const std::vector<VkDynamicState>& dynamic_states);
 
-    VkPipelineDepthStencilStateCreateInfo create_depth_stencil_state();
+    static VkPipelineDepthStencilStateCreateInfo create_depth_stencil_state();
 
     PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
 

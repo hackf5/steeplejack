@@ -47,10 +47,10 @@ void VulkanEngine::draw_frame()
 {
     m_context->gui().begin_frame();
 
-    auto framebuffer = m_context->graphics_queue().prepare_framebuffer(
+    auto* framebuffer = m_context->graphics_queue().prepare_framebuffer(
         m_current_frame, m_context->swapchain(), m_context->framebuffers());
 
-    if (!framebuffer)
+    if (framebuffer == nullptr)
     {
         recreate_swapchain();
         return;
@@ -70,7 +70,7 @@ void VulkanEngine::draw_frame()
 
 void VulkanEngine::render(VkFramebuffer framebuffer)
 {
-    auto command_buffer = m_context->graphics_queue().begin_command();
+    auto* command_buffer = m_context->graphics_queue().begin_command();
 
     m_context->render_pass().begin(command_buffer, framebuffer);
 
@@ -79,7 +79,7 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
     m_context->graphics_buffers().bind(command_buffer);
 
     m_context->render_scene().render(command_buffer, m_current_frame, m_context->graphics_pipeline());
-    m_context->gui().render(command_buffer);
+    steeplejack::Gui::render(command_buffer);
 
     m_context->render_pass().end(command_buffer);
 

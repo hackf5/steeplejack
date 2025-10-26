@@ -35,15 +35,15 @@ Buffer::AllocationInfo Buffer::create_allocation_info(VkDeviceSize size)
     alloc_info.usage = m_memory_usage;
     alloc_info.flags = m_allocation_flags;
 
-    VkBuffer buffer;
-    VmaAllocation allocation;
+    VkBuffer buffer = nullptr;
+    VmaAllocation allocation = nullptr;
     VmaAllocationInfo allocation_info;
     if (vmaCreateBuffer(m_allocator, &buffer_info, &alloc_info, &buffer, &allocation, &allocation_info) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create buffer");
     }
 
-    return {buffer, allocation, allocation_info};
+    return {.buffer = buffer, .allocation = allocation, .info = allocation_info};
 }
 
 VkDescriptorBufferInfo Buffer::create_descriptor_info() const

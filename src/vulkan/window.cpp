@@ -2,6 +2,7 @@
 
 #include <spdlog/spdlog.h>
 #include <stdexcept>
+#include <utility>
 
 using namespace steeplejack;
 
@@ -35,7 +36,7 @@ Window::~Window()
 
 void Window::framebuffer_resize_callback(GLFWwindow* window, int width, int height)
 {
-    auto app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
+    auto* app = reinterpret_cast<Window*>(glfwGetWindowUserPointer(window));
 
     if (app->m_framebuffer_resize_callback)
     {
@@ -47,7 +48,7 @@ VkSurfaceKHR Window::create_window_surface(VkInstance instance) const
 {
     spdlog::info("Creating Window Surface");
 
-    VkSurfaceKHR surface;
+    VkSurfaceKHR surface = nullptr;
     if (glfwCreateWindowSurface(instance, m_window, nullptr, &surface) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create window surface");
@@ -58,7 +59,7 @@ VkSurfaceKHR Window::create_window_surface(VkInstance instance) const
 
 void Window::register_framebuffer_resize_callback(framebuffer_resize_callback_t callback)
 {
-    m_framebuffer_resize_callback = callback;
+    m_framebuffer_resize_callback = std::move(callback);
 }
 
 void Window::wait_resize()
