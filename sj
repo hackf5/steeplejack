@@ -16,7 +16,7 @@ Commands:
   run   [config]  Execute the latest build for the config. Extra args are passed to the executable.
   test  [config]  Build and run the test suite for the config.
   format [mode]   Run clang-format. mode: fix (default) or check.
-  lint  [mode]    Run clang-tidy. mode: check (report only) or fix (default).
+  lint  [mode]    Run clang-tidy. mode: check (report only) or fix (default). Add --all to lint all files.
 USAGE
     exit 1
 }

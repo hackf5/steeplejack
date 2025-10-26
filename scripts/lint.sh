@@ -6,14 +6,20 @@ set -euo pipefail
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 source "${SCRIPT_DIR}/lib/common.sh"
 
-MODE=${1:-fix}
-case "${MODE}" in
-  check|fix) ;;
-  *)
-    echo "Unknown mode '${MODE}'. Use 'fix' (default) or 'check'." >&2
-    exit 1
-    ;;
-esac
+MODE=fix
+FULL=0
+# Parse args: first positional can be mode; optional --all to lint all files
+if [[ ${1:-} == "check" || ${1:-} == "fix" ]]; then
+  MODE=$1
+  shift || true
+fi
+for arg in "$@"; do
+  case "$arg" in
+    --all|all)
+      FULL=1
+      ;;
+  esac
+done
 
 if ! command -v run-clang-tidy.py >/dev/null 2>&1 && ! command -v run-clang-tidy >/dev/null 2>&1; then
   echo "run-clang-tidy not found. On MSYS2 UCRT, install: mingw-w64-ucrt-x86_64-clang-tools-extra" >&2
@@ -36,8 +42,34 @@ fi
 
 cd "${ROOT_DIR}"
 
-# Gather C++ source files tracked by git that are likely in the compile database
-mapfile -d '' FILES < <(git ls-files -z -- '*.cpp' '*.cc' '*.cxx')
+# Gather C++ source files
+if [[ ${FULL} -eq 1 ]]; then
+  mapfile -d '' FILES < <(git ls-files -z -- '*.cpp' '*.cc' '*.cxx')
+else
+  # Determine a reasonable base for changed files
+  if git rev-parse --abbrev-ref --symbolic-full-name @{upstream} >/dev/null 2>&1; then
+    upstream_ref=$(git rev-parse --abbrev-ref --symbolic-full-name @{upstream})
+    base_commit=$(git merge-base HEAD "${upstream_ref}")
+  elif git show-ref --verify --quiet refs/heads/main; then
+    base_commit=$(git merge-base HEAD main)
+  elif git show-ref --verify --quiet refs/remotes/origin/main; then
+    base_commit=$(git merge-base HEAD origin/main)
+  else
+    # Fallback to initial commit
+    base_commit=$(git rev-list --max-parents=0 HEAD | tail -n1)
+  fi
+  # Collect unstaged, staged, committed-changed, and new files; unique the list (zero-terminated safe)
+  mapfile -d '' FILES < <({
+      git diff -z --name-only --diff-filter=ACMR HEAD -- '*.cpp' '*.cc' '*.cxx' ;
+      git diff -z --name-only --diff-filter=ACMR "${base_commit}...HEAD" -- '*.cpp' '*.cc' '*.cxx' ;
+      git diff -z --name-only --cached --diff-filter=ACMR -- '*.cpp' '*.cc' '*.cxx' ;
+      git ls-files -z --others --exclude-standard -- '*.cpp' '*.cc' '*.cxx' ;
+    } | sort -zu)
+  if [[ ${#FILES[@]} -eq 0 ]]; then
+    echo "No changed C++ files. Use '--all' for full lint."
+    exit 0
+  fi
+fi
 if [[ ${#FILES[@]} -eq 0 ]]; then
   echo "No C++ source files found."
   exit 0
