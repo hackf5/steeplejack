@@ -7,6 +7,12 @@
 
 #include <iostream>
 
+namespace
+{
+constexpr int kWindowWidth = 1280;
+constexpr int kWindowHeight = 720;
+}
+
 namespace steeplejack
 {
 
@@ -37,7 +43,7 @@ int Application::run()
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };
 
         auto context = VulkanContextBuilder()
-                           .add_window(1280, 720, "Steeplejack")
+                           .add_window(kWindowWidth, kWindowHeight, "Steeplejack")
                            .add_device(enable_validation_layers)
                            .add_graphics_queue()
                            .add_adhoc_queues()

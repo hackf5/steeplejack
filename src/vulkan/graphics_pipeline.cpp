@@ -56,7 +56,7 @@ VkPipeline GraphicsPipeline::create_pipeline(const Swapchain& swapchain,
 {
     spdlog::info("Creating Graphics Pipeline");
 
-    auto vertex_input_state = VertexInputState(0, Vertex::ALL_COMPONENTS);
+    auto vertex_input_state = VertexInputState(0, Vertex::kAllComponents);
 
     auto vertex_shader_module = ShaderModule(m_device, vertex_shader);
     auto fragment_shader_module = ShaderModule(m_device, fragment_shader);
@@ -167,8 +167,8 @@ VkPipelineColorBlendAttachmentState GraphicsPipeline::create_color_blend_attachm
 {
     VkPipelineColorBlendAttachmentState result = {};
     result.blendEnable = VK_FALSE;
-    result.colorWriteMask =
-        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+    result.colorWriteMask = static_cast<VkColorComponentFlags>(
+        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
     return result;
 }

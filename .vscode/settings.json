@@ -53,6 +53,7 @@
     "MSYS",
     "Multisampler",
     "SPIR",
+    "stbi",
     "swapchain",
     "swapchains",
     "ucrt",

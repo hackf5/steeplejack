@@ -4,10 +4,7 @@
 
 using namespace steeplejack;
 
-const std::vector<VertexComponent> Vertex::ALL_COMPONENTS = {
-    VertexComponent::Position, VertexComponent::UV, VertexComponent::Color};
-
-VertexInputState::VertexInputState(uint32_t binding, const std::vector<VertexComponent>& components) :
+VertexInputState::VertexInputState(uint32_t binding, std::span<const VertexComponent> components) :
     binding(create_binding(binding)), attributes(create_attributes(components)), pipeline(create_pipeline())
 {
 }
@@ -49,7 +46,7 @@ VkVertexInputAttributeDescription VertexInputState::create_attribute(uint32_t lo
 }
 
 std::vector<VkVertexInputAttributeDescription>
-VertexInputState::create_attributes(const std::vector<VertexComponent>& components)
+VertexInputState::create_attributes(std::span<const VertexComponent> components)
 {
     std::vector<VkVertexInputAttributeDescription> descriptions;
     descriptions.reserve(components.size());

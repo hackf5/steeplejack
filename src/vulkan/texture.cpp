@@ -5,6 +5,7 @@
 #include "stb_image.h"
 
 #include <cstddef>
+#include <span>
 #include <utility>
 
 using namespace steeplejack;
@@ -31,8 +32,9 @@ std::unique_ptr<Buffer> Texture::create_staging_buffer(const std::string& name, 
         throw std::runtime_error("Failed to load image " + file_name + ": " + stbi_failure_reason());
     }
 
-    auto staging_buffer =
-        std::make_unique<StagingBuffer>(m_device, pixels, pixels + (static_cast<ptrdiff_t>(width * height * channels)));
+    const size_t bytes = static_cast<size_t>(width) * static_cast<size_t>(height) * 4U;
+    const auto bytes_view = std::span<const std::byte>(reinterpret_cast<const std::byte*>(pixels), bytes);
+    auto staging_buffer = std::make_unique<StagingBuffer>(m_device, bytes_view);
 
     stbi_image_free(pixels);
 
