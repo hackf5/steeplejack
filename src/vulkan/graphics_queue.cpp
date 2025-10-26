@@ -1,5 +1,6 @@
 #include "graphics_queue.h"
 
+#include <array>
 #include <limits>
 #include <spdlog/spdlog.h>
 
@@ -19,12 +20,12 @@ GraphicsQueue::~GraphicsQueue()
 {
     spdlog::info("Destroying Graphics Commands");
 
-    for (auto* fence : m_in_flight_fences)
+    for (auto fence : m_in_flight_fences)
     {
         vkDestroyFence(m_device, fence, nullptr);
     }
 
-    for (auto* semaphore : m_image_available)
+    for (auto semaphore : m_image_available)
     {
         vkDestroySemaphore(m_device, semaphore, nullptr);
     }
@@ -180,15 +181,15 @@ void GraphicsQueue::submit_command() const
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &m_command_buffers[m_current_frame];
 
-    VkSemaphore const wait_semaphores[] = {m_image_available[m_current_frame]};
-    VkPipelineStageFlags wait_stages[] = {VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
+    const std::array<VkSemaphore, 1> wait_semaphores{m_image_available[m_current_frame]};
+    const std::array<VkPipelineStageFlags, 1> wait_stages{VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT};
     submit_info.waitSemaphoreCount = 1;
-    submit_info.pWaitSemaphores = wait_semaphores;
-    submit_info.pWaitDstStageMask = wait_stages;
+    submit_info.pWaitSemaphores = wait_semaphores.data();
+    submit_info.pWaitDstStageMask = wait_stages.data();
 
-    VkSemaphore const signal_semaphores[] = {m_render_finished_semaphore};
+    const std::array<VkSemaphore, 1> signal_semaphores{m_render_finished_semaphore};
     submit_info.signalSemaphoreCount = 1;
-    submit_info.pSignalSemaphores = signal_semaphores;
+    submit_info.pSignalSemaphores = signal_semaphores.data();
 
     vkResetFences(m_device, 1, &m_in_flight_fences[m_current_frame]);
 
@@ -203,21 +204,21 @@ bool GraphicsQueue::present_framebuffer()
     assert(m_swapchain != VK_NULL_HANDLE);
     assert(m_render_finished_semaphore != VK_NULL_HANDLE);
 
-    auto* swapchain = m_swapchain;
-    auto* render_finished_semaphore = m_render_finished_semaphore;
+    auto swapchain = m_swapchain;
+    auto render_finished_semaphore = m_render_finished_semaphore;
     m_swapchain = VK_NULL_HANDLE;
     m_render_finished_semaphore = VK_NULL_HANDLE;
 
     VkPresentInfoKHR present_info{};
     present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;
 
-    VkSemaphore const wait_semaphores[] = {render_finished_semaphore};
+    const std::array<VkSemaphore, 1> wait_semaphores{render_finished_semaphore};
     present_info.waitSemaphoreCount = 1;
-    present_info.pWaitSemaphores = wait_semaphores;
+    present_info.pWaitSemaphores = wait_semaphores.data();
 
-    VkSwapchainKHR const swapchains[] = {swapchain};
+    const std::array<VkSwapchainKHR, 1> swapchains{swapchain};
     present_info.swapchainCount = 1;
-    present_info.pSwapchains = swapchains;
+    present_info.pSwapchains = swapchains.data();
     present_info.pImageIndices = &m_image_index;
 
     VkResult const result = vkQueuePresentKHR(m_graphics_queue, &present_info);

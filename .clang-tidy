@@ -3,6 +3,7 @@ Checks: >
   -*
   ,clang-analyzer-*
   ,bugprone-*
+  ,-bugprone-easily-swappable-parameters
   ,cert-*
   ,cppcoreguidelines-*
   ,hicpp-*
