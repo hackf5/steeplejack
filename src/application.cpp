@@ -1,6 +1,6 @@
 #include "application.h"
 
-#include "scenes/woxel_column.h"
+#include "scenes/cubes_one.h"
 #include "spdlog/spdlog.h"
 #include "vulkan_context_builder.h"
 #include "vulkan_engine.h"
@@ -40,20 +40,7 @@ int Application::run()
                 .add_combined_image_sampler(); // texture
         };
 
-        auto scene_factory = [](const Device& device)
-        {
-            using namespace steeplejack::woxel;
-            WoxelGrid grid{};
-            grid.num_sectors = 48;
-            grid.dy = 0.25f;
-            grid.dz = 0.2f;
-
-            ColumnSpec spec{};
-            spec.inner_radius = 2.5f;
-            spec.layers = 24;
-
-            return std::make_unique<WoxelColumn>(device, grid, spec);
-        };
+        auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };
 
         auto context = VulkanContextBuilder()
                            .add_window(kWindowWidth, kWindowHeight, "Steeplejack")
