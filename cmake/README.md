@@ -1,3 +1,3 @@
 # CMake Helpers
 
-Custom modules and toolchain files (e.g., MSYS2, WSL2) live here.
+Custom modules and toolchain files (e.g., MSYS2) live here.
