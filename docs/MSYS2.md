@@ -14,7 +14,7 @@ Follow the official installer instructions at <https://www.msys2.org/>. Use the 
 
    ```bash
    pacman -Syu
-   pacman -S base-devel git vim zsh
+   pacman -S base-devel vim zsh
    ```
 
 ## Windows Terminal profiles
@@ -65,28 +65,15 @@ Notes:
 - `mingw-w64-ucrt-x86_64-glslang` provides the GLSL tools used to compile shaders during the build.
 - `mingw-w64-ucrt-x86_64-clang-tools-extra` provides `clang-format`, `clang-tidy`, and related tooling used by `./sj format` and `./sj lint`.
 
-## Git + SSH
-
-Generate a keypair (adjust the email/comment) and configure git:
-
-```bash
-ssh-keygen -t ed25519 -C "your@email"
-ssh-add ~/.ssh/id_ed25519
-
-git config --global user.name "Your Name"
-git config --global user.email "your@email"
-git config --global core.sshCommand "ssh"
-git config --global gpg.format ssh
-git config --global user.signingkey ~/.ssh/id_ed25519.pub
-git config --global commit.gpgsign true
-```
-
 ## Shell profile (`~/.zshrc`)
 
-Add environment variables and helpers so builds find the right tools and vcpkg:
+You want to reuse Git for Windows, not the one in MSYS2, so you can work in both VS Code and MSYS2 without friction.
 
 ```bash
-# Paths for VS Code (adjust if you use stable/insiders only)
+# At the very top of your .zshrc to use the same Git in MSYS2 as you use in Windows
+export PATH="/c/Program Files/Git/cmd:$PATH"
+
+# Anywhere in your .zshrc
 export PATH="$PATH:/c/Users/$USERNAME/AppData/Local/Programs/Microsoft VS Code Insiders/bin"
 export PATH="$PATH:/c/Users/$USERNAME/AppData/Local/Programs/Microsoft VS Code/bin"
 
@@ -95,15 +82,6 @@ export VCPKG_ROOT=/c/tools/vcpkg
 
 # Shortcuts
 alias vi='vim'
-
-# SSH agent
-export SSH_AUTH_SOCK=/tmp/ssh-agent.sock
-ssh_agent_is_running() { ssh-add -l >/dev/null 2>&1; }
-if ! ssh_agent_is_running; then
-  [ -S "$SSH_AUTH_SOCK" ] && rm -f "$SSH_AUTH_SOCK"
-  eval "$(ssh-agent -a $SSH_AUTH_SOCK -s)" >/dev/null
-  ssh-add ~/.ssh/id_ed25519 </dev/tty
-fi
 ```
 
 At this point the UCRT64 shell has the compilers, CMake, vcpkg, and SSH credentials you need to work on Steeplejack.
