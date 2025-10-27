@@ -1,11 +1,20 @@
-# Woxel core data model (header-only for now)
+# Woxel minimal API (header-only)
 
-This folder sketches the core types to represent a cylindrical voxel ("woxel") world:
+Initial target: draw a cylindrical column of woxels.
 
-- WoxelSpaceSpec: global parameters (sector count, radius, vertical/radial steps) and conversions.
-- WoxelIndex / WoxelCoord: discrete vs continuous coordinates, with wrap helpers.
-- ChunkDims / ChunkAddress / WoxelChunk: chunking over (theta, z, radial) and a simple dense cell store.
-- WoxelWorld: container for chunks with helpers to map continuous positions to cells and back.
-- ActorState: continuous cylindrical pose/velocity with local tangent/normal/up basis.
+Kept minimal surface (build what we need):
 
-These headers are not compiled yet; they are designed to be included by future code without requiring changes to the build.
+- Namespace: `steeplejack::woxel`.
+- `WoxelGrid`: `num_sectors`, `dy` (height), `dz` (radial thickness); `dtheta()` derived on demand.
+- `GridIndex`: discrete indices `(i_theta, i_z)` with wrap helpers.
+- Helpers are member functions on `WoxelGrid`: `theta_of`, `z_of`, `theta_index_of`, `z_index_of`, `wrap_theta_index`.
+
+Minimal column content:
+
+- `ColumnSpec` (in `woxel/column.h`): `inner_radius`, `layers`.
+
+Deferred (removed for now):
+
+- Radial layers and materials, chunking/world containers, actor state, and continuous coordinates.
+
+These headers are not compiled directly; they are designed to be included by future code as we integrate rendering.

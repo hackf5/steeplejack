@@ -20,6 +20,8 @@ Use the project task runner `sj` at the repo root. It targets MSYS2 UCRT64, keep
 
 Extra flags after the config go straight to CMake (for `build`) or the executable (for `run`).
 
+The build uses CMake presets under the hood (`ucrt-debug`/`ucrt-release`). Ensure `VCPKG_ROOT` is set per docs.
+
 ## Notes
 
 - Dependencies come from `vcpkg.json`. With `VCPKG_ROOT` set (per the docs), the build script pulls them automatically.

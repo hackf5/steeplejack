@@ -31,7 +31,7 @@ Point your MSYS2 environment at the shared checkout so the helper scripts can fi
 
 ## Installing dependencies
 
-You don’t need to call vcpkg manually—`./sj build ...` runs CMake with `vcpkg.json` and installs the manifest dependencies on first configure.
+You don’t need to call vcpkg manually — `./sj build` drives CMake using presets in `CMakePresets.json` and vcpkg manifest mode.
 
 ## Updating the baseline
 
