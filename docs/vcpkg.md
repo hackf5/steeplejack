@@ -1,55 +1,37 @@
-# vcpkg Setup
+# vcpkg Setup (MSYS2 UCRT64)
 
-Steeplejack uses vcpkg’s manifest mode to fetch third-party libraries (GLFW, GLM, spdlog, stb, VMA, …). This guide walks through the shared checkout approach so both MSYS2 UCRT64 and WSL2 reuse the same dependency cache.
+Steeplejack uses vcpkg’s manifest mode to fetch third-party libraries (GLFW, GLM, spdlog, stb, VMA, …).
+This guide is MSYS2‑specific and uses a shared checkout at `/c/tools/vcpkg` so dependency caches persist across builds.
 
 ## Install vcpkg
 
-1. Clone once on the Windows side (adjust the path if you prefer another drive):
-
-   ```powershell
-   git clone https://github.com/microsoft/vcpkg C:\tools\vcpkg
-   ```
-
-2. Bootstrap the executable once from the Windows/MSYS2 side:
+1. Clone once from the MSYS2 UCRT64 shell:
 
    ```bash
-   /c/tools/vcpkg/bootstrap-vcpkg.bat
+   mkdir -p /c/tools
+   cd /c/tools
+   git clone https://github.com/microsoft/vcpkg
    ```
 
-   WSL can invoke the resulting `vcpkg.exe` via `/mnt/c/tools/vcpkg/vcpkg.exe`, so no second bootstrap is required.
+2. Bootstrap the executable once (still in MSYS2 UCRT64):
+
+   ```bash
+   /c/tools/vcpkg/bootstrap-vcpkg.sh
+   ```
 
 ## Environment variables
 
-Point each environment at the shared checkout so the helper scripts can find vcpkg’s toolchain file.
+Point your MSYS2 environment at the shared checkout so the helper scripts can find vcpkg’s toolchain file.
 
 - **MSYS2 UCRT64** (`~/.zshrc`):
 
   ```bash
   export VCPKG_ROOT=/c/tools/vcpkg
-  export VCPKG_DEFAULT_TRIPLET=x64-mingw-dynamic
-  export VCPKG_DEFAULT_HOST_TRIPLET=x64-mingw-dynamic
-  ```
-
-- **WSL2** (`~/.bashrc` or `~/.zshrc`):
-
-  ```bash
-  export VCPKG_ROOT=/mnt/c/tools/vcpkg
-  # Defaults already point at x64-linux, so no extra triplet overrides needed.
   ```
 
 ## Installing dependencies
 
-You don’t need to call vcpkg manually—`./sj build ...` runs CMake with `vcpkg.json`, which automatically installs the manifest dependencies on first configure for each triplet.
-
-If you prefer to prefetch them (e.g., before heading offline), run:
-
-```bash
-# Inside MSYS2 UCRT64
-$VCPKG_ROOT/vcpkg install --triplet x64-mingw-dynamic
-
-# Inside WSL2
-$VCPKG_ROOT/vcpkg install --triplet x64-linux
-```
+You don’t need to call vcpkg manually—`./sj build ...` runs CMake with `vcpkg.json` and installs the manifest dependencies on first configure.
 
 ## Updating the baseline
 
@@ -62,6 +44,6 @@ The repo pins `builtin-baseline` `271a5b8850aa50f9a40269cbf3cf414b36e333d6`. Whe
 ## Troubleshooting
 
 - **Missing `versions/baseline.json`**: make sure your local vcpkg clone actually contains the requested baseline (`git -C $VCPKG_ROOT fetch --all` or re-clone).
-- **Triplet mismatch**: if CMake complains about `*_x64-mingw-static.list` files while you expect dynamic builds, confirm `VCPKG_DEFAULT_TRIPLET` is set in your MSYS shell (and restart the terminal so the variable is active).
+- **Triplet mismatch**: the CMake toolchain hardcodes the project triplets. If you see cache files for the wrong variant, clear your build directory (`./sj clean`) and reconfigure.
 
 Once vcpkg is configured, the `sj` task runner takes care of calling the right triplet/toolchain, so you can focus on writing code.

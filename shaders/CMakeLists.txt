@@ -6,7 +6,7 @@ find_program(GLSL_VALIDATOR
 )
 
 if(NOT GLSL_VALIDATOR)
-    message(FATAL_ERROR "glslangValidator not found! Please install mingw-w64-x86_64-glslang or set VULKAN_SDK")
+    message(FATAL_ERROR "glslangValidator not found! Please install mingw-w64-ucrt-x86_64-glslang or set VULKAN_SDK")
 endif()
 
 file(GLOB_RECURSE GLSL_SOURCE_FILES

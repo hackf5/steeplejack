@@ -60,7 +60,7 @@ configure_and_build() {
 }
 
 env_name=$(steeplejack_detect_environment) || {
-    echo "Unable to detect environment (expected MSYS2 UCRT64 or WSL2)." >&2
+    echo "Unable to detect environment (expected MSYS2 UCRT64)." >&2
     exit 1
 }
 

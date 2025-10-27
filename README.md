@@ -1,16 +1,15 @@
 # steeplejack
 
-Experimental C++/Vulkan playground for Windows. Everything builds via MSYS2 UCRT64; WSL2 is optional for tooling/tests (no Vulkan runtime there).
+Experimental C++/Vulkan playground for Windows. Everything builds via MSYS2 UCRT64.
 
 ## Prerequisites
 
 - Follow [docs/MSYS2.md](docs/MSYS2.md) to set up MSYS2 UCRT64, compilers, and the required vcpkg defaults.
 - Follow [docs/vcpkg.md](docs/vcpkg.md) to bootstrap the package manager.
-- (Optional) Read [docs/environments.md](docs/environments.md) if you want the WSL2 helper environment for tooling/tests.
 
 ## Build / Run
 
-Use the project task runner `sj` at the repo root. It detects the host (MSYS2 UCRT vs WSL2), selects the right toolchain, keeps separate Debug/Release build folders, chains through vcpkg when `VCPKG_ROOT` is set, and preserves dependency caches on clean.
+Use the project task runner `sj` at the repo root. It targets MSYS2 UCRT64, keeps separate Debug/Release build folders, chains through vcpkg when `VCPKG_ROOT` is set, and preserves dependency caches on clean.
 
 ```bash
 ./sj build [debug|release]   # configure + build (defaults to debug)
