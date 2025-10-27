@@ -13,7 +13,7 @@ esac
 
 ROOT_DIR=$(steeplejack_root)
 env_name=$(steeplejack_detect_environment) || {
-    echo "Unable to detect environment (expected MSYS2 UCRT64 or WSL2)." >&2
+    echo "Unable to detect environment (expected MSYS2 UCRT64)." >&2
     exit 1
 }
 
@@ -29,4 +29,3 @@ cmake --build "${build_dir}" --target steeplejack_tests
 
 echo "==> Running tests"
 ctest --test-dir "${build_dir}" --output-on-failure
-

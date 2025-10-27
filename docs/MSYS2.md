@@ -55,8 +55,15 @@ Launch the **UCRT64 / MSYS2** profile for day-to-day development.
       mingw-w64-ucrt-x86_64-toolchain \
       mingw-w64-ucrt-x86_64-make \
       mingw-w64-ucrt-x86_64-pkgconf \
-      mingw-w64-ucrt-x86_64-cmake
+      mingw-w64-ucrt-x86_64-cmake \
+      mingw-w64-ucrt-x86_64-glslang \
+      mingw-w64-ucrt-x86_64-clang-tools-extra
   ```
+
+Notes:
+
+- `mingw-w64-ucrt-x86_64-glslang` provides the GLSL tools used to compile shaders during the build.
+- `mingw-w64-ucrt-x86_64-clang-tools-extra` provides `clang-format`, `clang-tidy`, and related tooling used by `./sj format` and `./sj lint`.
 
 ## Git + SSH
 
@@ -76,7 +83,7 @@ git config --global commit.gpgsign true
 
 ## Shell profile (`~/.zshrc`)
 
-Add environment variables and helpers so builds find the right tools and vcpkg triplets:
+Add environment variables and helpers so builds find the right tools and vcpkg:
 
 ```bash
 # Paths for VS Code (adjust if you use stable/insiders only)
@@ -85,8 +92,6 @@ export PATH="$PATH:/c/Users/$USERNAME/AppData/Local/Programs/Microsoft VS Code/b
 
 # vcpkg
 export VCPKG_ROOT=/c/tools/vcpkg
-export VCPKG_DEFAULT_TRIPLET=x64-mingw-dynamic
-export VCPKG_DEFAULT_HOST_TRIPLET=x64-mingw-dynamic
 
 # Shortcuts
 alias vi='vim'
@@ -101,4 +106,4 @@ if ! ssh_agent_is_running; then
 fi
 ```
 
-At this point the UCRT64 shell has the compilers, CMake, vcpkg defaults, and SSH credentials you need to work on Steeplejack.
+At this point the UCRT64 shell has the compilers, CMake, vcpkg, and SSH credentials you need to work on Steeplejack.
