@@ -82,7 +82,7 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
 void CubesOne::load(const Device& device, TextureFactory& texture_factory, GraphicsBuffers& graphics_buffers)
 {
     texture_factory.clear();
-    texture_factory.load_texture("george", "george.png");
+    texture_factory.load_texture_from_gltf("rock", "rock_wall_15_1k/rock_wall_15_1k.gltf");
 
     graphics_buffers.load_vertexes(m_vertexes);
     graphics_buffers.load_indexes(m_indexes);
@@ -93,7 +93,7 @@ void CubesOne::load(const Device& device, TextureFactory& texture_factory, Graph
 
     auto& root_node = m_scene.model().root_node();
     auto& child1 = root_node.add_child();
-    child1.add_child(std::make_unique<Mesh>(device, primitives, texture_factory["george"]));
+    child1.add_child(std::make_unique<Mesh>(device, primitives, texture_factory["rock"]));
 
     auto& camera = m_scene.camera();
     camera.target() = glm::vec3(0.0F, 0.0F, 0.0F);

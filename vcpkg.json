@@ -4,7 +4,9 @@
   "version-string": "0.1.0",
   "builtin-baseline": "271a5b8850aa50f9a40269cbf3cf414b36e333d6",
   "dependencies": [
-    "enet",
+    "catch2",
+    "entt",
+    "glslang",
     "glfw3",
     "glm",
     { "name": "imgui", "features": ["glfw-binding", "vulkan-binding"] },
@@ -12,10 +14,9 @@
     "spdlog",
     "spirv-tools",
     "stb",
+    "tinygltf",
     "vk-bootstrap",
-    "glslang",
     "vulkan",
-    "vulkan-memory-allocator",
-    "catch2"
+    "vulkan-memory-allocator"
   ]
 }
