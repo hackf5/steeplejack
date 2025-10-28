@@ -35,9 +35,9 @@ int Application::run()
         auto layout_builder = [](DescriptorSetLayoutBuilder& builder)
         {
             builder
-                .add_uniform_buffer()          // camera
-                .add_uniform_buffer()          // model
-                .add_combined_image_sampler()  // texture
+                .add_uniform_buffer()           // camera
+                .add_uniform_buffer()           // model
+                .add_combined_image_sampler()   // texture
                 .add_uniform_buffer_fragment(); // material params
         };
 

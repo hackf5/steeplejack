@@ -13,9 +13,11 @@ TextureFactory::TextureFactory(const Device& device, const Sampler& sampler, con
 {
 }
 
-void TextureFactory::load_texture(const std::string& name, const std::string& texture_name)
+void TextureFactory::load_texture(const std::string& name,
+                                  const std::string& texture_name,
+                                  TextureColorSpace color_space)
 {
-    m_textures[name] = std::make_unique<Texture>(m_device, m_sampler, m_adhoc_queues, texture_name);
+    m_textures[name] = std::make_unique<Texture>(m_device, m_sampler, m_adhoc_queues, texture_name, color_space);
 }
 
 void TextureFactory::load_texture_from_gltf(const std::string& name, const std::string& gltf_relpath)
@@ -76,7 +78,7 @@ void TextureFactory::load_texture_from_gltf(const std::string& name, const std::
         const fs::path rel_image = rel_dir / image.uri;
 
         spdlog::info("Loading baseColor from glTF: {} -> {}", full_path.string(), rel_image.generic_string());
-        load_texture(name, rel_image.generic_string());
+        load_texture(name, rel_image.generic_string(), TextureColorSpace::Srgb);
         return;
     }
 

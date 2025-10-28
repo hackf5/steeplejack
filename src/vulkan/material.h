@@ -1,9 +1,9 @@
 #pragma once
 
 #include "util/no_copy_or_move.h"
-#include "vulkan/texture.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
+#include "vulkan/texture.h"
 
 #include <glm/glm.hpp>
 
@@ -42,21 +42,51 @@ class Material : NoCopyOrMove
     explicit Material(const Device& device) : m_uniform_buffers(device, sizeof(UniformBlock)) {}
 
     // Base color
-    Texture* base_color() const { return m_base_color; }
-    void set_base_color(Texture* tex) { m_base_color = tex; }
+    Texture* base_color() const
+    {
+        return m_base_color;
+    }
+    void set_base_color(Texture* tex)
+    {
+        m_base_color = tex;
+    }
 
     // Factors
-    const glm::vec4& base_color_factor() const { return m_base_color_factor; }
-    glm::vec4& base_color_factor() { return m_base_color_factor; }
+    const glm::vec4& base_color_factor() const
+    {
+        return m_base_color_factor;
+    }
+    glm::vec4& base_color_factor()
+    {
+        return m_base_color_factor;
+    }
 
-    float alpha_cutoff() const { return m_alpha_cutoff; }
-    float& alpha_cutoff() { return m_alpha_cutoff; }
+    float alpha_cutoff() const
+    {
+        return m_alpha_cutoff;
+    }
+    float& alpha_cutoff()
+    {
+        return m_alpha_cutoff;
+    }
 
-    AlphaMode alpha_mode() const { return m_alpha_mode; }
-    void set_alpha_mode(AlphaMode mode) { m_alpha_mode = mode; }
+    AlphaMode alpha_mode() const
+    {
+        return m_alpha_mode;
+    }
+    void set_alpha_mode(AlphaMode mode)
+    {
+        m_alpha_mode = mode;
+    }
 
-    bool double_sided() const { return m_double_sided; }
-    void set_double_sided(bool value) { m_double_sided = value; }
+    bool double_sided() const
+    {
+        return m_double_sided;
+    }
+    void set_double_sided(bool value)
+    {
+        m_double_sided = value;
+    }
 
     // UBO interface
     void flush(uint32_t frame_index)

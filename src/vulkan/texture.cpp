@@ -10,12 +10,17 @@
 
 using namespace steeplejack;
 
-Texture::Texture(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues, std::string name) :
+Texture::Texture(const Device& device,
+                 const Sampler& sampler,
+                 const AdhocQueues& adhoc_queues,
+                 std::string name,
+                 TextureColorSpace color_space) :
     m_device(device),
     m_name(std::move(name)),
-    m_image(create_image(adhoc_queues)),
+    m_image(create_image(adhoc_queues, color_space)),
     m_image_view(m_device, *m_image, VK_IMAGE_ASPECT_COLOR_BIT),
-    m_image_descriptor_info(create_image_descriptor_info(sampler))
+    m_image_descriptor_info(create_image_descriptor_info(sampler)),
+    m_color_space(color_space)
 {
 }
 
@@ -41,15 +46,17 @@ std::unique_ptr<Buffer> Texture::create_staging_buffer(const std::string& name, 
     return staging_buffer;
 }
 
-std::unique_ptr<Image> Texture::create_image(const AdhocQueues& adhoc_queues)
+std::unique_ptr<Image> Texture::create_image(const AdhocQueues& adhoc_queues, TextureColorSpace color_space)
 {
     int width = 0;
     int height = 0;
     auto staging_buffer = create_staging_buffer(m_name, width, height);
+    const VkFormat format =
+        (color_space == TextureColorSpace::Srgb) ? VK_FORMAT_R8G8B8A8_SRGB : VK_FORMAT_R8G8B8A8_UNORM;
     auto image = std::make_unique<Image>(m_device,
                                          width,
                                          height,
-                                         VK_FORMAT_R8G8B8A8_SRGB,
+                                         format,
                                          VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
                                          VK_IMAGE_TILING_OPTIMAL);
 

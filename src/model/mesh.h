@@ -28,7 +28,10 @@ class Mesh : NoCopyOrMove
 
   public:
     Mesh(const Device& device, const std::vector<Primitive>& primitives, Material* material = nullptr) :
-        m_uniform_block{}, m_uniform_buffers(device, sizeof(UniformBlock)), m_primitives(primitives), m_material(material)
+        m_uniform_block{},
+        m_uniform_buffers(device, sizeof(UniformBlock)),
+        m_primitives(primitives),
+        m_material(material)
     {
     }
 
@@ -41,7 +44,10 @@ class Mesh : NoCopyOrMove
         return m_uniform_block.model;
     }
 
-    void set_material(Material* material) { m_material = material; }
+    void set_material(Material* material)
+    {
+        m_material = material;
+    }
 
     void flush(uint32_t frame_index)
     {
@@ -64,7 +70,8 @@ class Mesh : NoCopyOrMove
             // Base color texture at binding 2 (if present)
             if (m_material->base_color())
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(), 2);
+                pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(),
+                                                                              2);
             }
         }
 

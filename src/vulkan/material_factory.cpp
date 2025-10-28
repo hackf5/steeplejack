@@ -36,7 +36,7 @@ Material* MaterialFactory::operator[](const std::string& name)
 Material& MaterialFactory::create_unlit(const std::string& name, const std::string& texture_relpath)
 {
     auto tex_name = name + ".baseColor";
-    m_textures.load_texture(tex_name, texture_relpath);
+    m_textures.load_texture(tex_name, texture_relpath, TextureColorSpace::Srgb);
 
     auto material = std::make_unique<Material>(m_device);
     material->set_base_color(m_textures[tex_name]);
@@ -70,7 +70,8 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
         throw std::runtime_error(std::format("Failed to load glTF {}: {}", full_path.string(), err));
 
     if (material_index < 0 || static_cast<size_t>(material_index) >= model.materials.size())
-        throw std::runtime_error(std::format("Material index {} out of range for {}", material_index, full_path.string()));
+        throw std::runtime_error(
+            std::format("Material index {} out of range for {}", material_index, full_path.string()));
 
     const auto& mat = model.materials[static_cast<size_t>(material_index)];
 
@@ -109,13 +110,13 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
                 const auto rel_image = (rel_dir / image.uri).generic_string();
                 auto tex_name = name + ".baseColor";
                 spdlog::info("Material {} baseColor -> {}", name, rel_image);
-                m_textures.load_texture(tex_name, rel_image);
+                m_textures.load_texture(tex_name, rel_image, TextureColorSpace::Srgb);
                 material->set_base_color(m_textures[tex_name]);
             }
             else
             {
-                throw std::runtime_error(std::format(
-                    "Embedded baseColor image not supported in first pass for {}", full_path.string()));
+                throw std::runtime_error(
+                    std::format("Embedded baseColor image not supported in first pass for {}", full_path.string()));
             }
         }
     }

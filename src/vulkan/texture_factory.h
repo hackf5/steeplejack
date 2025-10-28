@@ -25,7 +25,9 @@ class TextureFactory
   public:
     TextureFactory(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues);
 
-    void load_texture(const std::string& name, const std::string& texture_name);
+    void load_texture(const std::string& name,
+                      const std::string& texture_name,
+                      TextureColorSpace color_space = TextureColorSpace::Srgb);
 
     // Load the baseColor (albedo) texture referenced by a glTF/GLB file.
     // gltf_relpath is relative to assets/textures/ (e.g., "rock_wall_15_1k/rock_wall_15_1k.gltf").
