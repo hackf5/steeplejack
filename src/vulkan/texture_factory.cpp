@@ -3,8 +3,8 @@
 #include "spdlog/spdlog.h"
 
 #include <filesystem>
-#include <tiny_gltf.h>
 #include <format>
+#include <tiny_gltf.h>
 
 using namespace steeplejack;
 
@@ -75,8 +75,7 @@ void TextureFactory::load_texture_from_gltf(const std::string& name, const std::
         const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
         const fs::path rel_image = rel_dir / image.uri;
 
-        spdlog::info(
-            "Loading baseColor from glTF: {} -> {}", full_path.string(), rel_image.generic_string());
+        spdlog::info("Loading baseColor from glTF: {} -> {}", full_path.string(), rel_image.generic_string());
         load_texture(name, rel_image.generic_string());
         return;
     }

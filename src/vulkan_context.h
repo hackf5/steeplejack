@@ -12,6 +12,7 @@
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
 #include "vulkan/graphics_queue.h"
+#include "vulkan/material_factory.h"
 #include "vulkan/render_pass.h"
 #include "vulkan/sampler.h"
 #include "vulkan/swapchain.h"
@@ -34,6 +35,7 @@ class VulkanContext : NoCopyOrMove
     std::unique_ptr<GraphicsBuffers> m_graphics_buffers;
     std::unique_ptr<Sampler> m_sampler;
     std::unique_ptr<TextureFactory> m_texture_factory;
+    std::unique_ptr<MaterialFactory> m_material_factory;
     std::unique_ptr<RenderScene> m_render_scene;
     std::unique_ptr<Swapchain> m_swapchain;
     std::unique_ptr<DepthBuffer> m_depth_buffer;
@@ -104,6 +106,11 @@ class VulkanContext : NoCopyOrMove
     TextureFactory& texture_factory()
     {
         return *m_texture_factory;
+    }
+
+    MaterialFactory& material_factory()
+    {
+        return *m_material_factory;
     }
 
     const Swapchain& swapchain() const
