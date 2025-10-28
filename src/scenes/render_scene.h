@@ -5,7 +5,7 @@
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
-#include "vulkan/texture_factory.h"
+#include "vulkan/material_factory.h"
 
 #include <chrono>
 #include <string>
@@ -47,7 +47,7 @@ class RenderScene : NoCopyOrMove
         return m_fragment_shader;
     }
 
-    virtual void load(const Device& device, TextureFactory& texture_factory, GraphicsBuffers& graphics_buffers) = 0;
+    virtual void load(const Device& device, MaterialFactory& material_factory, GraphicsBuffers& graphics_buffers) = 0;
 
     void update(uint32_t frame_index, float aspect_ratio)
     {

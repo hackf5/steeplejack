@@ -44,10 +44,9 @@ const std::vector<steeplejack::Vertex::index_t> kIndexes = {
     0,
 };
 
-void George::load(const Device& device, TextureFactory& texture_factory, GraphicsBuffers& graphics_buffers)
+void George::load(const Device& device, MaterialFactory& material_factory, GraphicsBuffers& graphics_buffers)
 {
-    texture_factory.clear();
-    texture_factory.load_texture_from_gltf("rock", "rock_wall_15_1k/rock_wall_15_1k.gltf");
+    auto& mat = material_factory.load_gltf_material("rock", "rock_wall_15_1k/rock_wall_15_1k.gltf");
 
     graphics_buffers.load_vertexes(kVertexes);
     graphics_buffers.load_indexes(kIndexes);
@@ -55,11 +54,11 @@ void George::load(const Device& device, TextureFactory& texture_factory, Graphic
     std::vector<Primitive> const primitives = {{0, static_cast<uint32_t>(kIndexes.size())}};
 
     auto& root_node = m_scene.model().root_node();
-    auto mesh1 = std::make_unique<Mesh>(device, primitives, texture_factory["rock"]);
+    auto mesh1 = std::make_unique<Mesh>(device, primitives, &mat);
     auto& child1 = root_node.add_child(std::move(mesh1));
     child1.translation() = glm::vec3(0.0F, 0.0F, 0.0F);
 
-    auto mesh2 = std::make_unique<Mesh>(device, primitives, texture_factory["rock"]);
+    auto mesh2 = std::make_unique<Mesh>(device, primitives, &mat);
     auto& child2 = root_node.add_child(std::move(mesh2));
     child2.translation() = glm::vec3(0.0F, -1.0F, -1.0F);
 

@@ -5,7 +5,7 @@
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
-#include "vulkan/texture_factory.h"
+#include "vulkan/material_factory.h"
 #include "vulkan/vertex.h"
 
 #include <array>
@@ -46,6 +46,6 @@ class CubesOne final : public RenderScene
     }
 
     virtual void
-    load(const Device& device, TextureFactory& texture_factory, GraphicsBuffers& graphics_buffers) override;
+    load(const Device& device, MaterialFactory& material_factory, GraphicsBuffers& graphics_buffers) override;
 };
 } // namespace steeplejack

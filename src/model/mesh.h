@@ -5,7 +5,7 @@
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
-#include "vulkan/texture.h"
+#include "model/material.h"
 
 #include <glm/glm.hpp>
 #include <memory>
@@ -24,11 +24,11 @@ class Mesh : NoCopyOrMove
     UniformBlock m_uniform_block;
     UniformBuffer m_uniform_buffers;
     std::vector<Primitive> m_primitives;
-    Texture* m_texture;
+    Material* m_material;
 
   public:
-    Mesh(const Device& device, const std::vector<Primitive>& primitives, Texture* texture = nullptr) :
-        m_uniform_block{}, m_uniform_buffers(device, sizeof(UniformBlock)), m_primitives(primitives), m_texture(texture)
+    Mesh(const Device& device, const std::vector<Primitive>& primitives, Material* material = nullptr) :
+        m_uniform_block{}, m_uniform_buffers(device, sizeof(UniformBlock)), m_primitives(primitives), m_material(material)
     {
     }
 
@@ -41,10 +41,7 @@ class Mesh : NoCopyOrMove
         return m_uniform_block.model;
     }
 
-    void set_texture(Texture* texture)
-    {
-        m_texture = texture;
-    }
+    void set_material(Material* material) { m_material = material; }
 
     void flush(uint32_t frame_index)
     {
@@ -55,10 +52,8 @@ class Mesh : NoCopyOrMove
     {
         pipeline.descriptor_set_layout().write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), 1);
 
-        if (m_texture)
-        {
-            pipeline.descriptor_set_layout().write_combined_image_sampler(m_texture->descriptor(), 2);
-        }
+        if (m_material && m_material->base_color())
+            pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(), 2);
 
         pipeline.push_descriptor_set(command_buffer);
 

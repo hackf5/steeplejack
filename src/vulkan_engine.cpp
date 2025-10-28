@@ -16,7 +16,7 @@ void VulkanEngine::run()
 {
     spdlog::info("Vulkan Engine is running");
 
-    m_context->render_scene().load(m_context->device(), m_context->texture_factory(), m_context->graphics_buffers());
+    m_context->render_scene().load(m_context->device(), m_context->material_factory(), m_context->graphics_buffers());
 
     while (!m_context->window().should_close())
     {
