@@ -35,13 +35,14 @@ int Application::run()
         auto layout_builder = [](DescriptorSetLayoutBuilder& builder)
         {
             builder
-                .add_uniform_buffer()          // camera
-                .add_uniform_buffer()          // model
-                .add_combined_image_sampler()  // baseColor
-                .add_uniform_buffer_fragment() // material params
-                .add_combined_image_sampler()  // normal
-                .add_combined_image_sampler()  // metallicRoughness / ORM
-                .add_combined_image_sampler(); // emissive
+                .add_uniform_buffer()           // camera (vertex)
+                .add_uniform_buffer()           // model (vertex)
+                .add_combined_image_sampler()   // baseColor (fragment)
+                .add_uniform_buffer_fragment()  // material params (fragment)
+                .add_combined_image_sampler()   // normal (fragment)
+                .add_combined_image_sampler()   // metallicRoughness / ORM (fragment)
+                .add_combined_image_sampler()   // emissive (fragment)
+                .add_uniform_buffer_fragment(); // scene lights (ambient) (fragment)
         };
 
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };

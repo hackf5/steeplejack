@@ -14,8 +14,14 @@ layout(binding = 3) uniform MaterialParams {
     vec4 baseColorFactor;
 };
 
+layout(binding = 7) uniform SceneLights {
+    vec3 ambientColor;
+    float ambientIntensity;
+};
+
 void main() {
     vec4 baseCol = inColor * texture(inSampler, inUV) * baseColorFactor;
     vec3 emissiveCol = texture(inEmissive, inUV).rgb;
-    outColor = baseCol + vec4(emissiveCol, 0.0);
+    vec3 ambient = baseCol.rgb * ambientColor * ambientIntensity;
+    outColor = vec4(ambient + emissiveCol, baseCol.a);
 }
