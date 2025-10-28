@@ -37,10 +37,9 @@ class DescriptorSetLayout : NoCopyOrMove
         return m_descriptor_set_layouts;
     }
 
-    const std::vector<VkWriteDescriptorSet>& get_write_descriptor_sets() const
-    {
-        return m_write_descriptor_sets;
-    }
+    void reset_writes();
+
+    std::vector<VkWriteDescriptorSet> get_write_descriptor_sets() const;
 
     DescriptorSetLayout& write_combined_image_sampler(VkDescriptorImageInfo* image_info, uint32_t binding_index)
     {

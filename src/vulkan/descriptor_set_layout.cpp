@@ -71,3 +71,50 @@ std::vector<VkWriteDescriptorSet> DescriptorSetLayout::create_write_descriptor_s
 
     return write_descriptor_sets;
 }
+
+void DescriptorSetLayout::reset_writes()
+{
+    for (auto& write : m_write_descriptor_sets)
+    {
+        write.pImageInfo = nullptr;
+        write.pBufferInfo = nullptr;
+        write.pTexelBufferView = nullptr;
+    }
+}
+
+std::vector<VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets() const
+{
+    std::vector<VkWriteDescriptorSet> result;
+    result.reserve(m_write_descriptor_sets.size());
+
+    for (const auto& write : m_write_descriptor_sets)
+    {
+        switch (write.descriptorType)
+        {
+        case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER:
+        case VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER_DYNAMIC:
+        case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER:
+        case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC:
+            if (write.pBufferInfo != nullptr)
+            {
+                result.push_back(write);
+            }
+            break;
+        case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
+        case VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE:
+        case VK_DESCRIPTOR_TYPE_SAMPLER:
+        case VK_DESCRIPTOR_TYPE_STORAGE_IMAGE:
+        case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
+            if (write.pImageInfo != nullptr)
+            {
+                result.push_back(write);
+            }
+            break;
+        default:
+            // Unknown/unsupported types not expected here; ignore if unset
+            break;
+        }
+    }
+
+    return result;
+}

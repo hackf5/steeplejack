@@ -44,6 +44,8 @@ class Scene : public NoCopyOrMove
 
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
     {
+        // Reset descriptor writes per frame/draw sequence before rebinding camera and meshes
+        pipeline.descriptor_set_layout().reset_writes();
         m_camera.bind(frame_index, pipeline);
         m_model.render(command_buffer, frame_index, pipeline);
     }

@@ -121,6 +121,62 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
         }
     }
 
+    // Normal texture (linear)
+    if (mat.normalTexture.index >= 0 && static_cast<size_t>(mat.normalTexture.index) < model.textures.size())
+    {
+        const int img_index_n = model.textures[static_cast<size_t>(mat.normalTexture.index)].source;
+        if (img_index_n >= 0 && static_cast<size_t>(img_index_n) < model.images.size())
+        {
+            const auto& img = model.images[static_cast<size_t>(img_index_n)];
+            if (!img.uri.empty())
+            {
+                const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
+                const auto rel = (rel_dir / img.uri).generic_string();
+                auto tex_name = name + ".normal";
+                m_textures.load_texture(tex_name, rel, TextureColorSpace::Linear);
+                material->set_normal(m_textures[tex_name]);
+            }
+        }
+    }
+
+    // Metallic-Roughness (linear). Some assets pack ORM; we treat as MR for now.
+    if (mat.pbrMetallicRoughness.metallicRoughnessTexture.index >= 0 &&
+        static_cast<size_t>(mat.pbrMetallicRoughness.metallicRoughnessTexture.index) < model.textures.size())
+    {
+        const int img_index_mr =
+            model.textures[static_cast<size_t>(mat.pbrMetallicRoughness.metallicRoughnessTexture.index)].source;
+        if (img_index_mr >= 0 && static_cast<size_t>(img_index_mr) < model.images.size())
+        {
+            const auto& img = model.images[static_cast<size_t>(img_index_mr)];
+            if (!img.uri.empty())
+            {
+                const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
+                const auto rel = (rel_dir / img.uri).generic_string();
+                auto tex_name = name + ".metallicRoughness";
+                m_textures.load_texture(tex_name, rel, TextureColorSpace::Linear);
+                material->set_metallic_roughness(m_textures[tex_name]);
+            }
+        }
+    }
+
+    // Emissive texture (sRGB)
+    if (mat.emissiveTexture.index >= 0 && static_cast<size_t>(mat.emissiveTexture.index) < model.textures.size())
+    {
+        const int img_index_e = model.textures[static_cast<size_t>(mat.emissiveTexture.index)].source;
+        if (img_index_e >= 0 && static_cast<size_t>(img_index_e) < model.images.size())
+        {
+            const auto& img = model.images[static_cast<size_t>(img_index_e)];
+            if (!img.uri.empty())
+            {
+                const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
+                const auto rel = (rel_dir / img.uri).generic_string();
+                auto tex_name = name + ".emissive";
+                m_textures.load_texture(tex_name, rel, TextureColorSpace::Srgb);
+                material->set_emissive(m_textures[tex_name]);
+            }
+        }
+    }
+
     auto& ref = *material;
     m_materials[name] = std::move(material);
     return ref;

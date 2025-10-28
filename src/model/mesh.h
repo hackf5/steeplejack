@@ -73,6 +73,22 @@ class Mesh : NoCopyOrMove
                 pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(),
                                                                               2);
             }
+            // Normal map at binding 4
+            if (m_material->normal())
+            {
+                pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->normal()->descriptor(), 4);
+            }
+            // Metallic-Roughness (or ORM) at binding 5
+            if (m_material->metallic_roughness())
+            {
+                pipeline.descriptor_set_layout().write_combined_image_sampler(
+                    m_material->metallic_roughness()->descriptor(), 5);
+            }
+            // Emissive at binding 6
+            if (m_material->emissive())
+            {
+                pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->emissive()->descriptor(), 6);
+            }
         }
 
         pipeline.push_descriptor_set(command_buffer);

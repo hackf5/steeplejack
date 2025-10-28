@@ -35,10 +35,13 @@ int Application::run()
         auto layout_builder = [](DescriptorSetLayoutBuilder& builder)
         {
             builder
-                .add_uniform_buffer()           // camera
-                .add_uniform_buffer()           // model
-                .add_combined_image_sampler()   // texture
-                .add_uniform_buffer_fragment(); // material params
+                .add_uniform_buffer()          // camera
+                .add_uniform_buffer()          // model
+                .add_combined_image_sampler()  // baseColor
+                .add_uniform_buffer_fragment() // material params
+                .add_combined_image_sampler()  // normal
+                .add_combined_image_sampler()  // metallicRoughness / ORM
+                .add_combined_image_sampler(); // emissive
         };
 
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };

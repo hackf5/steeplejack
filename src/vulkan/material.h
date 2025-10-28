@@ -19,8 +19,11 @@ enum class AlphaMode
 class Material : NoCopyOrMove
 {
   private:
-    // Textures (base pass-only for first step)
-    Texture* m_base_color = nullptr; // sRGB
+    // Textures (extend beyond base pass)
+    Texture* m_base_color = nullptr;         // sRGB
+    Texture* m_normal = nullptr;             // linear
+    Texture* m_metallic_roughness = nullptr; // linear (ORM or MR)
+    Texture* m_emissive = nullptr;           // sRGB
 
     // Factors (subset for first step)
     glm::vec4 m_base_color_factor{1.0f, 1.0f, 1.0f, 1.0f};
@@ -49,6 +52,33 @@ class Material : NoCopyOrMove
     void set_base_color(Texture* tex)
     {
         m_base_color = tex;
+    }
+
+    Texture* normal() const
+    {
+        return m_normal;
+    }
+    void set_normal(Texture* tex)
+    {
+        m_normal = tex;
+    }
+
+    Texture* metallic_roughness() const
+    {
+        return m_metallic_roughness;
+    }
+    void set_metallic_roughness(Texture* tex)
+    {
+        m_metallic_roughness = tex;
+    }
+
+    Texture* emissive() const
+    {
+        return m_emissive;
+    }
+    void set_emissive(Texture* tex)
+    {
+        m_emissive = tex;
     }
 
     // Factors
