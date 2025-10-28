@@ -27,6 +27,8 @@ class Buffer : NoCopyOrMove
 
     const AllocationInfo m_allocation_info;
 
+    const VkDeviceSize m_buffer_size; // requested buffer size used for descriptors
+
     VkDescriptorBufferInfo m_descriptor;
 
     AllocationInfo create_allocation_info(VkDeviceSize size);
@@ -42,7 +44,7 @@ class Buffer : NoCopyOrMove
 
     VkDeviceSize size() const
     {
-        return m_allocation_info.info.size;
+        return m_buffer_size;
     }
 
     operator VkBuffer() const

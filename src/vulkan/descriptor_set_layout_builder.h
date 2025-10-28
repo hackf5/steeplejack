@@ -35,6 +35,13 @@ class DescriptorSetLayoutBuilder
         return *this;
     }
 
+    // Fragment-stage uniform buffer (e.g., material params)
+    DescriptorSetLayoutBuilder& add_uniform_buffer_fragment()
+    {
+        add_info(VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, VK_SHADER_STAGE_FRAGMENT_BIT);
+        return *this;
+    }
+
     std::unique_ptr<DescriptorSetLayout> build(const Device& device)
     {
         auto result = std::make_unique<DescriptorSetLayout>(device, m_infos);

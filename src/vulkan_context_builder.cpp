@@ -58,7 +58,8 @@ VulkanContextBuilder& VulkanContextBuilder::add_texture_factory()
 
 VulkanContextBuilder& VulkanContextBuilder::add_material_factory()
 {
-    m_context->m_material_factory = std::make_unique<MaterialFactory>(*m_context->m_texture_factory);
+    m_context->m_material_factory =
+        std::make_unique<MaterialFactory>(*m_context->m_device, *m_context->m_texture_factory);
     return *this;
 }
 

@@ -46,14 +46,27 @@ class Mesh : NoCopyOrMove
     void flush(uint32_t frame_index)
     {
         m_uniform_buffers[frame_index].copy_from(m_uniform_block);
+        if (m_material)
+        {
+            m_material->flush(frame_index);
+        }
     }
 
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
     {
         pipeline.descriptor_set_layout().write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), 1);
 
-        if (m_material && m_material->base_color())
-            pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(), 2);
+        if (m_material)
+        {
+            // Material params UBO at binding 3
+            pipeline.descriptor_set_layout().write_uniform_buffer(m_material->descriptor(frame_index), 3);
+
+            // Base color texture at binding 2 (if present)
+            if (m_material->base_color())
+            {
+                pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(), 2);
+            }
+        }
 
         pipeline.push_descriptor_set(command_buffer);
 

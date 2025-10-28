@@ -14,6 +14,7 @@ Buffer::Buffer(const Device& device,
     m_memory_usage(memory_usage),
     m_allocation_flags(allocation_flags),
     m_allocation_info(create_allocation_info(size)),
+    m_buffer_size(size),
     m_descriptor(create_descriptor_info())
 {
 }
@@ -48,5 +49,6 @@ Buffer::AllocationInfo Buffer::create_allocation_info(VkDeviceSize size)
 
 VkDescriptorBufferInfo Buffer::create_descriptor_info() const
 {
-    return {.buffer = m_allocation_info.buffer, .offset = 0, .range = m_allocation_info.info.size};
+    // Range must be <= buffer size; use requested buffer size rather than allocation size
+    return {.buffer = m_allocation_info.buffer, .offset = 0, .range = m_buffer_size};
 }

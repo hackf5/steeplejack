@@ -12,11 +12,12 @@ namespace steeplejack
 class MaterialFactory
 {
   private:
+    const Device& m_device;
     TextureFactory& m_textures;
     std::unordered_map<std::string, std::unique_ptr<Material>> m_materials;
 
   public:
-    explicit MaterialFactory(TextureFactory& textures);
+    MaterialFactory(const Device& device, TextureFactory& textures);
 
     // Clears all materials (does not clear textures)
     void clear();

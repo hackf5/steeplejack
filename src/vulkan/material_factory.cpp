@@ -8,7 +8,10 @@
 
 using namespace steeplejack;
 
-MaterialFactory::MaterialFactory(TextureFactory& textures) : m_textures(textures), m_materials() {}
+MaterialFactory::MaterialFactory(const Device& device, TextureFactory& textures) :
+    m_device(device), m_textures(textures), m_materials()
+{
+}
 
 void MaterialFactory::clear()
 {
@@ -35,7 +38,7 @@ Material& MaterialFactory::create_unlit(const std::string& name, const std::stri
     auto tex_name = name + ".baseColor";
     m_textures.load_texture(tex_name, texture_relpath);
 
-    auto material = std::make_unique<Material>();
+    auto material = std::make_unique<Material>(m_device);
     material->set_base_color(m_textures[tex_name]);
 
     auto& ref = *material;
@@ -71,7 +74,7 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     const auto& mat = model.materials[static_cast<size_t>(material_index)];
 
-    auto material = std::make_unique<Material>();
+    auto material = std::make_unique<Material>(m_device);
 
     // Base color factors
     if (mat.pbrMetallicRoughness.baseColorFactor.size() == 4)
@@ -121,4 +124,3 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
     m_materials[name] = std::move(material);
     return ref;
 }
-

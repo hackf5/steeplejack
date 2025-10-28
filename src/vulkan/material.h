@@ -2,6 +2,8 @@
 
 #include "util/no_copy_or_move.h"
 #include "vulkan/texture.h"
+#include "vulkan/buffer/uniform_buffer.h"
+#include "vulkan/device.h"
 
 #include <glm/glm.hpp>
 
@@ -26,8 +28,18 @@ class Material : NoCopyOrMove
     AlphaMode m_alpha_mode = AlphaMode::Opaque;
     bool m_double_sided = false;
 
+    // UBO for material params
+    struct UniformBlock
+    {
+        glm::vec4 baseColorFactor;
+        // Room for more later (metallic/roughness/emissive)
+    };
+
+    UniformBuffer m_uniform_buffers;
+    UniformBlock m_uniform_block{glm::vec4(1.0f)};
+
   public:
-    Material() = default;
+    explicit Material(const Device& device) : m_uniform_buffers(device, sizeof(UniformBlock)) {}
 
     // Base color
     Texture* base_color() const { return m_base_color; }
@@ -45,6 +57,17 @@ class Material : NoCopyOrMove
 
     bool double_sided() const { return m_double_sided; }
     void set_double_sided(bool value) { m_double_sided = value; }
+
+    // UBO interface
+    void flush(uint32_t frame_index)
+    {
+        m_uniform_block.baseColorFactor = m_base_color_factor;
+        m_uniform_buffers[frame_index].copy_from(m_uniform_block);
+    }
+
+    VkDescriptorBufferInfo* descriptor(uint32_t frame_index)
+    {
+        return m_uniform_buffers[frame_index].descriptor();
+    }
 };
 } // namespace steeplejack
-

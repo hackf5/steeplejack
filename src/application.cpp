@@ -37,7 +37,8 @@ int Application::run()
             builder
                 .add_uniform_buffer()          // camera
                 .add_uniform_buffer()          // model
-                .add_combined_image_sampler(); // texture
+                .add_combined_image_sampler()  // texture
+                .add_uniform_buffer_fragment(); // material params
         };
 
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };
