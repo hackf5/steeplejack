@@ -19,16 +19,18 @@ layout(binding = 3) uniform MaterialParams {
 const int MAX_SPOTS = 8;
 
 struct Spot {
-    vec3 position;  float intensity;
-    vec3 direction; float innerCos;
-    vec3 color;     float outerCos;
-    float range;    vec3 _pad;
+    vec4 posIntensity;   // xyz = position, w = intensity
+    vec4 dirInnerCos;    // xyz = direction, w = innerCos
+    vec4 colorOuterCos;  // rgb = color,   w = outerCos
+    vec4 rangePad;       // x = range
 };
 
 layout(binding = 7) uniform SceneLights {
     vec3 ambientColor;  float ambientIntensity;
-    int spotCount;      vec3 _padCount;
-    Spot spots[MAX_SPOTS];
+    vec4 spotPosIntensity;   // xyz pos, w intensity
+    vec4 spotDirInnerCos;    // xyz dir, w innerCos
+    vec4 spotColorOuterCos;  // rgb color, w outerCos
+    vec4 spotRangePad;       // x range
 };
 
 void main() {
@@ -37,16 +39,18 @@ void main() {
     vec3 ambient = baseCol.rgb * ambientColor * ambientIntensity;
 
     vec3 N = normalize(inWorldNormal);
-    vec3 diffuseSum = vec3(0.0);
-    for (int i = 0; i < spotCount && i < MAX_SPOTS; ++i) {
-        vec3 L = normalize(spots[i].position - inWorldPos);
-        float NdotL = max(dot(N, L), 0.0);
-        float cosAng = dot(normalize(-spots[i].direction), L);
-        float cone = clamp((cosAng - spots[i].outerCos) / max(spots[i].innerCos - spots[i].outerCos, 1e-5), 0.0, 1.0);
-        float dist = length(spots[i].position - inWorldPos);
-        float att = 1.0 / (1.0 + (dist / max(spots[i].range, 1e-3)) * (dist / max(spots[i].range, 1e-3)));
-        diffuseSum += baseCol.rgb * spots[i].color * (spots[i].intensity * NdotL * cone * att);
-    }
+    vec3 L = normalize(spotPosIntensity.xyz - inWorldPos);
+    float NdotL = max(dot(N, L), 0.0);
+    float cosAng = dot(normalize(-spotDirInnerCos.xyz), L);
+    float innerC = spotDirInnerCos.w;
+    float outerC = spotColorOuterCos.w;
+    float cone = clamp((cosAng - outerC) / max(innerC - outerC, 1e-5), 0.0, 1.0);
+    float dist = length(spotPosIntensity.xyz - inWorldPos);
+    float range = spotRangePad.x;
+    float att = 1.0 / (1.0 + (dist / max(range, 1e-3)) * (dist / max(range, 1e-3)));
+    float intensity = spotPosIntensity.w;
+    vec3 scolor = spotColorOuterCos.xyz;
+    vec3 diffuse = baseCol.rgb * scolor * (intensity * NdotL * cone * att);
 
-    outColor = vec4(ambient + diffuseSum + emissiveCol, baseCol.a);
+    outColor = vec4(ambient + diffuse + emissiveCol, baseCol.a);
 }

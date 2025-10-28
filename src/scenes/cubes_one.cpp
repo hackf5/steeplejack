@@ -6,6 +6,7 @@
 #include <functional>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <imgui.h>
 #include <numeric>
 
 using namespace steeplejack;
@@ -107,12 +108,68 @@ void CubesOne::load(const Device& device, MaterialFactory& material_factory, Gra
 
 void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
 {
-    auto rotation_x = glm::rotate(glm::mat4(1.0F), time * glm::radians(90.0F), glm::vec3(1.0F, 0.0F, 0.0F));
-    auto rotation_y = glm::rotate(glm::mat4(1.0F), time * glm::radians(60.0F), glm::vec3(0.0F, 1.0F, 0.0F));
-    auto rotation_z = glm::rotate(glm::mat4(1.0F), time * glm::radians(30.0F), glm::vec3(0.0F, 0.0F, 1.0F));
+    // ImGui lighting controls (persist across frames)
+    struct SpotUI
+    {
+        float radius;
+        float speed_deg;
+        float inner_deg;
+        float outer_deg;
+        float intensity;
+        float range;
+        float color[3];
+    };
+    static bool ui_init = false;
+    static float ambient_color[3] = {1.0f, 1.0f, 1.0f};
+    static float ambient_intensity = 0.1f;
+    static SpotUI spot0{2.5f, 45.0f, 15.0f, 25.0f, 2.0f, 6.0f, {1.0f, 0.95f, 0.9f}};
+
+    if (!ui_init)
+    {
+        ambient_color[0] = m_scene.ambient_color().x;
+        ambient_color[1] = m_scene.ambient_color().y;
+        ambient_color[2] = m_scene.ambient_color().z;
+        ambient_intensity = m_scene.ambient_intensity();
+        ui_init = true;
+    }
+
+    static bool animate_model = false;
+    static bool animate_lights = true;
+
+    if (ImGui::Begin("Lighting", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Checkbox("Animate Model", &animate_model);
+        ImGui::SameLine();
+        ImGui::Checkbox("Animate Lights", &animate_lights);
+        if (ImGui::CollapsingHeader("Ambient", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::ColorEdit3("Color", ambient_color);
+            ImGui::SliderFloat("Intensity", &ambient_intensity, 0.0f, 1.0f, "%.3f");
+        }
+        if (ImGui::CollapsingHeader("Spot 0", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::ColorEdit3("Color##0", spot0.color);
+            ImGui::SliderFloat("Intensity##0", &spot0.intensity, 0.0f, 10.0f, "%.2f");
+            ImGui::SliderFloat("Radius##0", &spot0.radius, 0.5f, 8.0f, "%.2f");
+            ImGui::SliderFloat("Speed (deg/s)##0", &spot0.speed_deg, -180.0f, 180.0f, "%.1f");
+            ImGui::SliderFloat("Inner (deg)##0", &spot0.inner_deg, 1.0f, 60.0f, "%.1f");
+            ImGui::SliderFloat("Outer (deg)##0", &spot0.outer_deg, 1.0f, 80.0f, "%.1f");
+            ImGui::SliderFloat("Range##0", &spot0.range, 0.5f, 20.0f, "%.2f");
+            if (spot0.outer_deg < spot0.inner_deg) spot0.outer_deg = spot0.inner_deg;
+        }
+    }
+    ImGui::End();
+
+    glm::mat4 rotation_x(1.0f), rotation_y(1.0f), rotation_z(1.0f);
+    if (animate_model)
+    {
+        rotation_x = glm::rotate(glm::mat4(1.0F), time * glm::radians(90.0F), glm::vec3(1.0F, 0.0F, 0.0F));
+        rotation_y = glm::rotate(glm::mat4(1.0F), time * glm::radians(60.0F), glm::vec3(0.0F, 1.0F, 0.0F));
+        rotation_z = glm::rotate(glm::mat4(1.0F), time * glm::radians(30.0F), glm::vec3(0.0F, 0.0F, 1.0F));
+    }
 
     auto& camera = m_scene.camera();
-    camera.position() = glm::vec3(2.0F, 2.0F, 2.0F);
+    camera.position() = glm::vec3(3.0F, 3.0F, 3.0F);
     camera.aspect_ratio() = aspect_ratio;
 
     auto& node = m_scene.model().root_node();
@@ -126,32 +183,23 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
         }
     }
 
-    // Animate two spotlights: one rotating around X axis, one around Y axis
-    m_scene.spot_count() = 2;
-    const float r = 2.5f; // radius for the lights
-    // Spot 0: rotate position in YZ plane around X axis
-    glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), time * glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::vec3 pos0 = glm::vec3(rotX * glm::vec4(0.0f, 0.0f, r, 1.0f));
-    auto& s0 = m_scene.spot(0);
-    s0.position = pos0;
-    s0.direction = glm::normalize(-pos0);
-    s0.color = glm::vec3(1.0f, 0.95f, 0.9f);
-    s0.intensity = 2.0f;
-    s0.innerCos = glm::cos(glm::radians(15.0f));
-    s0.outerCos = glm::cos(glm::radians(25.0f));
-    s0.range = 6.0f;
+    // Animate one spotlight using UI parameters
+    float t0 = animate_lights ? time : 0.0f;
+    glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), t0 * glm::radians(spot0.speed_deg), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::vec3 pos0 = glm::vec3(rotX * glm::vec4(0.0f, 0.0f, spot0.radius, 1.0f));
+    m_scene.set_spotlight_position(pos0);
+    m_scene.spotlight_intensity() = spot0.intensity;
+    m_scene.set_spotlight_direction(glm::normalize(-pos0));
+    m_scene.spotlight_inner_cos() = glm::cos(glm::radians(spot0.inner_deg));
+    m_scene.set_spotlight_color(glm::vec3(spot0.color[0], spot0.color[1], spot0.color[2]));
+    m_scene.spotlight_outer_cos() = glm::cos(glm::radians(spot0.outer_deg));
+    m_scene.spotlight_range() = spot0.range;
 
-    // Spot 1: rotate position in XZ plane around Y axis
-    glm::mat4 rotY = glm::rotate(glm::mat4(1.0f), time * glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::vec3 pos1 = glm::vec3(rotY * glm::vec4(r, 0.0f, 0.0f, 1.0f));
-    auto& s1 = m_scene.spot(1);
-    s1.position = pos1;
-    s1.direction = glm::normalize(-pos1);
-    s1.color = glm::vec3(0.9f, 0.95f, 1.0f);
-    s1.intensity = 2.0f;
-    s1.innerCos = glm::cos(glm::radians(12.0f));
-    s1.outerCos = glm::cos(glm::radians(22.0f));
-    s1.range = 6.0f;
+    // (Second spotlight disabled for simplicity)
+
+    // Apply ambient values from UI
+    m_scene.ambient_color() = glm::vec3(ambient_color[0], ambient_color[1], ambient_color[2]);
+    m_scene.ambient_intensity() = ambient_intensity;
 
     m_scene.flush(frame_index);
 }
