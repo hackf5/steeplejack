@@ -126,6 +126,33 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
         }
     }
 
+    // Animate two spotlights: one rotating around X axis, one around Y axis
+    m_scene.spot_count() = 2;
+    const float r = 2.5f; // radius for the lights
+    // Spot 0: rotate position in YZ plane around X axis
+    glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), time * glm::radians(45.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::vec3 pos0 = glm::vec3(rotX * glm::vec4(0.0f, 0.0f, r, 1.0f));
+    auto& s0 = m_scene.spot(0);
+    s0.position = pos0;
+    s0.direction = glm::normalize(-pos0);
+    s0.color = glm::vec3(1.0f, 0.95f, 0.9f);
+    s0.intensity = 2.0f;
+    s0.innerCos = glm::cos(glm::radians(15.0f));
+    s0.outerCos = glm::cos(glm::radians(25.0f));
+    s0.range = 6.0f;
+
+    // Spot 1: rotate position in XZ plane around Y axis
+    glm::mat4 rotY = glm::rotate(glm::mat4(1.0f), time * glm::radians(60.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::vec3 pos1 = glm::vec3(rotY * glm::vec4(r, 0.0f, 0.0f, 1.0f));
+    auto& s1 = m_scene.spot(1);
+    s1.position = pos1;
+    s1.direction = glm::normalize(-pos1);
+    s1.color = glm::vec3(0.9f, 0.95f, 1.0f);
+    s1.intensity = 2.0f;
+    s1.innerCos = glm::cos(glm::radians(12.0f));
+    s1.outerCos = glm::cos(glm::radians(22.0f));
+    s1.range = 6.0f;
+
     m_scene.flush(frame_index);
 }
 // NOLINTEND

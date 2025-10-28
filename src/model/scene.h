@@ -6,6 +6,7 @@
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include <glm/glm.hpp>
+#include <cstdint>
 
 #include <vulkan/vulkan.h>
 
@@ -20,14 +21,21 @@ class Scene : public NoCopyOrMove
     {
         glm::vec3 ambientColor;
         float ambientIntensity;
-        glm::vec3 spotPosition;
-        float spotIntensity;
-        glm::vec3 spotDirection;
-        float spotInnerCos;
-        glm::vec3 spotColor;
-        float spotOuterCos;
-        float spotRange;
-        glm::vec3 _pad0;
+        int32_t spotCount; // std140: 4 bytes, pad to 16 with _padCount
+        glm::vec3 _padCount;
+
+        static constexpr int MAX_SPOTS = 8;
+        struct Spot
+        {
+            glm::vec3 position;
+            float intensity;
+            glm::vec3 direction;
+            float innerCos;
+            glm::vec3 color;
+            float outerCos;
+            float range;
+            glm::vec3 _pad;
+        } spots[MAX_SPOTS];
     };
     UniformBuffer m_lights_buffers;
     LightsBlock m_lights;
@@ -41,14 +49,29 @@ class Scene : public NoCopyOrMove
     {
         m_lights.ambientColor = glm::vec3(1.0f);
         m_lights.ambientIntensity = 0.1f;
-        m_lights.spotPosition = glm::vec3(2.0f, 2.0f, 2.0f);
-        m_lights.spotIntensity = 2.0f;
-        m_lights.spotDirection = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
-        m_lights.spotInnerCos = glm::cos(glm::radians(15.0f));
-        m_lights.spotColor = glm::vec3(1.0f);
-        m_lights.spotOuterCos = glm::cos(glm::radians(25.0f));
-        m_lights.spotRange = 6.0f;
-        m_lights._pad0 = glm::vec3(0.0f);
+        m_lights.spotCount = 1;
+        m_lights._padCount = glm::vec3(0.0f);
+        // Initialize first spot
+        m_lights.spots[0].position = glm::vec3(2.0f, 2.0f, 2.0f);
+        m_lights.spots[0].intensity = 2.0f;
+        m_lights.spots[0].direction = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
+        m_lights.spots[0].innerCos = glm::cos(glm::radians(15.0f));
+        m_lights.spots[0].color = glm::vec3(1.0f);
+        m_lights.spots[0].outerCos = glm::cos(glm::radians(25.0f));
+        m_lights.spots[0].range = 6.0f;
+        m_lights.spots[0]._pad = glm::vec3(0.0f);
+        // Zero the rest
+        for (int i = 1; i < LightsBlock::MAX_SPOTS; ++i)
+        {
+            m_lights.spots[i].position = glm::vec3(0.0f);
+            m_lights.spots[i].intensity = 0.0f;
+            m_lights.spots[i].direction = glm::vec3(0.0f, 0.0f, -1.0f);
+            m_lights.spots[i].innerCos = 0.0f;
+            m_lights.spots[i].color = glm::vec3(0.0f);
+            m_lights.spots[i].outerCos = 0.0f;
+            m_lights.spots[i].range = 0.0f;
+            m_lights.spots[i]._pad = glm::vec3(0.0f);
+        }
     }
 
     const Camera& camera() const
@@ -78,14 +101,18 @@ class Scene : public NoCopyOrMove
         return m_lights.ambientIntensity;
     }
 
-    // Spotlight controls
-    glm::vec3& spotlight_position() { return m_lights.spotPosition; }
-    glm::vec3& spotlight_direction() { return m_lights.spotDirection; }
-    glm::vec3& spotlight_color() { return m_lights.spotColor; }
-    float& spotlight_intensity() { return m_lights.spotIntensity; }
-    float& spotlight_inner_cos() { return m_lights.spotInnerCos; }
-    float& spotlight_outer_cos() { return m_lights.spotOuterCos; }
-    float& spotlight_range() { return m_lights.spotRange; }
+    // Spotlight controls (primary spot at index 0 for now)
+    glm::vec3& spotlight_position() { return m_lights.spots[0].position; }
+    glm::vec3& spotlight_direction() { return m_lights.spots[0].direction; }
+    glm::vec3& spotlight_color() { return m_lights.spots[0].color; }
+    float& spotlight_intensity() { return m_lights.spots[0].intensity; }
+    float& spotlight_inner_cos() { return m_lights.spots[0].innerCos; }
+    float& spotlight_outer_cos() { return m_lights.spots[0].outerCos; }
+    float& spotlight_range() { return m_lights.spots[0].range; }
+
+    // Multiple spotlights support
+    int& spot_count() { return m_lights.spotCount; }
+    LightsBlock::Spot& spot(size_t index) { return m_lights.spots[index]; }
 
     void flush(uint32_t frame_index)
     {
