@@ -5,7 +5,7 @@
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
-#include "model/material.h"
+#include "vulkan/material.h"
 
 #include <glm/glm.hpp>
 #include <memory>

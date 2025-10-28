@@ -1,6 +1,6 @@
 #pragma once
 
-#include "model/material.h"
+#include "vulkan/material.h"
 #include "vulkan/texture_factory.h"
 
 #include <memory>
@@ -34,4 +34,3 @@ class MaterialFactory
     Material& create_unlit(const std::string& name, const std::string& texture_relpath);
 };
 } // namespace steeplejack
-
