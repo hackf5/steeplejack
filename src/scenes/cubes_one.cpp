@@ -71,6 +71,15 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
         vertex.color = glm::vec4(1.0F);
     }
 
+    // Compute flat face normal after positions are finalized
+    const glm::vec3 e1 = result[1].pos - result[0].pos;
+    const glm::vec3 e2 = result[3].pos - result[0].pos;
+    glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+    for (auto& v : result)
+    {
+        v.normal = n;
+    }
+
     return result;
 }
 

@@ -16,21 +16,39 @@ class Scene : public NoCopyOrMove
   private:
     Camera m_camera;
     Model m_model;
-    struct AmbientBlock
+    struct LightsBlock
     {
-        glm::vec3 color;
-        float intensity;
+        glm::vec3 ambientColor;
+        float ambientIntensity;
+        glm::vec3 spotPosition;
+        float spotIntensity;
+        glm::vec3 spotDirection;
+        float spotInnerCos;
+        glm::vec3 spotColor;
+        float spotOuterCos;
+        float spotRange;
+        glm::vec3 _pad0;
     };
-    UniformBuffer m_ambient_buffers;
-    AmbientBlock m_ambient_block;
+    UniformBuffer m_lights_buffers;
+    LightsBlock m_lights;
 
   public:
     Scene(const Device& device) :
         m_camera(device),
         m_model(),
-        m_ambient_buffers(device, sizeof(AmbientBlock)),
-        m_ambient_block({glm::vec3(1.0f), 0.2f})
+        m_lights_buffers(device, sizeof(LightsBlock)),
+        m_lights{}
     {
+        m_lights.ambientColor = glm::vec3(1.0f);
+        m_lights.ambientIntensity = 0.1f;
+        m_lights.spotPosition = glm::vec3(2.0f, 2.0f, 2.0f);
+        m_lights.spotIntensity = 2.0f;
+        m_lights.spotDirection = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
+        m_lights.spotInnerCos = glm::cos(glm::radians(15.0f));
+        m_lights.spotColor = glm::vec3(1.0f);
+        m_lights.spotOuterCos = glm::cos(glm::radians(25.0f));
+        m_lights.spotRange = 6.0f;
+        m_lights._pad0 = glm::vec3(0.0f);
     }
 
     const Camera& camera() const
@@ -53,17 +71,26 @@ class Scene : public NoCopyOrMove
 
     glm::vec3& ambient_color()
     {
-        return m_ambient_block.color;
+        return m_lights.ambientColor;
     }
     float& ambient_intensity()
     {
-        return m_ambient_block.intensity;
+        return m_lights.ambientIntensity;
     }
+
+    // Spotlight controls
+    glm::vec3& spotlight_position() { return m_lights.spotPosition; }
+    glm::vec3& spotlight_direction() { return m_lights.spotDirection; }
+    glm::vec3& spotlight_color() { return m_lights.spotColor; }
+    float& spotlight_intensity() { return m_lights.spotIntensity; }
+    float& spotlight_inner_cos() { return m_lights.spotInnerCos; }
+    float& spotlight_outer_cos() { return m_lights.spotOuterCos; }
+    float& spotlight_range() { return m_lights.spotRange; }
 
     void flush(uint32_t frame_index)
     {
         m_camera.flush(frame_index);
-        m_ambient_buffers[frame_index].copy_from(m_ambient_block);
+        m_lights_buffers[frame_index].copy_from(m_lights);
         m_model.flush(frame_index);
     }
 
@@ -72,8 +99,8 @@ class Scene : public NoCopyOrMove
         // Reset descriptor writes per frame/draw sequence before rebinding camera and meshes
         pipeline.descriptor_set_layout().reset_writes();
         m_camera.bind(frame_index, pipeline);
-        // Bind ambient light UBO at binding 7
-        pipeline.descriptor_set_layout().write_uniform_buffer(m_ambient_buffers[frame_index].descriptor(), 7);
+        // Bind lights UBO at binding 7
+        pipeline.descriptor_set_layout().write_uniform_buffer(m_lights_buffers[frame_index].descriptor(), 7);
         m_model.render(command_buffer, frame_index, pipeline);
     }
 };

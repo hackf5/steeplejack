@@ -12,6 +12,7 @@ namespace steeplejack
 enum class VertexComponent
 {
     Position,
+    Normal,
     UV,
     Color
 };
@@ -22,10 +23,11 @@ struct Vertex
 
     static const VkIndexType vk_index_type = VK_INDEX_TYPE_UINT32;
 
-    static constexpr std::array<VertexComponent, 3> kAllComponents{
-        VertexComponent::Position, VertexComponent::UV, VertexComponent::Color};
+    static constexpr std::array<VertexComponent, 4> kAllComponents{
+        VertexComponent::Position, VertexComponent::UV, VertexComponent::Color, VertexComponent::Normal};
 
     glm::vec3 pos;
+    glm::vec3 normal;
     glm::vec2 uv;
     glm::vec4 color;
 };

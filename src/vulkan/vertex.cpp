@@ -30,6 +30,10 @@ VkVertexInputAttributeDescription VertexInputState::create_attribute(uint32_t lo
         description.format = VK_FORMAT_R32G32B32_SFLOAT;
         description.offset = offsetof(Vertex, pos);
         break;
+    case VertexComponent::Normal:
+        description.format = VK_FORMAT_R32G32B32_SFLOAT;
+        description.offset = offsetof(Vertex, normal);
+        break;
     case VertexComponent::UV:
         description.format = VK_FORMAT_R32G32_SFLOAT;
         description.offset = offsetof(Vertex, uv);
