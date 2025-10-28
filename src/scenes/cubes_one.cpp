@@ -68,12 +68,7 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
             ((vx & 1) != 0U) ? 0.0F : 1.0F,
             ((vx & 2) != 0U) ? 0.0F : 1.0F,
         };
-        vertex.color = {
-            ((vx & 1) != 0U) ? 0.0F : 1.0F,
-            ((vx & 2) != 0U) ? 0.0F : 1.0F,
-            ((vx & 4) != 0U) ? 0.0F : 1.0F,
-            1.0F,
-        };
+        vertex.color = glm::vec4(1.0F);
     }
 
     return result;

@@ -1,6 +1,5 @@
 #include "vulkan_engine.h"
 
-#include "scenes/george.h"
 #include "spdlog/spdlog.h"
 #include "vulkan_context_builder.h"
 

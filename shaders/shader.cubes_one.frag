@@ -1,8 +1,8 @@
 #version 450
 
-layout(binding = 2) uniform sampler2D inSampler; // baseColor
-layout(binding = 4) uniform sampler2D inNormal;  // normal (unused)
-layout(binding = 5) uniform sampler2D inMR;      // metallic-roughness (unused)
+layout(binding = 2) uniform sampler2D inSampler;  // baseColor
+layout(binding = 4) uniform sampler2D inNormal;   // normal (unused)
+layout(binding = 5) uniform sampler2D inMR;       // metallic-roughness (unused)
 layout(binding = 6) uniform sampler2D inEmissive; // emissive (unused)
 
 layout(location = 0) in vec2 inUV;
@@ -15,7 +15,7 @@ layout(binding = 3) uniform MaterialParams {
 };
 
 void main() {
-    vec4 baseCol = texture(inSampler, inUV) * baseColorFactor;
+    vec4 baseCol = inColor * texture(inSampler, inUV) * baseColorFactor;
     vec3 emissiveCol = texture(inEmissive, inUV).rgb;
-    outColor = inColor * baseCol + vec4(emissiveCol, 0.0);
+    outColor = baseCol + vec4(emissiveCol, 0.0);
 }
