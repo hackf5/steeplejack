@@ -43,6 +43,14 @@ Material& MaterialFactory::create_unlit(const std::string& name, const std::stri
 
     auto& ref = *material;
     m_materials[name] = std::move(material);
+
+    // Defaults for other maps
+    m_textures.ensure_texture_rgba_1x1("__default.normal.flat", 128, 128, 255, 255, TextureColorSpace::Linear);
+    m_textures.ensure_texture_rgba_1x1("__default.mr.neutral", 255, 255, 0, 255, TextureColorSpace::Linear);
+    m_textures.ensure_texture_rgba_1x1("__default.emissive.black", 0, 0, 0, 255, TextureColorSpace::Srgb);
+    ref.set_normal(m_textures["__default.normal.flat"]);
+    ref.set_metallic_roughness(m_textures["__default.mr.neutral"]);
+    ref.set_emissive(m_textures["__default.emissive.black"]);
     return ref;
 }
 
@@ -179,5 +187,26 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     auto& ref = *material;
     m_materials[name] = std::move(material);
+
+    // Provide default textures for any missing maps
+    // baseColor default: white (sRGB)
+    m_textures.ensure_texture_rgba_1x1("__default.baseColor.white", 255, 255, 255, 255, TextureColorSpace::Srgb);
+    if (ref.base_color() == nullptr)
+        ref.set_base_color(m_textures["__default.baseColor.white"]);
+
+    // normal default: (0.5, 0.5, 1.0) linear
+    m_textures.ensure_texture_rgba_1x1("__default.normal.flat", 128, 128, 255, 255, TextureColorSpace::Linear);
+    if (ref.normal() == nullptr)
+        ref.set_normal(m_textures["__default.normal.flat"]);
+
+    // metallic-roughness default: occlusion=1, roughness=1, metallic=0 (linear)
+    m_textures.ensure_texture_rgba_1x1("__default.mr.neutral", 255, 255, 0, 255, TextureColorSpace::Linear);
+    if (ref.metallic_roughness() == nullptr)
+        ref.set_metallic_roughness(m_textures["__default.mr.neutral"]);
+
+    // emissive default: black (sRGB)
+    m_textures.ensure_texture_rgba_1x1("__default.emissive.black", 0, 0, 0, 255, TextureColorSpace::Srgb);
+    if (ref.emissive() == nullptr)
+        ref.set_emissive(m_textures["__default.emissive.black"]);
     return ref;
 }

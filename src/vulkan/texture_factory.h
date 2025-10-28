@@ -38,5 +38,21 @@ class TextureFactory
     void clear();
 
     Texture* operator[](const std::string& name);
+
+    bool has(const std::string& name) const
+    {
+        return m_textures.find(name) != m_textures.end();
+    }
+
+    // Ensure a 1x1 RGBA texture exists with given color
+    void ensure_texture_rgba_1x1(
+        const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space)
+    {
+        if (has(name))
+            return;
+        const std::array<std::byte, 4> px{std::byte{r}, std::byte{g}, std::byte{b}, std::byte{a}};
+        m_textures[name] = std::make_unique<Texture>(
+            m_device, m_sampler, m_adhoc_queues, 1, 1, color_space, std::span<const std::byte>(px.data(), px.size()));
+    }
 };
 } // namespace steeplejack

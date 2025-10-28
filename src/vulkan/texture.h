@@ -51,6 +51,15 @@ class Texture : public NoCopyOrMove
             std::string name,
             TextureColorSpace color_space = TextureColorSpace::Srgb);
 
+    // Construct from raw RGBA8 pixel data (width*height*4 bytes)
+    Texture(const Device& device,
+            const Sampler& sampler,
+            const AdhocQueues& adhoc_queues,
+            int width,
+            int height,
+            TextureColorSpace color_space,
+            std::span<const std::byte> rgba_pixels);
+
     VkDescriptorImageInfo* descriptor()
     {
         return &m_image_descriptor_info;

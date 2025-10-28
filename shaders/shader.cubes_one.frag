@@ -15,5 +15,7 @@ layout(binding = 3) uniform MaterialParams {
 };
 
 void main() {
-    outColor = inColor * texture(inSampler, inUV) * baseColorFactor;
+    vec4 baseCol = texture(inSampler, inUV) * baseColorFactor;
+    vec3 emissiveCol = texture(inEmissive, inUV).rgb;
+    outColor = inColor * baseCol + vec4(emissiveCol, 0.0);
 }
