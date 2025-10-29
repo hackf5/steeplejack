@@ -19,12 +19,18 @@ class Scene : public NoCopyOrMove
     Model m_model;
     struct LightsBlock
     {
-        glm::vec3 ambientColor;
+        alignas(16) glm::vec3 ambientColor;
         float ambientIntensity;
-        glm::vec4 spotPosIntensity;  // xyz position, w intensity
-        glm::vec4 spotDirInnerCos;   // xyz direction, w inner cos
-        glm::vec4 spotColorOuterCos; // rgb color, w outer cos
-        glm::vec4 spotRangePad;      // x range, yzw pad
+
+        // Single spotlight with std140-friendly alignment
+        alignas(16) glm::vec3 spotPosition;
+        float spotIntensity;
+        alignas(16) glm::vec3 spotDirection;
+        float spotInnerCos;
+        alignas(16) glm::vec3 spotColor;
+        float spotOuterCos;
+        float spotRange;
+        alignas(16) glm::vec3 _pad;
     };
     UniformBuffer m_lights_buffers;
     LightsBlock m_lights;
@@ -38,11 +44,14 @@ class Scene : public NoCopyOrMove
     {
         m_lights.ambientColor = glm::vec3(1.0f);
         m_lights.ambientIntensity = 0.1f;
-        m_lights.spotPosIntensity = glm::vec4(2.0f, 2.0f, 2.0f, 2.0f);
-        m_lights.spotDirInnerCos = glm::vec4(glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f)),
-                                             glm::cos(glm::radians(15.0f)));
-        m_lights.spotColorOuterCos = glm::vec4(1.0f, 1.0f, 1.0f, glm::cos(glm::radians(25.0f)));
-        m_lights.spotRangePad = glm::vec4(6.0f, 0.0f, 0.0f, 0.0f);
+        m_lights.spotPosition = glm::vec3(2.0f, 2.0f, 2.0f);
+        m_lights.spotIntensity = 2.0f;
+        m_lights.spotDirection = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
+        m_lights.spotInnerCos = glm::cos(glm::radians(15.0f));
+        m_lights.spotColor = glm::vec3(1.0f);
+        m_lights.spotOuterCos = glm::cos(glm::radians(25.0f));
+        m_lights.spotRange = 6.0f;
+        m_lights._pad = glm::vec3(0.0f);
     }
 
     const Camera& camera() const
@@ -73,25 +82,25 @@ class Scene : public NoCopyOrMove
     }
 
     // Spotlight controls
-    glm::vec3 spotlight_position() const { return glm::vec3(m_lights.spotPosIntensity); }
+    glm::vec3 spotlight_position() const { return m_lights.spotPosition; }
     void set_spotlight_position(const glm::vec3& p)
     {
-        m_lights.spotPosIntensity = glm::vec4(p, m_lights.spotPosIntensity.w);
+        m_lights.spotPosition = p;
     }
-    glm::vec3 spotlight_direction() const { return glm::vec3(m_lights.spotDirInnerCos); }
+    glm::vec3 spotlight_direction() const { return m_lights.spotDirection; }
     void set_spotlight_direction(const glm::vec3& d)
     {
-        m_lights.spotDirInnerCos = glm::vec4(d, m_lights.spotDirInnerCos.w);
+        m_lights.spotDirection = d;
     }
-    glm::vec3 spotlight_color() const { return glm::vec3(m_lights.spotColorOuterCos); }
+    glm::vec3 spotlight_color() const { return m_lights.spotColor; }
     void set_spotlight_color(const glm::vec3& c)
     {
-        m_lights.spotColorOuterCos = glm::vec4(c, m_lights.spotColorOuterCos.w);
+        m_lights.spotColor = c;
     }
-    float& spotlight_intensity() { return m_lights.spotPosIntensity.w; }
-    float& spotlight_inner_cos() { return m_lights.spotDirInnerCos.w; }
-    float& spotlight_outer_cos() { return m_lights.spotColorOuterCos.w; }
-    float& spotlight_range() { return m_lights.spotRangePad.x; }
+    float& spotlight_intensity() { return m_lights.spotIntensity; }
+    float& spotlight_inner_cos() { return m_lights.spotInnerCos; }
+    float& spotlight_outer_cos() { return m_lights.spotOuterCos; }
+    float& spotlight_range() { return m_lights.spotRange; }
 
     // Single spotlight in this simplified path; arrays can be reintroduced later.
 
