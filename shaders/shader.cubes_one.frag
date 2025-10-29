@@ -16,40 +16,35 @@ layout(binding = 3) uniform MaterialParams {
     vec4 baseColorFactor;
 };
 
-const int MAX_SPOTS = 8;
-
 struct Spot {
-    vec4 posIntensity;   // xyz = position, w = intensity
-    vec4 dirInnerCos;    // xyz = direction, w = innerCos
-    vec4 colorOuterCos;  // rgb = color,   w = outerCos
-    vec4 rangePad;       // x = range
+    vec3 position;  float intensity;
+    vec3 direction; float innerCos;
+    vec3 color;     float outerCos;
+    float range;    vec3 _pad; // std140 alignment
 };
 
 layout(binding = 7) uniform SceneLights {
     vec3 ambientColor;  float ambientIntensity;
-    vec3 spotPosition;  float spotIntensity;
-    vec3 spotDirection; float spotInnerCos;
-    vec3 spotColor;     float spotOuterCos;
-    float spotRange;    vec3 _pad;
+    Spot spot;
 };
 
 void main() {
-    vec4 baseCol = inColor * texture(inSampler, inUV) * baseColorFactor;
+    vec4 baseCol = texture(inSampler, inUV) * baseColorFactor;
     vec3 emissiveCol = texture(inEmissive, inUV).rgb;
     vec3 ambient = baseCol.rgb * ambientColor * ambientIntensity;
 
     vec3 N = normalize(inWorldNormal);
-    vec3 L = normalize(spotPosition - inWorldPos);
+    vec3 L = normalize(spot.position - inWorldPos);
     float NdotL = max(dot(N, L), 0.0);
-    float cosAng = dot(normalize(-spotDirection), L);
-    float innerC = spotInnerCos;
-    float outerC = spotOuterCos;
+    float cosAng = dot(normalize(-spot.direction), L);
+    float innerC = spot.innerCos;
+    float outerC = spot.outerCos;
     float cone = clamp((cosAng - outerC) / max(innerC - outerC, 1e-5), 0.0, 1.0);
-    float dist = length(spotPosition - inWorldPos);
-    float range = spotRange;
+    float dist = length(spot.position - inWorldPos);
+    float range = spot.range;
     float att = 1.0 / (1.0 + (dist / max(range, 1e-3)) * (dist / max(range, 1e-3)));
-    float intensity = spotIntensity;
-    vec3 scolor = spotColor;
+    float intensity = spot.intensity;
+    vec3 scolor = spot.color;
     vec3 diffuse = baseCol.rgb * scolor * (intensity * NdotL * cone * att);
 
     outColor = vec4(ambient + diffuse + emissiveCol, baseCol.a);
