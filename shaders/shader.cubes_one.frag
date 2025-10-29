@@ -25,7 +25,7 @@ struct Spot {
 
 layout(binding = 7) uniform SceneLights {
     vec3 ambientColor;  float ambientIntensity;
-    Spot spot;
+    Spot spots[1];
 };
 
 void main() {
@@ -34,17 +34,17 @@ void main() {
     vec3 ambient = baseCol.rgb * ambientColor * ambientIntensity;
 
     vec3 N = normalize(inWorldNormal);
-    vec3 L = normalize(spot.position - inWorldPos);
+    vec3 L = normalize(spots[0].position - inWorldPos);
     float NdotL = max(dot(N, L), 0.0);
-    float cosAng = dot(normalize(-spot.direction), L);
-    float innerC = spot.innerCos;
-    float outerC = spot.outerCos;
+    float cosAng = dot(normalize(-spots[0].direction), L);
+    float innerC = spots[0].innerCos;
+    float outerC = spots[0].outerCos;
     float cone = clamp((cosAng - outerC) / max(innerC - outerC, 1e-5), 0.0, 1.0);
-    float dist = length(spot.position - inWorldPos);
-    float range = spot.range;
+    float dist = length(spots[0].position - inWorldPos);
+    float range = spots[0].range;
     float att = 1.0 / (1.0 + (dist / max(range, 1e-3)) * (dist / max(range, 1e-3)));
-    float intensity = spot.intensity;
-    vec3 scolor = spot.color;
+    float intensity = spots[0].intensity;
+    vec3 scolor = spots[0].color;
     vec3 diffuse = baseCol.rgb * scolor * (intensity * NdotL * cone * att);
 
     outColor = vec4(ambient + diffuse + emissiveCol, baseCol.a);
