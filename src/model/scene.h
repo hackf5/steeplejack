@@ -1,13 +1,13 @@
 #pragma once
 
 #include "camera.h"
+#include "glm_config.hpp"
 #include "model.h"
 #include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
-#include <glm/glm.hpp>
-#include <cstdint>
 
+#include <cstdint>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -24,25 +24,31 @@ class Scene : public NoCopyOrMove
 
         struct alignas(16) Spot
         {
-            alignas(16) glm::vec3 position;
-            float intensity;
-            alignas(16) glm::vec3 direction;
-            float innerCos;
-            alignas(16) glm::vec3 color;
-            float outerCos;
-            float range;
-            float _pad[3];
-        } spots[1];
+            glm::vec3 position;  // pad to 16
+            float intensity;     // 16
+            glm::vec3 direction; // pad to 16
+            float innerCos;      // 48
+            glm::vec3 color;     // pad to 16
+            float outerCos;      // 80
+            float range;         // 84
+            float _pad[4];       // to 96
+        } spots[2];
+
+        // static_assert(alignof(Spot) == 16, "Spot alignment must be 16 bytes (std140)");
+        // static_assert(sizeof(Spot) == 96, "Spot size must be 96 bytes (std140 stride)");
+        // static_assert(offsetof(Spot, position) == 0, "position offset");
+        // static_assert(offsetof(Spot, intensity) == 16, "intensity offset");
+        // static_assert(offsetof(Spot, direction) == 32, "direction offset");
+        // static_assert(offsetof(Spot, innerCos) == 48, "innerCos offset");
+        // static_assert(offsetof(Spot, color) == 64, "color offset");
+        // static_assert(offsetof(Spot, outerCos) == 80, "outerCos offset");
+        // static_assert(offsetof(Spot, range) == 84, "range offset");
     };
     UniformBuffer m_lights_buffers;
     LightsBlock m_lights;
 
   public:
-    Scene(const Device& device) :
-        m_camera(device),
-        m_model(),
-        m_lights_buffers(device, sizeof(LightsBlock)),
-        m_lights{}
+    Scene(const Device& device) : m_camera(device), m_model(), m_lights_buffers(device, sizeof(LightsBlock)), m_lights{}
     {
         m_lights.ambientColor = glm::vec3(1.0f);
         m_lights.ambientIntensity = 0.1f;
@@ -53,7 +59,16 @@ class Scene : public NoCopyOrMove
         m_lights.spots[0].color = glm::vec3(1.0f);
         m_lights.spots[0].outerCos = glm::cos(glm::radians(25.0f));
         m_lights.spots[0].range = 6.0f;
-        m_lights.spots[0]._pad[0] = m_lights.spots[0]._pad[1] = m_lights.spots[0]._pad[2] = 0.0f;
+        m_lights.spots[0]._pad[0] = m_lights.spots[0]._pad[1] = 0.0f;
+        // Second spot default
+        m_lights.spots[1].position = glm::vec3(-2.0f, 2.0f, 2.0f);
+        m_lights.spots[1].intensity = 2.0f;
+        m_lights.spots[1].direction = glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f));
+        m_lights.spots[1].innerCos = glm::cos(glm::radians(12.0f));
+        m_lights.spots[1].color = glm::vec3(0.9f, 0.95f, 1.0f);
+        m_lights.spots[1].outerCos = glm::cos(glm::radians(22.0f));
+        m_lights.spots[1].range = 6.0f;
+        m_lights.spots[1]._pad[0] = m_lights.spots[1]._pad[1] = 0.0f;
     }
 
     const Camera& camera() const
@@ -84,27 +99,54 @@ class Scene : public NoCopyOrMove
     }
 
     // Spotlight controls
-    glm::vec3 spotlight_position() const { return m_lights.spots[0].position; }
+    glm::vec3 spotlight_position() const
+    {
+        return m_lights.spots[0].position;
+    }
     void set_spotlight_position(const glm::vec3& p)
     {
         m_lights.spots[0].position = p;
     }
-    glm::vec3 spotlight_direction() const { return m_lights.spots[0].direction; }
+    glm::vec3 spotlight_direction() const
+    {
+        return m_lights.spots[0].direction;
+    }
     void set_spotlight_direction(const glm::vec3& d)
     {
         m_lights.spots[0].direction = d;
     }
-    glm::vec3 spotlight_color() const { return m_lights.spots[0].color; }
+    glm::vec3 spotlight_color() const
+    {
+        return m_lights.spots[0].color;
+    }
     void set_spotlight_color(const glm::vec3& c)
     {
         m_lights.spots[0].color = c;
     }
-    float& spotlight_intensity() { return m_lights.spots[0].intensity; }
-    float& spotlight_inner_cos() { return m_lights.spots[0].innerCos; }
-    float& spotlight_outer_cos() { return m_lights.spots[0].outerCos; }
-    float& spotlight_range() { return m_lights.spots[0].range; }
+    float& spotlight_intensity()
+    {
+        return m_lights.spots[0].intensity;
+    }
+    float& spotlight_inner_cos()
+    {
+        return m_lights.spots[0].innerCos;
+    }
+    float& spotlight_outer_cos()
+    {
+        return m_lights.spots[0].outerCos;
+    }
+    float& spotlight_range()
+    {
+        return m_lights.spots[0].range;
+    }
 
-    // Single spotlight in this simplified path; arrays can be reintroduced later.
+    // Access spot by index (0 or 1)
+    LightsBlock::Spot& spot(size_t index)
+    {
+        return m_lights.spots[index];
+    }
+
+    // Single spotlight path extended to two spots via array; more can be added later.
 
     void flush(uint32_t frame_index)
     {

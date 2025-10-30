@@ -1,11 +1,10 @@
 #include "vulkan_engine.h"
 
+#include "glm_config.hpp"
 #include "spdlog/spdlog.h"
 #include "vulkan_context_builder.h"
 
 #include <chrono>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 
 using namespace steeplejack;
 

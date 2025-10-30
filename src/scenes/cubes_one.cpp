@@ -1,11 +1,11 @@
 // NOLINTBEGIN
 #include "cubes_one.h"
 
+#include "glm_config.hpp"
+
 #include <algorithm>
 #include <cstddef>
 #include <functional>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <imgui.h>
 #include <numeric>
 
@@ -123,6 +123,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     static float ambient_color[3] = {1.0f, 1.0f, 1.0f};
     static float ambient_intensity = 0.1f;
     static SpotUI spot0{2.5f, 45.0f, 15.0f, 25.0f, 2.0f, 6.0f, {1.0f, 0.95f, 0.9f}};
+    static SpotUI spot1{2.5f, 60.0f, 12.0f, 22.0f, 2.0f, 6.0f, {0.9f, 0.95f, 1.0f}};
 
     if (!ui_init)
     {
@@ -155,7 +156,20 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
             ImGui::SliderFloat("Inner (deg)##0", &spot0.inner_deg, 1.0f, 60.0f, "%.1f");
             ImGui::SliderFloat("Outer (deg)##0", &spot0.outer_deg, 1.0f, 80.0f, "%.1f");
             ImGui::SliderFloat("Range##0", &spot0.range, 0.5f, 20.0f, "%.2f");
-            if (spot0.outer_deg < spot0.inner_deg) spot0.outer_deg = spot0.inner_deg;
+            if (spot0.outer_deg < spot0.inner_deg)
+                spot0.outer_deg = spot0.inner_deg;
+        }
+        if (ImGui::CollapsingHeader("Spot 1", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::ColorEdit3("Color##1", spot1.color);
+            ImGui::SliderFloat("Intensity##1", &spot1.intensity, 0.0f, 10.0f, "%.2f");
+            ImGui::SliderFloat("Radius##1", &spot1.radius, 0.5f, 8.0f, "%.2f");
+            ImGui::SliderFloat("Speed (deg/s)##1", &spot1.speed_deg, -180.0f, 180.0f, "%.1f");
+            ImGui::SliderFloat("Inner (deg)##1", &spot1.inner_deg, 1.0f, 60.0f, "%.1f");
+            ImGui::SliderFloat("Outer (deg)##1", &spot1.outer_deg, 1.0f, 80.0f, "%.1f");
+            ImGui::SliderFloat("Range##1", &spot1.range, 0.5f, 20.0f, "%.2f");
+            if (spot1.outer_deg < spot1.inner_deg)
+                spot1.outer_deg = spot1.inner_deg;
         }
     }
     ImGui::End();
@@ -183,17 +197,30 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
         }
     }
 
-    // Animate one spotlight using UI parameters
+    // Animate two spotlights using UI parameters
     float t0 = animate_lights ? time : 0.0f;
     glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), t0 * glm::radians(spot0.speed_deg), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::vec3 pos0 = glm::vec3(rotX * glm::vec4(0.0f, 0.0f, spot0.radius, 1.0f));
-    m_scene.set_spotlight_position(pos0);
-    m_scene.spotlight_intensity() = spot0.intensity;
-    m_scene.set_spotlight_direction(glm::normalize(-pos0));
-    m_scene.spotlight_inner_cos() = glm::cos(glm::radians(spot0.inner_deg));
-    m_scene.set_spotlight_color(glm::vec3(spot0.color[0], spot0.color[1], spot0.color[2]));
-    m_scene.spotlight_outer_cos() = glm::cos(glm::radians(spot0.outer_deg));
-    m_scene.spotlight_range() = spot0.range;
+    auto& s0 = m_scene.spot(0);
+    s0.position = pos0;
+    s0.intensity = spot0.intensity;
+    s0.direction = glm::normalize(-pos0);
+    s0.innerCos = glm::cos(glm::radians(spot0.inner_deg));
+    s0.color = glm::vec3(spot0.color[0], spot0.color[1], spot0.color[2]);
+    s0.outerCos = glm::cos(glm::radians(spot0.outer_deg));
+    s0.range = spot0.range;
+
+    float t1 = animate_lights ? time : 0.0f;
+    glm::mat4 rotY = glm::rotate(glm::mat4(1.0f), t1 * glm::radians(spot1.speed_deg), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::vec3 pos1 = glm::vec3(rotY * glm::vec4(spot1.radius, 0.0f, 0.0f, 1.0f));
+    auto& s1 = m_scene.spot(1);
+    s1.position = pos1;
+    s1.intensity = spot1.intensity;
+    s1.direction = glm::normalize(-pos1);
+    s1.innerCos = glm::cos(glm::radians(spot1.inner_deg));
+    s1.color = glm::vec3(spot1.color[0], spot1.color[1], spot1.color[2]);
+    s1.outerCos = glm::cos(glm::radians(spot1.outer_deg));
+    s1.range = spot1.range;
 
     // (Second spotlight disabled for simplicity)
 

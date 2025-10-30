@@ -1,11 +1,10 @@
 #pragma once
 
+#include "glm_config.hpp"
 #include "mesh.h"
 #include "util/no_copy_or_move.h"
 #include "vulkan/graphics_pipeline.h"
 
-#include <glm/glm.hpp>
-#include <glm/gtc/quaternion.hpp>
 #include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>

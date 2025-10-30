@@ -51,6 +51,7 @@
     "GLSL",
     "gltf",
     "HLSL",
+    "ifndef",
     "msaa",
     "MSYS",
     "Multisampler",

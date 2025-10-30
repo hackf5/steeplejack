@@ -86,7 +86,7 @@ file(GLOB_RECURSE STEEPLEJACK_SOURCES CONFIGURE_DEPENDS
 )
 list(REMOVE_ITEM STEEPLEJACK_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
 target_sources(steeplejack_engine PRIVATE ${STEEPLEJACK_SOURCES})
-target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/vulkan/_h_impl.cpp)
+target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/tiny_gltf.cpp)
 
 
 # Bring in assets

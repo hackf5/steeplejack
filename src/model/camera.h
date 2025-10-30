@@ -1,13 +1,12 @@
 #pragma once
 
+#include "glm_config.hpp"
 #include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
 
 #include <array>
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <memory>
 #include <vulkan/vulkan.h>
 

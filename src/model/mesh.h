@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glm_config.hpp"
 #include "primitive.h"
 #include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
@@ -7,7 +8,6 @@
 #include "vulkan/graphics_pipeline.h"
 #include "vulkan/material.h"
 
-#include <glm/glm.hpp>
 #include <memory>
 #include <vector>
 

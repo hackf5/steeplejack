@@ -1,5 +1,6 @@
 #pragma once
 
+#include "glm_config.hpp"
 #include "render_scene.h"
 #include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
@@ -9,7 +10,6 @@
 #include "vulkan/vertex.h"
 
 #include <array>
-#include <glm/glm.hpp>
 
 namespace steeplejack
 {
@@ -39,9 +39,7 @@ class CubesOne final : public RenderScene
 
   public:
     CubesOne(const Device& device) :
-        RenderScene(device, "cubes_one.vert", "cubes_one.frag"),
-        m_indexes(create_indexes()),
-        m_vertexes(create_vertexes())
+        RenderScene(device, "default.vert", "default.frag"), m_indexes(create_indexes()), m_vertexes(create_vertexes())
     {
     }
 

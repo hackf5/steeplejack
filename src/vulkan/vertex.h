@@ -1,8 +1,9 @@
 #pragma once
 
+#include "glm_config.hpp"
+
 #include <array>
 #include <cstdint>
-#include <glm/glm.hpp>
 #include <span>
 #include <vector>
 #include <vulkan/vulkan.h>
