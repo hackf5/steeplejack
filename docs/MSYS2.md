@@ -65,11 +65,28 @@ Notes:
 - `mingw-w64-ucrt-x86_64-glslang` provides the GLSL tools used to compile shaders during the build.
 - `mingw-w64-ucrt-x86_64-clang-tools-extra` provides `clang-format`, `clang-tidy`, and related tooling used by `./sj format` and `./sj lint`.
 
-## Shell profile (`~/.zshrc`)
+## Git
 
 You want to reuse Git for Windows, not the one in MSYS2, so you can work in both VS Code and MSYS2 without friction.
 
 You'll also want to copy your SSH keys into `~/.ssh`, or make new keys and register them with Github.
+
+```bash
+# Optionally create a new SSH key, or copy your existing keys from Windows/WSL2
+ssh-keygen -t ed25519 -C "your@email"
+
+# Configure Git
+git config --global user.name "Your Name"
+git config --global user.email "your@email"
+git config --global core.sshCommand "ssh"
+git config --global gpg.format ssh
+git config --global user.signingkey ~/.ssh/id_ed25519.pub
+git config --global commit.gpgsign true
+```
+
+## Shell profile (`~/.zshrc`)
+
+Add the following to your bash profile.
 
 ```bash
 # At the very top of your .zshrc to use the same Git in MSYS2 as you use in Windows
