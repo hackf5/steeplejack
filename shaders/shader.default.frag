@@ -9,11 +9,11 @@ layout(binding = 4) uniform sampler2D inNormal;   // normal (unused)
 layout(binding = 5) uniform sampler2D inMR;       // metallic-roughness (unused)
 layout(binding = 6) uniform sampler2D inEmissive; // emissive
 
-layout(binding = 3) uniform MaterialParams {
+layout(binding = 3, std140) uniform MaterialParams {
     vec4 baseColorFactor;
 };
 
-layout(binding = 7) uniform SceneLights {
+layout(binding = 7, std140) uniform SceneLights {
     vec3 ambientColor;  float ambientIntensity;
     Spot spots[2];
 };
@@ -24,8 +24,6 @@ layout(location = 2) in vec3 inWorldPos;
 layout(location = 3) in vec3 inWorldNormal;
 
 layout(location = 0) out vec4 outColor;
-
-
 
 void main() {
     vec4 baseCol = texture(inSampler, inUV) * baseColorFactor;

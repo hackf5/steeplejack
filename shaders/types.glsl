@@ -5,7 +5,7 @@ struct Spot {
     vec3 position;  float intensity;
     vec3 direction; float innerCos;
     vec3 color;     float outerCos;
-    float range;    vec3 _pad; // std140 alignment
+    vec3 _pad;      float range;
 };
 
 #endif // TYPES_GLSL

@@ -19,30 +19,17 @@ class Scene : public NoCopyOrMove
     Model m_model;
     struct LightsBlock
     {
-        alignas(16) glm::vec3 ambientColor;
+        glm::vec3 ambientColor;
         float ambientIntensity;
 
-        struct alignas(16) Spot
+        struct Spot
         {
-            glm::vec3 position;  // pad to 16
-            float intensity;     // 16
-            glm::vec3 direction; // pad to 16
-            float innerCos;      // 48
-            glm::vec3 color;     // pad to 16
-            float outerCos;      // 80
-            float range;         // 84
-            float _pad[4];       // to 96
+            // https://stackoverflow.com/a/19957102/323316
+            glm::vec3 position;  float intensity;
+            glm::vec3 direction; float innerCos;
+            glm::vec3 color;     float outerCos;
+            glm::vec3 _pad;      float range;
         } spots[2];
-
-        // static_assert(alignof(Spot) == 16, "Spot alignment must be 16 bytes (std140)");
-        // static_assert(sizeof(Spot) == 96, "Spot size must be 96 bytes (std140 stride)");
-        // static_assert(offsetof(Spot, position) == 0, "position offset");
-        // static_assert(offsetof(Spot, intensity) == 16, "intensity offset");
-        // static_assert(offsetof(Spot, direction) == 32, "direction offset");
-        // static_assert(offsetof(Spot, innerCos) == 48, "innerCos offset");
-        // static_assert(offsetof(Spot, color) == 64, "color offset");
-        // static_assert(offsetof(Spot, outerCos) == 80, "outerCos offset");
-        // static_assert(offsetof(Spot, range) == 84, "range offset");
     };
     UniformBuffer m_lights_buffers;
     LightsBlock m_lights;
