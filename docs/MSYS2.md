@@ -69,6 +69,8 @@ Notes:
 
 You want to reuse Git for Windows, not the one in MSYS2, so you can work in both VS Code and MSYS2 without friction.
 
+You'll also want to copy your SSH keys into `~/.ssh`, or make new keys and register them with Github.
+
 ```bash
 # At the very top of your .zshrc to use the same Git in MSYS2 as you use in Windows
 export PATH="/c/Program Files/Git/cmd:$PATH"
@@ -82,6 +84,15 @@ export VCPKG_ROOT=/c/tools/vcpkg
 
 # Shortcuts
 alias vi='vim'
+
+# SSH Agent
+export SSH_AUTH_SOCK=/tmp/ssh-agent.sock
+ssh_agent_is_running() { ssh-add -l >/dev/null 2>&1; }
+if ! ssh_agent_is_running; then
+  [ -S "$SSH_AUTH_SOCK" ] && rm -f "$SSH_AUTH_SOCK"
+  eval "$(ssh-agent -a $SSH_AUTH_SOCK -s)" >/dev/null
+  ssh-add ~/.ssh/id_ed25519 </dev/tty
+fi
 ```
 
 At this point the UCRT64 shell has the compilers, CMake, vcpkg, and SSH credentials you need to work on Steeplejack.
