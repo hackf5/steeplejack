@@ -10,10 +10,16 @@ Image::Image(const Device& device,
              VkFormat format,
              VkImageUsageFlags usage,
              VkImageTiling tiling,
-             VkSampleCountFlagBits samples) :
+             VkSampleCountFlagBits samples,
+             uint32_t array_layers) :
     m_device(device),
-    m_image_info(
-        {.width = width, .height = height, .format = format, .usage = usage, .tiling = tiling, .samples = samples}),
+    m_image_info({.width = width,
+                  .height = height,
+                  .format = format,
+                  .usage = usage,
+                  .tiling = tiling,
+                  .samples = samples,
+                  .array_layers = array_layers}),
     m_allocation_info(create_allocation_info())
 {
 }
@@ -34,7 +40,7 @@ Image::AllocationInfo Image::create_allocation_info()
     image_info.extent.height = m_image_info.height;
     image_info.extent.depth = 1;
     image_info.mipLevels = 1;
-    image_info.arrayLayers = 1;
+    image_info.arrayLayers = m_image_info.array_layers;
     image_info.format = m_image_info.format;
     image_info.tiling = m_image_info.tiling;
     image_info.usage = m_image_info.usage;

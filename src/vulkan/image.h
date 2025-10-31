@@ -19,6 +19,7 @@ class Image : public NoCopyOrMove
         const VkImageUsageFlags usage;
         const VkImageTiling tiling;
         const VkSampleCountFlagBits samples;
+        const uint32_t array_layers;
     };
 
   private:
@@ -42,7 +43,8 @@ class Image : public NoCopyOrMove
           VkFormat format,
           VkImageUsageFlags usage,
           VkImageTiling tiling,
-          VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT);
+          VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT,
+          uint32_t array_layers = 1);
     ~Image();
 
     operator VkImage() const

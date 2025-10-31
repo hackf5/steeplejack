@@ -27,10 +27,15 @@ class Scene : public NoCopyOrMove
         struct Spot
         {
             // https://stackoverflow.com/a/19957102/323316
-            glm::vec3 position;     float intensity;
-            glm::vec3 direction;    float innerCos;
-            glm::vec3 color;        float outerCos;
-            float range;            bool enable = false;    glm::vec2 _pad0;
+            glm::vec3 position;
+            float intensity;
+            glm::vec3 direction;
+            float innerCos;
+            glm::vec3 color;
+            float outerCos;
+            float range;
+            bool enable = false;
+            glm::vec2 _pad0;
         } spots[kMaxSpots];
     };
     UniformBuffer m_lights_buffers;
