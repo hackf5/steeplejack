@@ -37,14 +37,15 @@ class Image : public NoCopyOrMove
     AllocationInfo create_allocation_info();
 
   public:
-    Image(const Device& device,
-          uint32_t width,
-          uint32_t height,
-          VkFormat format,
-          VkImageUsageFlags usage,
-          VkImageTiling tiling,
-          VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT,
-          uint32_t array_layers = 1);
+    Image(
+        const Device& device,
+        uint32_t width,
+        uint32_t height,
+        VkFormat format,
+        VkImageUsageFlags usage,
+        VkImageTiling tiling,
+        VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT,
+        uint32_t array_layers = 1);
     ~Image();
 
     operator VkImage() const

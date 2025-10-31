@@ -6,8 +6,8 @@ Standard: c++20
 ColumnLimit: 120
 IndentWidth: 4
 TabWidth: 4
-UseTab: Never
 ContinuationIndentWidth: 4
+UseTab: Never
 
 # Braces and constructors
 BreakBeforeBraces: Allman
@@ -17,16 +17,19 @@ AllowShortLoopsOnASingleLine: false
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 BreakConstructorInitializers: AfterColon
 ConstructorInitializerIndentWidth: 4
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
 
 # Spacing and alignment
 SpaceBeforeParens: ControlStatements
 PointerAlignment: Left
 ReferenceAlignment: Left
 DerivePointerAlignment: false
-AlignAfterOpenBracket: Align
 AlignOperands: false
 BinPackParameters: false
 BinPackArguments: false
+AlignAfterOpenBracket: AlwaysBreak
+AllowAllArgumentsOnNextLine: false
 
 # Includes
 SortIncludes: true

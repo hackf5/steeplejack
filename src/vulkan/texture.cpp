@@ -10,11 +10,12 @@
 
 using namespace steeplejack;
 
-Texture::Texture(const Device& device,
-                 const Sampler& sampler,
-                 const AdhocQueues& adhoc_queues,
-                 std::string name,
-                 TextureColorSpace color_space) :
+Texture::Texture(
+    const Device& device,
+    const Sampler& sampler,
+    const AdhocQueues& adhoc_queues,
+    std::string name,
+    TextureColorSpace color_space) :
     m_device(device),
     m_name(std::move(name)),
     m_image(create_image(adhoc_queues, color_space)),
@@ -53,26 +54,28 @@ std::unique_ptr<Image> Texture::create_image(const AdhocQueues& adhoc_queues, Te
     auto staging_buffer = create_staging_buffer(m_name, width, height);
     const VkFormat format =
         (color_space == TextureColorSpace::Srgb) ? VK_FORMAT_R8G8B8A8_SRGB : VK_FORMAT_R8G8B8A8_UNORM;
-    auto image = std::make_unique<Image>(m_device,
-                                         width,
-                                         height,
-                                         format,
-                                         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-                                         VK_IMAGE_TILING_OPTIMAL);
+    auto image = std::make_unique<Image>(
+        m_device,
+        width,
+        height,
+        format,
+        VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+        VK_IMAGE_TILING_OPTIMAL);
 
     transition_image_layout(adhoc_queues, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
     copy_staging_buffer_to_image(*staging_buffer, adhoc_queues);
 
     transition_image_layout(
-        adhoc_queues, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        adhoc_queues,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
     return image;
 }
 
-void Texture::transition_image_layout(const AdhocQueues& adhoc_queues,
-                                      VkImageLayout old_layout,
-                                      VkImageLayout new_layout)
+void Texture::transition_image_layout(
+    const AdhocQueues& adhoc_queues, VkImageLayout old_layout, VkImageLayout new_layout)
 {
     VkCommandBuffer command_buffer = adhoc_queues.graphics().begin();
 
@@ -100,8 +103,8 @@ void Texture::transition_image_layout(const AdhocQueues& adhoc_queues,
         source_stage = VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT;
         destination_stage = VK_PIPELINE_STAGE_TRANSFER_BIT;
     }
-    else if (old_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL &&
-             new_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
+    else if (
+        old_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL && new_layout == VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL)
     {
         barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
         barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
@@ -162,22 +165,24 @@ VkDescriptorImageInfo Texture::create_image_descriptor_info(const Sampler& sampl
     return image_info;
 }
 
-Texture::Texture(const Device& device,
-                 const Sampler& sampler,
-                 const AdhocQueues& adhoc_queues,
-                 int width,
-                 int height,
-                 TextureColorSpace color_space,
-                 std::span<const std::byte> rgba_pixels) :
+Texture::Texture(
+    const Device& device,
+    const Sampler& sampler,
+    const AdhocQueues& adhoc_queues,
+    int width,
+    int height,
+    TextureColorSpace color_space,
+    std::span<const std::byte> rgba_pixels) :
     m_device(device),
     m_name("<memory>"),
-    m_image(std::make_unique<Image>(m_device,
-                                    width,
-                                    height,
-                                    color_space == TextureColorSpace::Srgb ? VK_FORMAT_R8G8B8A8_SRGB
-                                                                           : VK_FORMAT_R8G8B8A8_UNORM,
-                                    VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
-                                    VK_IMAGE_TILING_OPTIMAL)),
+    m_image(
+        std::make_unique<Image>(
+            m_device,
+            width,
+            height,
+            color_space == TextureColorSpace::Srgb ? VK_FORMAT_R8G8B8A8_SRGB : VK_FORMAT_R8G8B8A8_UNORM,
+            VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
+            VK_IMAGE_TILING_OPTIMAL)),
     m_image_view(m_device, *m_image, VK_IMAGE_ASPECT_COLOR_BIT),
     m_image_descriptor_info(create_image_descriptor_info(sampler)),
     m_color_space(color_space)
@@ -189,5 +194,7 @@ Texture::Texture(const Device& device,
     copy_staging_buffer_to_image(staging_buffer, adhoc_queues);
 
     transition_image_layout(
-        adhoc_queues, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+        adhoc_queues,
+        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+        VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 }

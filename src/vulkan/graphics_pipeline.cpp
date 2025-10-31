@@ -7,15 +7,16 @@
 
 using namespace steeplejack;
 
-GraphicsPipeline::GraphicsPipeline(const Device& device,
-                                   DescriptorSetLayout& descriptor_set_layout,
-                                   const Swapchain& swapchain,
-                                   const RenderPass& render_pass,
-                                   const std::string& vertex_shader,
-                                   const std::string& fragment_shader) :
+GraphicsPipeline::GraphicsPipeline(
+    const Device& device,
+    DescriptorSetLayout& descriptor_set_layout,
+    const Swapchain& swapchain,
+    const RenderPass& render_pass,
+    const std::string& vertex_shader,
+    const std::string& fragment_shader) :
     m_device(device),
     m_descriptor_set_layout(descriptor_set_layout),
-    m_pipeline_layout(create_pipeline_layout(descriptor_set_layout)),
+    m_pipeline_layout(m_descriptor_set_layout.create_pipeline_layout()),
     m_pipeline(create_pipeline(swapchain, render_pass, vertex_shader, fragment_shader)),
     vkCmdPushDescriptorSetKHR(fetch_vkCmdPushDescriptorSetKHR())
 {
@@ -28,31 +29,11 @@ GraphicsPipeline::~GraphicsPipeline()
     vkDestroyPipelineLayout(m_device, m_pipeline_layout, nullptr);
 }
 
-VkPipelineLayout GraphicsPipeline::create_pipeline_layout(const DescriptorSetLayout& descriptor_set_layout)
-{
-    spdlog::info("Creating Graphics Pipeline Layout");
-
-    auto set_layouts = descriptor_set_layout.get_layouts_for_pipeline();
-    VkPipelineLayoutCreateInfo pipeline_layout_info = {};
-    pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
-    pipeline_layout_info.setLayoutCount = static_cast<uint32_t>(set_layouts.size());
-    pipeline_layout_info.pSetLayouts = set_layouts.data();
-    pipeline_layout_info.pushConstantRangeCount = 0;
-    pipeline_layout_info.pPushConstantRanges = nullptr;
-
-    VkPipelineLayout pipeline_layout = nullptr;
-    if (vkCreatePipelineLayout(m_device, &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create pipeline layout");
-    }
-
-    return pipeline_layout;
-}
-
-VkPipeline GraphicsPipeline::create_pipeline(const Swapchain& swapchain,
-                                             const RenderPass& render_pass,
-                                             const std::string& vertex_shader,
-                                             const std::string& fragment_shader)
+VkPipeline GraphicsPipeline::create_pipeline(
+    const Swapchain& swapchain,
+    const RenderPass& render_pass,
+    const std::string& vertex_shader,
+    const std::string& fragment_shader)
 {
     spdlog::info("Creating Graphics Pipeline");
 
@@ -98,8 +79,8 @@ VkPipeline GraphicsPipeline::create_pipeline(const Swapchain& swapchain,
     return pipeline;
 }
 
-std::vector<VkPipelineShaderStageCreateInfo> GraphicsPipeline::create_shader_stages(const ShaderModule& vertex_shader,
-                                                                                    const ShaderModule& fragment_shader)
+std::vector<VkPipelineShaderStageCreateInfo>
+GraphicsPipeline::create_shader_stages(const ShaderModule& vertex_shader, const ShaderModule& fragment_shader)
 {
     VkPipelineShaderStageCreateInfo vert_stage_info = {};
     vert_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -167,8 +148,8 @@ VkPipelineColorBlendAttachmentState GraphicsPipeline::create_color_blend_attachm
 {
     VkPipelineColorBlendAttachmentState result = {};
     result.blendEnable = VK_FALSE;
-    result.colorWriteMask = static_cast<VkColorComponentFlags>(VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT |
-                                                               VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
+    result.colorWriteMask = static_cast<VkColorComponentFlags>(
+        VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
 
     return result;
 }

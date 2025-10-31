@@ -4,22 +4,24 @@
 
 using namespace steeplejack;
 
-Image::Image(const Device& device,
-             uint32_t width,
-             uint32_t height,
-             VkFormat format,
-             VkImageUsageFlags usage,
-             VkImageTiling tiling,
-             VkSampleCountFlagBits samples,
-             uint32_t array_layers) :
+Image::Image(
+    const Device& device,
+    uint32_t width,
+    uint32_t height,
+    VkFormat format,
+    VkImageUsageFlags usage,
+    VkImageTiling tiling,
+    VkSampleCountFlagBits samples,
+    uint32_t array_layers) :
     m_device(device),
-    m_image_info({.width = width,
-                  .height = height,
-                  .format = format,
-                  .usage = usage,
-                  .tiling = tiling,
-                  .samples = samples,
-                  .array_layers = array_layers}),
+    m_image_info(
+        {.width = width,
+         .height = height,
+         .format = format,
+         .usage = usage,
+         .tiling = tiling,
+         .samples = samples,
+         .array_layers = array_layers}),
     m_allocation_info(create_allocation_info())
 {
 }

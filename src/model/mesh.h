@@ -70,8 +70,9 @@ class Mesh : NoCopyOrMove
             // Base color texture at binding 2 (if present)
             if (m_material->base_color())
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(m_material->base_color()->descriptor(),
-                                                                              2);
+                pipeline.descriptor_set_layout().write_combined_image_sampler(
+                    m_material->base_color()->descriptor(),
+                    2);
             }
             // Normal map at binding 4
             if (m_material->normal())
@@ -82,7 +83,8 @@ class Mesh : NoCopyOrMove
             if (m_material->metallic_roughness())
             {
                 pipeline.descriptor_set_layout().write_combined_image_sampler(
-                    m_material->metallic_roughness()->descriptor(), 5);
+                    m_material->metallic_roughness()->descriptor(),
+                    5);
             }
             // Emissive at binding 6
             if (m_material->emissive())

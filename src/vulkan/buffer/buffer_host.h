@@ -18,11 +18,12 @@ class BufferHost : public Buffer
 
   public:
     BufferHost(const Device& device, VkDeviceSize size, VkBufferUsageFlags usage) :
-        Buffer(device,
-               size,
-               usage,
-               VMA_MEMORY_USAGE_AUTO,
-               VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT)
+        Buffer(
+            device,
+            size,
+            usage,
+            VMA_MEMORY_USAGE_AUTO,
+            VMA_ALLOCATION_CREATE_HOST_ACCESS_SEQUENTIAL_WRITE_BIT | VMA_ALLOCATION_CREATE_MAPPED_BIT)
     {
     }
 

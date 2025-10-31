@@ -16,13 +16,12 @@ class ShadowFramebuffers : public NoCopyOrMove
     const Device& m_device;
     const std::vector<VkFramebuffer> m_framebuffers;
 
-    std::vector<VkFramebuffer> create_framebuffers(const ShadowMapArray& shadow_map_array,
-                       const ShadowRenderPass& shadow_render_pass);
+    std::vector<VkFramebuffer>
+    create_framebuffers(const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass);
 
   public:
-    ShadowFramebuffers(const Device& device,
-                       const ShadowMapArray& shadow_map_array,
-                       const ShadowRenderPass& shadow_render_pass);
+    ShadowFramebuffers(
+        const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass);
     ~ShadowFramebuffers();
 
     size_t size() const

@@ -25,9 +25,10 @@ class TextureFactory
   public:
     TextureFactory(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues);
 
-    void load_texture(const std::string& name,
-                      const std::string& texture_name,
-                      TextureColorSpace color_space = TextureColorSpace::Srgb);
+    void load_texture(
+        const std::string& name,
+        const std::string& texture_name,
+        TextureColorSpace color_space = TextureColorSpace::Srgb);
 
     // Load the baseColor (albedo) texture referenced by a glTF/GLB file.
     // gltf_relpath is relative to assets/textures/ (e.g., "rock_wall_15_1k/rock_wall_15_1k.gltf").
@@ -52,7 +53,13 @@ class TextureFactory
             return;
         const std::array<std::byte, 4> px{std::byte{r}, std::byte{g}, std::byte{b}, std::byte{a}};
         m_textures[name] = std::make_unique<Texture>(
-            m_device, m_sampler, m_adhoc_queues, 1, 1, color_space, std::span<const std::byte>(px.data(), px.size()));
+            m_device,
+            m_sampler,
+            m_adhoc_queues,
+            1,
+            1,
+            color_space,
+            std::span<const std::byte>(px.data(), px.size()));
     }
 };
 } // namespace steeplejack

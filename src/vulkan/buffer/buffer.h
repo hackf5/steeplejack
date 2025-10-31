@@ -35,11 +35,12 @@ class Buffer : NoCopyOrMove
     VkDescriptorBufferInfo create_descriptor_info() const;
 
   public:
-    Buffer(const Device& device,
-           VkDeviceSize size,
-           VkBufferUsageFlags usage,
-           VmaMemoryUsage memory_usage = VMA_MEMORY_USAGE_AUTO,
-           VmaAllocationCreateFlags allocation_flags = 0);
+    Buffer(
+        const Device& device,
+        VkDeviceSize size,
+        VkBufferUsageFlags usage,
+        VmaMemoryUsage memory_usage = VMA_MEMORY_USAGE_AUTO,
+        VmaAllocationCreateFlags allocation_flags = 0);
     ~Buffer();
 
     VkDeviceSize size() const

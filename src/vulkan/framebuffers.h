@@ -23,10 +23,11 @@ class Framebuffers : NoCopyOrMove
     create_framebuffers(const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer);
 
   public:
-    Framebuffers(const Device& device,
-                 const Swapchain& swapchain,
-                 const RenderPass& render_pass,
-                 const DepthBuffer& depth_buffer);
+    Framebuffers(
+        const Device& device,
+        const Swapchain& swapchain,
+        const RenderPass& render_pass,
+        const DepthBuffer& depth_buffer);
     Framebuffers(const Framebuffers&) = delete;
     ~Framebuffers();
 

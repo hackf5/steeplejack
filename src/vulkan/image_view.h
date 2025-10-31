@@ -20,10 +20,11 @@ class ImageView : public NoCopyOrMove
 
   public:
     // base_layer: if specified, creates a view for a single layer in a 2D array starting at base_layer;
-    ImageView(const Device& device,
-              const Image& image,
-              VkImageAspectFlags aspect_mask,
-              std::optional<uint32_t> base_layer = std::nullopt);
+    ImageView(
+        const Device& device,
+        const Image& image,
+        VkImageAspectFlags aspect_mask,
+        std::optional<uint32_t> base_layer = std::nullopt);
     ~ImageView();
 
     operator VkImageView() const

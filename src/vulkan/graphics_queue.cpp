@@ -122,12 +122,13 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
 
     vkResetFences(m_device, 1, &m_in_flight_fences[m_current_frame]);
 
-    VkResult const result = vkAcquireNextImageKHR(m_device,
-                                                  swapchain,
-                                                  std::numeric_limits<uint64_t>::max(),
-                                                  m_image_available[m_current_frame],
-                                                  VK_NULL_HANDLE,
-                                                  &m_image_index);
+    VkResult const result = vkAcquireNextImageKHR(
+        m_device,
+        swapchain,
+        std::numeric_limits<uint64_t>::max(),
+        m_image_available[m_current_frame],
+        VK_NULL_HANDLE,
+        &m_image_index);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR)
     {

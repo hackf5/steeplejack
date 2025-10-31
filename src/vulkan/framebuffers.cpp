@@ -7,10 +7,8 @@
 
 using namespace steeplejack;
 
-Framebuffers::Framebuffers(const Device& device,
-                           const Swapchain& swapchain,
-                           const RenderPass& render_pass,
-                           const DepthBuffer& depth_buffer) :
+Framebuffers::Framebuffers(
+    const Device& device, const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer) :
     m_device(device),
     m_multisampler(device, swapchain),
     m_framebuffers(create_framebuffers(swapchain, render_pass, depth_buffer))
@@ -26,9 +24,8 @@ Framebuffers::~Framebuffers()
     }
 }
 
-std::vector<VkFramebuffer> Framebuffers::create_framebuffers(const Swapchain& swapchain,
-                                                             const RenderPass& render_pass,
-                                                             const DepthBuffer& depth_buffer)
+std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
+    const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer)
 {
     spdlog::info("Creating Framebuffers");
 

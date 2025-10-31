@@ -32,7 +32,10 @@ class GraphicsBuffers : NoCopyOrMove
         static_assert(std::is_same_v<Vertex, std::decay_t<decltype(*begin)>>, "TIter must be an iterator to Vertex");
 
         m_vertex_buffer = std::make_unique<BufferGPU>(
-            m_device, m_adhoc_queues, total_bytes(begin, end), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+            m_device,
+            m_adhoc_queues,
+            total_bytes(begin, end),
+            VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
         m_vertex_buffer->copy_from(begin, end);
     }
 
@@ -43,11 +46,15 @@ class GraphicsBuffers : NoCopyOrMove
 
     template <typename TIter> void load_indexes(TIter begin, TIter end)
     {
-        static_assert(std::is_same_v<Vertex::index_t, std::decay_t<decltype(*begin)>>,
-                      "TIter must be an iterator to Vertex::index_t");
+        static_assert(
+            std::is_same_v<Vertex::index_t, std::decay_t<decltype(*begin)>>,
+            "TIter must be an iterator to Vertex::index_t");
 
         m_index_buffer = std::make_unique<BufferGPU>(
-            m_device, m_adhoc_queues, total_bytes(begin, end), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+            m_device,
+            m_adhoc_queues,
+            total_bytes(begin, end),
+            VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
         m_index_buffer->copy_from(begin, end);
     }
 

@@ -22,6 +22,26 @@ DescriptorSetLayout::~DescriptorSetLayout()
     vkDestroyDescriptorSetLayout(m_device, m_descriptor_set_layout, nullptr);
 }
 
+VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
+{
+    spdlog::info("Creating Graphics Pipeline Layout");
+
+    VkPipelineLayoutCreateInfo pipeline_layout_info = {};
+    pipeline_layout_info.sType = VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO;
+    pipeline_layout_info.setLayoutCount = static_cast<uint32_t>(m_descriptor_set_layouts.size());
+    pipeline_layout_info.pSetLayouts = m_descriptor_set_layouts.data();
+    pipeline_layout_info.pushConstantRangeCount = 0;
+    pipeline_layout_info.pPushConstantRanges = nullptr;
+
+    VkPipelineLayout pipeline_layout = nullptr;
+    if (vkCreatePipelineLayout(m_device, &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create pipeline layout");
+    }
+
+    return pipeline_layout;
+}
+
 VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
 {
     std::vector<VkDescriptorSetLayoutBinding> bindings;

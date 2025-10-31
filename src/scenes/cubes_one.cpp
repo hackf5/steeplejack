@@ -25,12 +25,18 @@ CubesOne::vertexes_t CubesOne::create_vertexes()
 CubesOne::indexes_t CubesOne::create_indexes()
 {
     return {
-        0,  2,  1,  2,  3,  1,  // bottom
-        4,  5,  6,  6,  5,  7,  // top
-        8,  10, 9,  10, 11, 9,  // front
-        13, 14, 12, 13, 15, 14, // back
-        17, 18, 16, 17, 19, 18, // left
-        20, 22, 21, 22, 23, 21, // right
+        0,  2,  1,  2,  3,
+        1, // bottom
+        4,  5,  6,  6,  5,
+        7, // top
+        8,  10, 9,  10, 11,
+        9, // front
+        13, 14, 12, 13, 15,
+        14, // back
+        17, 18, 16, 17, 19,
+        18, // left
+        20, 22, 21, 22, 23,
+        21, // right
     };
 }
 

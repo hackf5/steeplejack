@@ -32,10 +32,7 @@ class DescriptorSetLayout : NoCopyOrMove
         return m_descriptor_set_layout;
     }
 
-    const std::array<VkDescriptorSetLayout, 1>& get_layouts_for_pipeline() const
-    {
-        return m_descriptor_set_layouts;
-    }
+    VkPipelineLayout create_pipeline_layout() const;
 
     void reset_writes();
 

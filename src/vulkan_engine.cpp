@@ -46,7 +46,9 @@ void VulkanEngine::draw_frame()
     m_context->gui().begin_frame();
 
     auto* framebuffer = m_context->graphics_queue().prepare_framebuffer(
-        m_current_frame, m_context->swapchain(), m_context->framebuffers());
+        m_current_frame,
+        m_context->swapchain(),
+        m_context->framebuffers());
 
     if (framebuffer == nullptr)
     {

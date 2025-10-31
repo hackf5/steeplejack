@@ -45,20 +45,22 @@ class Texture : public NoCopyOrMove
     void copy_staging_buffer_to_image(const Buffer& staging_buffer, const AdhocQueues& adhoc_queues);
 
   public:
-    Texture(const Device& device,
-            const Sampler& sampler,
-            const AdhocQueues& adhoc_queues,
-            std::string name,
-            TextureColorSpace color_space = TextureColorSpace::Srgb);
+    Texture(
+        const Device& device,
+        const Sampler& sampler,
+        const AdhocQueues& adhoc_queues,
+        std::string name,
+        TextureColorSpace color_space = TextureColorSpace::Srgb);
 
     // Construct from raw RGBA8 pixel data (width*height*4 bytes)
-    Texture(const Device& device,
-            const Sampler& sampler,
-            const AdhocQueues& adhoc_queues,
-            int width,
-            int height,
-            TextureColorSpace color_space,
-            std::span<const std::byte> rgba_pixels);
+    Texture(
+        const Device& device,
+        const Sampler& sampler,
+        const AdhocQueues& adhoc_queues,
+        int width,
+        int height,
+        TextureColorSpace color_space,
+        std::span<const std::byte> rgba_pixels);
 
     VkDescriptorImageInfo* descriptor()
     {

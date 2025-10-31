@@ -7,11 +7,8 @@
 using namespace steeplejack;
 
 ShadowFramebuffers::ShadowFramebuffers(
-    const Device& device,
-    const ShadowMapArray& shadow_map_array,
-    const ShadowRenderPass& shadow_render_pass) :
-    m_device(device),
-    m_framebuffers(create_framebuffers(shadow_map_array, shadow_render_pass))
+    const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass) :
+    m_device(device), m_framebuffers(create_framebuffers(shadow_map_array, shadow_render_pass))
 {
 }
 
@@ -25,8 +22,7 @@ ShadowFramebuffers::~ShadowFramebuffers()
 }
 
 std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
-    const ShadowMapArray& shadow_map_array,
-    const ShadowRenderPass& shadow_render_pass)
+    const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass)
 {
     spdlog::info("Creating Shadow Framebuffers");
 

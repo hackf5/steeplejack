@@ -13,9 +13,8 @@ TextureFactory::TextureFactory(const Device& device, const Sampler& sampler, con
 {
 }
 
-void TextureFactory::load_texture(const std::string& name,
-                                  const std::string& texture_name,
-                                  TextureColorSpace color_space)
+void TextureFactory::load_texture(
+    const std::string& name, const std::string& texture_name, TextureColorSpace color_space)
 {
     m_textures[name] = std::make_unique<Texture>(m_device, m_sampler, m_adhoc_queues, texture_name, color_space);
 }
@@ -83,8 +82,10 @@ void TextureFactory::load_texture_from_gltf(const std::string& name, const std::
     }
 
     // If the image is embedded (no URI), we could upload from memory. For the first pass, fail loudly.
-    throw std::runtime_error(std::format(
-        "Embedded images not supported in first pass for {}. Expected external image URI.", full_path.string()));
+    throw std::runtime_error(
+        std::format(
+            "Embedded images not supported in first pass for {}. Expected external image URI.",
+            full_path.string()));
 }
 
 void TextureFactory::remove_texture(const std::string& name)

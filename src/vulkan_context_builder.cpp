@@ -105,19 +105,23 @@ VulkanContextBuilder& VulkanContextBuilder::add_render_pass()
 VulkanContextBuilder& VulkanContextBuilder::add_framebuffers()
 {
     m_context->m_framebuffers = std::make_unique<Framebuffers>(
-        *m_context->m_device, *m_context->m_swapchain, *m_context->m_render_pass, *m_context->m_depth_buffer);
+        *m_context->m_device,
+        *m_context->m_swapchain,
+        *m_context->m_render_pass,
+        *m_context->m_depth_buffer);
 
     return *this;
 }
 
 VulkanContextBuilder& VulkanContextBuilder::add_graphics_pipeline()
 {
-    m_context->m_graphics_pipeline = std::make_unique<GraphicsPipeline>(*m_context->m_device,
-                                                                        *m_context->m_descriptor_set_layout,
-                                                                        *m_context->m_swapchain,
-                                                                        *m_context->m_render_pass,
-                                                                        m_context->m_render_scene->vertex_shader(),
-                                                                        m_context->m_render_scene->fragment_shader());
+    m_context->m_graphics_pipeline = std::make_unique<GraphicsPipeline>(
+        *m_context->m_device,
+        *m_context->m_descriptor_set_layout,
+        *m_context->m_swapchain,
+        *m_context->m_render_pass,
+        m_context->m_render_scene->vertex_shader(),
+        m_context->m_render_scene->fragment_shader());
 
     return *this;
 }

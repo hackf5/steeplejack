@@ -4,11 +4,12 @@
 
 using namespace steeplejack;
 
-Buffer::Buffer(const Device& device,
-               VkDeviceSize size,
-               VkBufferUsageFlags usage,
-               VmaMemoryUsage memory_usage,
-               VmaAllocationCreateFlags allocation_flags) :
+Buffer::Buffer(
+    const Device& device,
+    VkDeviceSize size,
+    VkBufferUsageFlags usage,
+    VmaMemoryUsage memory_usage,
+    VmaAllocationCreateFlags allocation_flags) :
     m_allocator(device.allocator()),
     m_usage(usage),
     m_memory_usage(memory_usage),

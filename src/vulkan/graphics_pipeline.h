@@ -25,15 +25,14 @@ class GraphicsPipeline : NoCopyOrMove
 
     PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
 
-    VkPipelineLayout create_pipeline_layout(const DescriptorSetLayout& descriptor_set_layout);
+    VkPipeline create_pipeline(
+        const Swapchain& swapchain,
+        const RenderPass& render_pass,
+        const std::string& vertex_shader,
+        const std::string& fragment_shader);
 
-    VkPipeline create_pipeline(const Swapchain& swapchain,
-                               const RenderPass& render_pass,
-                               const std::string& vertex_shader,
-                               const std::string& fragment_shader);
-
-    static std::vector<VkPipelineShaderStageCreateInfo> create_shader_stages(const ShaderModule& vertex_shader,
-                                                                             const ShaderModule& fragment_shader);
+    static std::vector<VkPipelineShaderStageCreateInfo>
+    create_shader_stages(const ShaderModule& vertex_shader, const ShaderModule& fragment_shader);
 
     static VkPipelineInputAssemblyStateCreateInfo create_input_assembly_state();
 
@@ -57,12 +56,13 @@ class GraphicsPipeline : NoCopyOrMove
     PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
 
   public:
-    GraphicsPipeline(const Device& device,
-                     DescriptorSetLayout& descriptor_set_layout,
-                     const Swapchain& swapchain,
-                     const RenderPass& render_pass,
-                     const std::string& vertex_shader,
-                     const std::string& fragment_shader);
+    GraphicsPipeline(
+        const Device& device,
+        DescriptorSetLayout& descriptor_set_layout,
+        const Swapchain& swapchain,
+        const RenderPass& render_pass,
+        const std::string& vertex_shader,
+        const std::string& fragment_shader);
     ~GraphicsPipeline();
 
     operator VkPipeline() const
@@ -88,12 +88,13 @@ class GraphicsPipeline : NoCopyOrMove
     void push_descriptor_set(VkCommandBuffer command_buffer) const
     {
         auto write_descriptor_sets = m_descriptor_set_layout.get_write_descriptor_sets();
-        vkCmdPushDescriptorSetKHR(command_buffer,
-                                  VK_PIPELINE_BIND_POINT_GRAPHICS,
-                                  m_pipeline_layout,
-                                  0,
-                                  write_descriptor_sets.size(),
-                                  write_descriptor_sets.data());
+        vkCmdPushDescriptorSetKHR(
+            command_buffer,
+            VK_PIPELINE_BIND_POINT_GRAPHICS,
+            m_pipeline_layout,
+            0,
+            write_descriptor_sets.size(),
+            write_descriptor_sets.data());
     }
 };
 } // namespace steeplejack
