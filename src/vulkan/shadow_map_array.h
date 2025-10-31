@@ -5,10 +5,9 @@
 #include "image_view.h"
 #include "util/no_copy_or_move.h"
 
-#include <vulkan/vulkan.h>
-
 #include <memory>
 #include <vector>
+#include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
@@ -21,7 +20,10 @@ class ShadowMapArray : public NoCopyOrMove
     const std::vector<std::unique_ptr<ImageView>> m_layer_image_views;
 
   public:
-    ShadowMapArray(const Device& device, uint32_t layers, uint32_t resolution = 1024, VkFormat format = VK_FORMAT_D32_SFLOAT);
+    ShadowMapArray(const Device& device,
+                   uint32_t layers,
+                   uint32_t resolution = 1024,
+                   VkFormat format = VK_FORMAT_D32_SFLOAT);
     ~ShadowMapArray() = default;
 
     uint32_t layers() const

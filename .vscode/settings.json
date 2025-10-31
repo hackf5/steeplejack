@@ -57,6 +57,7 @@
     "Multisampler",
     "SPIR",
     "stbi",
+    "Subpasses",
     "swapchain",
     "swapchains",
     "TINYGLTF",
