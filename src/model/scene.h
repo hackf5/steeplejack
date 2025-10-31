@@ -17,28 +17,33 @@ class Scene : public NoCopyOrMove
   private:
     Camera m_camera;
     Model m_model;
-    struct LightsBlock
+    struct SceneLights
     {
+        constexpr static size_t kMaxSpots = 8;
+
         glm::vec3 ambientColor;
         float ambientIntensity;
 
         struct Spot
         {
             // https://stackoverflow.com/a/19957102/323316
-            glm::vec3 position;  float intensity;
-            glm::vec3 direction; float innerCos;
-            glm::vec3 color;     float outerCos;
-            glm::vec3 _pad;      float range;
-        } spots[2];
+            glm::vec3 position;     float intensity;
+            glm::vec3 direction;    float innerCos;
+            glm::vec3 color;        float outerCos;
+            float range;            bool enable = false;    glm::vec2 _pad0;
+        } spots[kMaxSpots];
     };
     UniformBuffer m_lights_buffers;
-    LightsBlock m_lights;
+    SceneLights m_lights;
 
   public:
-    Scene(const Device& device) : m_camera(device), m_model(), m_lights_buffers(device, sizeof(LightsBlock)), m_lights{}
+    Scene(const Device& device) : m_camera(device), m_model(), m_lights_buffers(device, sizeof(SceneLights)), m_lights{}
     {
         m_lights.ambientColor = glm::vec3(1.0f);
         m_lights.ambientIntensity = 0.1f;
+
+        // First spot default
+        m_lights.spots[0].enable = true;
         m_lights.spots[0].position = glm::vec3(2.0f, 2.0f, 2.0f);
         m_lights.spots[0].intensity = 2.0f;
         m_lights.spots[0].direction = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
@@ -46,8 +51,9 @@ class Scene : public NoCopyOrMove
         m_lights.spots[0].color = glm::vec3(1.0f);
         m_lights.spots[0].outerCos = glm::cos(glm::radians(25.0f));
         m_lights.spots[0].range = 6.0f;
-        m_lights.spots[0]._pad[0] = m_lights.spots[0]._pad[1] = 0.0f;
+
         // Second spot default
+        m_lights.spots[1].enable = true;
         m_lights.spots[1].position = glm::vec3(-2.0f, 2.0f, 2.0f);
         m_lights.spots[1].intensity = 2.0f;
         m_lights.spots[1].direction = glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f));
@@ -55,7 +61,6 @@ class Scene : public NoCopyOrMove
         m_lights.spots[1].color = glm::vec3(0.9f, 0.95f, 1.0f);
         m_lights.spots[1].outerCos = glm::cos(glm::radians(22.0f));
         m_lights.spots[1].range = 6.0f;
-        m_lights.spots[1]._pad[0] = m_lights.spots[1]._pad[1] = 0.0f;
     }
 
     const Camera& camera() const
@@ -85,50 +90,8 @@ class Scene : public NoCopyOrMove
         return m_lights.ambientIntensity;
     }
 
-    // Spotlight controls
-    glm::vec3 spotlight_position() const
-    {
-        return m_lights.spots[0].position;
-    }
-    void set_spotlight_position(const glm::vec3& p)
-    {
-        m_lights.spots[0].position = p;
-    }
-    glm::vec3 spotlight_direction() const
-    {
-        return m_lights.spots[0].direction;
-    }
-    void set_spotlight_direction(const glm::vec3& d)
-    {
-        m_lights.spots[0].direction = d;
-    }
-    glm::vec3 spotlight_color() const
-    {
-        return m_lights.spots[0].color;
-    }
-    void set_spotlight_color(const glm::vec3& c)
-    {
-        m_lights.spots[0].color = c;
-    }
-    float& spotlight_intensity()
-    {
-        return m_lights.spots[0].intensity;
-    }
-    float& spotlight_inner_cos()
-    {
-        return m_lights.spots[0].innerCos;
-    }
-    float& spotlight_outer_cos()
-    {
-        return m_lights.spots[0].outerCos;
-    }
-    float& spotlight_range()
-    {
-        return m_lights.spots[0].range;
-    }
-
-    // Access spot by index (0 or 1)
-    LightsBlock::Spot& spot(size_t index)
+    // Access spot by index (0..7)
+    SceneLights::Spot& spot(size_t index)
     {
         return m_lights.spots[index];
     }

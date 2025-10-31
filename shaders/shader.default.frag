@@ -4,6 +4,8 @@
 #include "types.glsl"
 #include "lighting.glsl"
 
+const int kMaxSpots = 8;
+
 layout(binding = 2) uniform sampler2D inSampler;  // baseColor
 layout(binding = 4) uniform sampler2D inNormal;   // normal (unused)
 layout(binding = 5) uniform sampler2D inMR;       // metallic-roughness (unused)
@@ -15,7 +17,7 @@ layout(binding = 3, std140) uniform MaterialParams {
 
 layout(binding = 7, std140) uniform SceneLights {
     vec3 ambientColor;  float ambientIntensity;
-    Spot spots[2];
+    Spot spots[kMaxSpots];
 };
 
 layout(location = 0) in vec2 inUV;
@@ -32,8 +34,10 @@ void main() {
 
     vec3 N = normalize(inWorldNormal);
     vec3 diffuseSum = vec3(0.0);
-    for (int i = 0; i < 2; ++i) {
-        diffuseSum += lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
+    for (int i = 0; i < kMaxSpots; ++i) {
+        if (spots[i].enable) {
+            diffuseSum += lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
+        }
     }
 
     outColor = vec4(ambient + diffuseSum + emissiveCol, baseCol.a);
