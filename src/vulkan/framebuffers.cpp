@@ -19,6 +19,7 @@ Framebuffers::Framebuffers(const Device& device,
 
 Framebuffers::~Framebuffers()
 {
+    spdlog::info("Destroying Framebuffers");
     for (auto* framebuffer : m_framebuffers)
     {
         vkDestroyFramebuffer(m_device, framebuffer, nullptr);
@@ -29,6 +30,8 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(const Swapchain& sw
                                                              const RenderPass& render_pass,
                                                              const DepthBuffer& depth_buffer)
 {
+    spdlog::info("Creating Framebuffers");
+
     std::vector<VkFramebuffer> framebuffers;
     framebuffers.resize(swapchain.image_count());
 

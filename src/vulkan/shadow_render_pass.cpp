@@ -40,7 +40,6 @@ VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
     subpass.colorAttachmentCount = 0;
     subpass.pDepthStencilAttachment = &depth_attachment_ref;
 
-
     VkRenderPassCreateInfo render_pass_info = {};
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
     render_pass_info.attachmentCount = 1;
