@@ -26,32 +26,9 @@ class GraphicsPipeline : NoCopyOrMove
     PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
 
     VkPipeline create_pipeline(
-        const Swapchain& swapchain,
         const RenderPass& render_pass,
         const std::string& vertex_shader,
         const std::string& fragment_shader);
-
-    static std::vector<VkPipelineShaderStageCreateInfo>
-    create_shader_stages(const ShaderModule& vertex_shader, const ShaderModule& fragment_shader);
-
-    static VkPipelineInputAssemblyStateCreateInfo create_input_assembly_state();
-
-    static VkPipelineViewportStateCreateInfo create_viewport_state(const Swapchain& swapchain);
-
-    static VkPipelineRasterizationStateCreateInfo create_rasterization_state();
-
-    VkPipelineMultisampleStateCreateInfo create_multisample_state();
-
-    static VkPipelineColorBlendAttachmentState create_color_blend_attachment_state();
-
-    static VkPipelineColorBlendStateCreateInfo
-    create_color_blend_state(const VkPipelineColorBlendAttachmentState& color_blend_attachment_state);
-
-    static std::vector<VkDynamicState> create_dynamic_states();
-
-    static VkPipelineDynamicStateCreateInfo create_dynamic_state(const std::vector<VkDynamicState>& dynamic_states);
-
-    static VkPipelineDepthStencilStateCreateInfo create_depth_stencil_state();
 
     PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
 
@@ -59,7 +36,6 @@ class GraphicsPipeline : NoCopyOrMove
     GraphicsPipeline(
         const Device& device,
         DescriptorSetLayout& descriptor_set_layout,
-        const Swapchain& swapchain,
         const RenderPass& render_pass,
         const std::string& vertex_shader,
         const std::string& fragment_shader);

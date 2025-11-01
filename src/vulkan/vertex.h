@@ -27,6 +27,8 @@ struct Vertex
     static constexpr std::array<VertexComponent, 4> kAllComponents{
         VertexComponent::Position, VertexComponent::UV, VertexComponent::Color, VertexComponent::Normal};
 
+    static constexpr std::array<VertexComponent, 1> kPositionOnly{VertexComponent::Position};
+
     glm::vec3 pos;
     glm::vec3 normal;
     glm::vec2 uv;
