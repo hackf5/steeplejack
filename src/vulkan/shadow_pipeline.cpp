@@ -1,20 +1,20 @@
 #include "shadow_pipeline.h"
 
-#include "shader_module.h"
 #include "descriptor_set_layout_builder.h"
 #include "pipeline.h"
-#include "vertex.h"
-
+#include "shader_module.h"
 #include "spdlog/spdlog.h"
+#include "vertex.h"
 
 #include <array>
 
 using namespace steeplejack;
 
-ShadowPipeline::ShadowPipeline(const Device& device,
-                                 const ShadowRenderPass& shadow_render_pass,
-                                 const std::string& vertex_shader,
-                                 const std::string& fragment_shader) :
+ShadowPipeline::ShadowPipeline(
+    const Device& device,
+    const ShadowRenderPass& shadow_render_pass,
+    const std::string& vertex_shader,
+    const std::string& fragment_shader) :
     m_device(device),
     m_descriptor_set_layout(create_descriptor_set_layout()),
     m_pipeline_layout(m_descriptor_set_layout->create_pipeline_layout()),

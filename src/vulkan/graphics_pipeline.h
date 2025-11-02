@@ -26,9 +26,7 @@ class GraphicsPipeline : NoCopyOrMove
     PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
 
     VkPipeline create_pipeline(
-        const RenderPass& render_pass,
-        const std::string& vertex_shader,
-        const std::string& fragment_shader);
+        const RenderPass& render_pass, const std::string& vertex_shader, const std::string& fragment_shader);
 
     PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
 

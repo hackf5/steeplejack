@@ -52,7 +52,7 @@ VkPipelineRasterizationStateCreateInfo pipeline::create_rasterization_state()
     result.rasterizerDiscardEnable = VK_FALSE;
     result.polygonMode = VK_POLYGON_MODE_FILL;
     result.lineWidth = 1.0F;
-    result.cullMode =  VK_CULL_MODE_BACK_BIT;
+    result.cullMode = VK_CULL_MODE_BACK_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
 
     return result;
@@ -67,7 +67,7 @@ VkPipelineRasterizationStateCreateInfo pipeline::create_shadow_rasterization_sta
     result.rasterizerDiscardEnable = VK_FALSE;
     result.polygonMode = VK_POLYGON_MODE_FILL;
     result.lineWidth = 1.0F;
-    result.cullMode =  VK_CULL_MODE_FRONT_BIT;
+    result.cullMode = VK_CULL_MODE_FRONT_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     result.depthBiasConstantFactor = 1.25f;
     result.depthBiasSlopeFactor = 1.75f;
@@ -93,7 +93,8 @@ VkPipelineDepthStencilStateCreateInfo pipeline::create_depth_stencil_state()
     return result;
 }
 
-VkPipelineColorBlendStateCreateInfo pipeline::create_color_blend_state(const VkPipelineColorBlendAttachmentState& blend_attachment_state)
+VkPipelineColorBlendStateCreateInfo
+pipeline::create_color_blend_state(const VkPipelineColorBlendAttachmentState& blend_attachment_state)
 {
     VkPipelineColorBlendStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO;

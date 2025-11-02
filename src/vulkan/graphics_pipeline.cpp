@@ -1,7 +1,6 @@
 #include "graphics_pipeline.h"
 
 #include "pipeline.h"
-
 #include "spdlog/spdlog.h"
 #include "vertex.h"
 
@@ -31,9 +30,7 @@ GraphicsPipeline::~GraphicsPipeline()
 }
 
 VkPipeline GraphicsPipeline::create_pipeline(
-    const RenderPass& render_pass,
-    const std::string& vertex_shader,
-    const std::string& fragment_shader)
+    const RenderPass& render_pass, const std::string& vertex_shader, const std::string& fragment_shader)
 {
     spdlog::info("Creating Graphics Pipeline");
 
