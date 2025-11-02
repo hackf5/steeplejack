@@ -78,7 +78,7 @@ std::vector<VkWriteDescriptorSet> DescriptorSetLayout::create_write_descriptor_s
     {
         VkWriteDescriptorSet write_descriptor_set = {};
         write_descriptor_set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        write_descriptor_set.dstSet = VK_NULL_HANDLE;
+        write_descriptor_set.dstSet = nullptr;
         write_descriptor_set.dstBinding = info.binding;
         write_descriptor_set.dstArrayElement = 0;
         write_descriptor_set.descriptorType = info.descriptor_type;

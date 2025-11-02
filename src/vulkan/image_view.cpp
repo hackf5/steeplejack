@@ -14,13 +14,15 @@ ImageView::ImageView(
 
 ImageView::~ImageView()
 {
-    spdlog::info("Destroying image view");
+    spdlog::info("Destroying Image View");
 
     vkDestroyImageView(m_device, m_image_view, nullptr);
 }
 
 VkImageView ImageView::create_image_view(VkImageAspectFlags aspect_mask, std::optional<uint32_t> base_layer)
 {
+    spdlog::info("Creating Image View");
+
     auto array_layers = m_image.image_info().array_layers;
 
     // base_layer can only be specified for array images

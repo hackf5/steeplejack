@@ -53,14 +53,11 @@ VkPipeline ShadowPipeline::create_pipeline(
     auto shader_stages = pipeline::create_shader_stages(vertex_shader_module, fragment_shader_module);
 
     auto input_assembly_state = pipeline::create_input_assembly_state();
+    auto viewport_state = pipeline::create_dynamic_viewport_state();
 
-    VkViewport vp{0,0,1,1,0.0f,1.0f}; VkRect2D sc{{0,0},{1,1}};
-    auto viewport_state = pipeline::create_dynamic_viewport_state(vp, sc);
+    auto rasterization_state = pipeline::create_shadow_rasterization_state();
 
-    // todo: enable depth bias for shadow pipeline
-    auto rasterization_state = pipeline::create_rasterization_state();
-
-    std::array<VkDynamicState, 3> dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_DEPTH_BIAS};
+    auto dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_DEPTH_BIAS};
     auto dynamic_state = pipeline::create_dynamic_state(dynamic_states);
 
     auto depth_stencil_state = pipeline::create_depth_stencil_state();
@@ -79,16 +76,16 @@ VkPipeline ShadowPipeline::create_pipeline(
     pipeline_info.pViewportState = &viewport_state;
     pipeline_info.pRasterizationState = &rasterization_state;
     pipeline_info.pMultisampleState = &multisample_state;
-    pipeline_info.pColorBlendState = VK_NULL_HANDLE;
+    pipeline_info.pColorBlendState = nullptr;
     pipeline_info.pDynamicState = &dynamic_state;
     pipeline_info.pDepthStencilState = &depth_stencil_state;
     pipeline_info.layout = m_pipeline_layout;
     pipeline_info.renderPass = shadow_render_pass;
     pipeline_info.subpass = 0;
-    pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
+    pipeline_info.basePipelineHandle = nullptr;
 
     VkPipeline pipeline = nullptr;
-    if (vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(m_device, nullptr, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline");
     }

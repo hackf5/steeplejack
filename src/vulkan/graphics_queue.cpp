@@ -112,8 +112,8 @@ std::vector<VkFence> GraphicsQueue::create_fences()
 VkFramebuffer
 GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swapchain, const Framebuffers& framebuffers)
 {
-    assert(m_swapchain == VK_NULL_HANDLE);
-    assert(m_render_finished_semaphore == VK_NULL_HANDLE);
+    assert(m_swapchain == nullptr);
+    assert(m_render_finished_semaphore == nullptr);
 
     m_current_frame = current_frame;
     m_swapchain = swapchain;
@@ -127,13 +127,13 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
         swapchain,
         std::numeric_limits<uint64_t>::max(),
         m_image_available[m_current_frame],
-        VK_NULL_HANDLE,
+        nullptr,
         &m_image_index);
 
     if (result == VK_ERROR_OUT_OF_DATE_KHR)
     {
-        m_swapchain = VK_NULL_HANDLE;
-        m_render_finished_semaphore = VK_NULL_HANDLE;
+        m_swapchain = nullptr;
+        m_render_finished_semaphore = nullptr;
         return nullptr;
     }
 
@@ -149,7 +149,7 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
 
 VkCommandBuffer GraphicsQueue::begin_command() const
 {
-    assert(m_swapchain != VK_NULL_HANDLE);
+    assert(m_swapchain != nullptr);
 
     if (vkResetCommandBuffer(m_command_buffers[m_current_frame], 0) != VK_SUCCESS)
     {
@@ -169,8 +169,8 @@ VkCommandBuffer GraphicsQueue::begin_command() const
 
 void GraphicsQueue::submit_command() const
 {
-    assert(m_swapchain != VK_NULL_HANDLE);
-    assert(m_render_finished_semaphore != VK_NULL_HANDLE);
+    assert(m_swapchain != nullptr);
+    assert(m_render_finished_semaphore != nullptr);
 
     if (vkEndCommandBuffer(m_command_buffers[m_current_frame]) != VK_SUCCESS)
     {
@@ -202,13 +202,13 @@ void GraphicsQueue::submit_command() const
 
 bool GraphicsQueue::present_framebuffer()
 {
-    assert(m_swapchain != VK_NULL_HANDLE);
-    assert(m_render_finished_semaphore != VK_NULL_HANDLE);
+    assert(m_swapchain != nullptr);
+    assert(m_render_finished_semaphore != nullptr);
 
     auto* swapchain = m_swapchain;
     auto* render_finished_semaphore = m_render_finished_semaphore;
-    m_swapchain = VK_NULL_HANDLE;
-    m_render_finished_semaphore = VK_NULL_HANDLE;
+    m_swapchain = nullptr;
+    m_render_finished_semaphore = nullptr;
 
     VkPresentInfoKHR present_info{};
     present_info.sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR;

@@ -29,8 +29,8 @@ class GraphicsQueue : NoCopyOrMove
 
     uint32_t m_image_index = 0;
     uint32_t m_current_frame = 0;
-    VkSwapchainKHR m_swapchain = VK_NULL_HANDLE;
-    VkSemaphore m_render_finished_semaphore = VK_NULL_HANDLE;
+    VkSwapchainKHR m_swapchain = nullptr;
+    VkSemaphore m_render_finished_semaphore = nullptr;
 
   public:
     GraphicsQueue(const Device& device);

@@ -28,13 +28,15 @@ Image::Image(
 
 Image::~Image()
 {
-    spdlog::info("Destroying image");
+    spdlog::info("Destroying Image");
 
     vmaDestroyImage(m_device.allocator(), m_allocation_info.image, m_allocation_info.allocation);
 }
 
 Image::AllocationInfo Image::create_allocation_info()
 {
+    spdlog::info("Creating Image");
+
     VkImageCreateInfo image_info = {};
     image_info.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
     image_info.imageType = VK_IMAGE_TYPE_2D;

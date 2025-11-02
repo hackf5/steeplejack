@@ -33,7 +33,7 @@ Gui::Gui(const Window& window, const Device& device, const RenderPass& render_pa
     init_info.RenderPass = render_pass;
     init_info.DescriptorPool = m_descriptor_pool;
 
-    init_info.PipelineCache = VK_NULL_HANDLE;
+    init_info.PipelineCache = nullptr;
     init_info.Allocator = nullptr;
 
     init_info.MinImageCount = Device::max_frames_in_flight;

@@ -114,7 +114,7 @@ void AdhocQueue::submit_and_wait() const
     submit_info.commandBufferCount = 1;
     submit_info.pCommandBuffers = &command_buffer;
 
-    if (vkQueueSubmit(m_queue, 1, &submit_info, VK_NULL_HANDLE) != VK_SUCCESS)
+    if (vkQueueSubmit(m_queue, 1, &submit_info, nullptr) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to submit transfer command buffer");
     }

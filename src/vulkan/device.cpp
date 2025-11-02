@@ -57,6 +57,7 @@ vkb::Device Device::create_device()
 
     VkPhysicalDeviceFeatures required_features = {};
     required_features.samplerAnisotropy = VK_TRUE;
+    required_features.depthClamp = VK_TRUE;
 
     vkb::PhysicalDeviceSelector selector{m_instance};
     auto phys_ret = selector.set_surface(m_surface)

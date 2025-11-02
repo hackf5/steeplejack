@@ -45,8 +45,7 @@ VkPipeline GraphicsPipeline::create_pipeline(
 
     auto input_assembly_state = pipeline::create_input_assembly_state();
 
-    VkViewport vp{0,0,1,1,0.0f,1.0f}; VkRect2D sc{{0,0},{1,1}};
-    auto viewport_state = pipeline::create_dynamic_viewport_state(vp, sc);
+    auto viewport_state = pipeline::create_dynamic_viewport_state();
 
     auto rasterization_state = pipeline::create_rasterization_state();
 
@@ -61,7 +60,7 @@ VkPipeline GraphicsPipeline::create_pipeline(
         VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT);
     auto color_blend_state = pipeline::create_color_blend_state(color_blend_attachment);
 
-    std::array<VkDynamicState, 2> dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
+    auto dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
     auto dynamic_state = pipeline::create_dynamic_state(dynamic_states);
 
     auto depth_stencil_state = pipeline::create_depth_stencil_state();
@@ -81,10 +80,10 @@ VkPipeline GraphicsPipeline::create_pipeline(
     pipeline_info.layout = m_pipeline_layout;
     pipeline_info.renderPass = render_pass;
     pipeline_info.subpass = 0;
-    pipeline_info.basePipelineHandle = VK_NULL_HANDLE;
+    pipeline_info.basePipelineHandle = nullptr;
 
     VkPipeline pipeline = nullptr;
-    if (vkCreateGraphicsPipelines(m_device, VK_NULL_HANDLE, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(m_device, nullptr, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline");
     }

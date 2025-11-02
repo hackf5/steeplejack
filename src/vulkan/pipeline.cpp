@@ -30,15 +30,15 @@ VkPipelineInputAssemblyStateCreateInfo pipeline::create_input_assembly_state()
     return result;
 }
 
-VkPipelineViewportStateCreateInfo pipeline::create_dynamic_viewport_state(const VkViewport& viewport, const VkRect2D& scissor)
+VkPipelineViewportStateCreateInfo pipeline::create_dynamic_viewport_state()
 {
     VkPipelineViewportStateCreateInfo result = {};
 
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_VIEWPORT_STATE_CREATE_INFO;
     result.viewportCount = 1;
-    result.pViewports = &viewport;
+    result.pViewports = &pipeline::kPlaceholderViewport;
     result.scissorCount = 1;
-    result.pScissors = &scissor;
+    result.pScissors = &pipeline::kPlaceholderScissor;
 
     return result;
 }
@@ -48,12 +48,30 @@ VkPipelineRasterizationStateCreateInfo pipeline::create_rasterization_state()
     VkPipelineRasterizationStateCreateInfo result = {};
     result.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
     result.depthClampEnable = VK_FALSE;
+    result.depthBiasEnable = VK_FALSE;
     result.rasterizerDiscardEnable = VK_FALSE;
     result.polygonMode = VK_POLYGON_MODE_FILL;
     result.lineWidth = 1.0F;
     result.cullMode =  VK_CULL_MODE_BACK_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-    result.depthBiasEnable = VK_FALSE;
+
+    return result;
+}
+
+VkPipelineRasterizationStateCreateInfo pipeline::create_shadow_rasterization_state()
+{
+    VkPipelineRasterizationStateCreateInfo result = {};
+    result.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
+    result.depthClampEnable = VK_TRUE;
+    result.depthBiasEnable = VK_TRUE;
+    result.rasterizerDiscardEnable = VK_FALSE;
+    result.polygonMode = VK_POLYGON_MODE_FILL;
+    result.lineWidth = 1.0F;
+    result.cullMode =  VK_CULL_MODE_FRONT_BIT;
+    result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
+    result.depthBiasConstantFactor = 1.25f;
+    result.depthBiasSlopeFactor = 1.75f;
+    result.depthBiasClamp = 0.0f;
 
     return result;
 }
