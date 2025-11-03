@@ -15,6 +15,10 @@
 #include "vulkan/material_factory.h"
 #include "vulkan/render_pass.h"
 #include "vulkan/sampler.h"
+#include "vulkan/shadow_framebuffers.h"
+#include "vulkan/shadow_map_array.h"
+#include "vulkan/shadow_pipeline.h"
+#include "vulkan/shadow_render_pass.h"
 #include "vulkan/swapchain.h"
 #include "vulkan/texture_factory.h"
 #include "vulkan/vertex.h"
@@ -36,6 +40,10 @@ class VulkanContext : NoCopyOrMove
     std::unique_ptr<Sampler> m_sampler;
     std::unique_ptr<TextureFactory> m_texture_factory;
     std::unique_ptr<MaterialFactory> m_material_factory;
+    std::unique_ptr<ShadowMapArray> m_shadow_mapping;
+    std::unique_ptr<ShadowFramebuffers> m_shadow_framebuffers;
+    std::unique_ptr<ShadowRenderPass> m_shadow_render_pass;
+    std::unique_ptr<ShadowPipeline> m_shadow_pipeline;
     std::unique_ptr<RenderScene> m_render_scene;
     std::unique_ptr<Swapchain> m_swapchain;
     std::unique_ptr<DepthBuffer> m_depth_buffer;
@@ -94,15 +102,6 @@ class VulkanContext : NoCopyOrMove
         return *m_sampler;
     }
 
-    const RenderScene& render_scene() const
-    {
-        return *m_render_scene;
-    }
-    RenderScene& render_scene()
-    {
-        return *m_render_scene;
-    }
-
     TextureFactory& texture_factory()
     {
         return *m_texture_factory;
@@ -111,6 +110,35 @@ class VulkanContext : NoCopyOrMove
     MaterialFactory& material_factory()
     {
         return *m_material_factory;
+    }
+
+    ShadowMapArray& shadow_mapping()
+    {
+        return *m_shadow_mapping;
+    }
+
+    ShadowFramebuffers& shadow_framebuffers()
+    {
+        return *m_shadow_framebuffers;
+    }
+
+    ShadowRenderPass& shadow_render_pass()
+    {
+        return *m_shadow_render_pass;
+    }
+
+    ShadowPipeline& shadow_pipeline()
+    {
+        return *m_shadow_pipeline;
+    }
+
+    const RenderScene& render_scene() const
+    {
+        return *m_render_scene;
+    }
+    RenderScene& render_scene()
+    {
+        return *m_render_scene;
     }
 
     const Swapchain& swapchain() const

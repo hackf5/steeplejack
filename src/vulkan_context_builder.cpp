@@ -63,6 +63,38 @@ VulkanContextBuilder& VulkanContextBuilder::add_material_factory()
     return *this;
 }
 
+VulkanContextBuilder& VulkanContextBuilder::add_shadow_mapping(uint32_t shadow_map_count)
+{
+    m_context->m_shadow_mapping = std::make_unique<ShadowMapArray>(*m_context->m_device, shadow_map_count);
+    return *this;
+}
+
+VulkanContextBuilder& VulkanContextBuilder::add_shadow_render_pass()
+{
+    m_context->m_shadow_render_pass = std::make_unique<ShadowRenderPass>(*m_context->m_device);
+    return *this;
+}
+
+VulkanContextBuilder& VulkanContextBuilder::add_shadow_framebuffers()
+{
+    m_context->m_shadow_framebuffers = std::make_unique<ShadowFramebuffers>(
+        *m_context->m_device,
+        *m_context->m_shadow_mapping,
+        *m_context->m_shadow_render_pass);
+    return *this;
+}
+
+VulkanContextBuilder&
+VulkanContextBuilder::add_shadow_pipeline(const std::string& vertex_shader, const std::string& fragment_shader)
+{
+    m_context->m_shadow_pipeline = std::make_unique<ShadowPipeline>(
+        *m_context->m_device,
+        *m_context->m_shadow_render_pass,
+        vertex_shader,
+        fragment_shader);
+    return *this;
+}
+
 VulkanContextBuilder&
 VulkanContextBuilder::add_scene(const std::function<std::unique_ptr<RenderScene>(const Device&)>& scene_factory)
 {

@@ -36,6 +36,15 @@ class VulkanContextBuilder : NoCopyOrMove
 
     VulkanContextBuilder& add_material_factory();
 
+    VulkanContextBuilder& add_shadow_mapping(uint32_t shadow_map_count = 8);
+
+    VulkanContextBuilder& add_shadow_framebuffers();
+
+    VulkanContextBuilder& add_shadow_render_pass();
+
+    VulkanContextBuilder& add_shadow_pipeline(
+        const std::string& vertex_shader = "shadow.vert", const std::string& fragment_shader = "shadow.frag");
+
     VulkanContextBuilder& add_scene(const std::function<std::unique_ptr<RenderScene>(const Device&)>& scene_factory);
 
     VulkanContextBuilder& add_swapchain();
