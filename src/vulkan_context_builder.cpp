@@ -49,6 +49,12 @@ VulkanContextBuilder& VulkanContextBuilder::add_sampler()
     return *this;
 }
 
+VulkanContextBuilder& VulkanContextBuilder::add_shadow_sampler()
+{
+    m_context->m_shadow_sampler = std::make_unique<ShadowSampler>(*m_context->m_device);
+    return *this;
+}
+
 VulkanContextBuilder& VulkanContextBuilder::add_texture_factory()
 {
     m_context->m_texture_factory =

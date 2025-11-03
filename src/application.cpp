@@ -44,7 +44,8 @@ int Application::run()
                 .add_combined_image_sampler()   // normal (fragment)
                 .add_combined_image_sampler()   // metallicRoughness / ORM (fragment)
                 .add_combined_image_sampler()   // emissive (fragment)
-                .add_uniform_buffer_fragment(); // scene lights (ambient) (fragment)
+                .add_uniform_buffer_fragment()  // scene lights (ambient) (fragment)
+                .add_combined_image_sampler();  // shadow map array (fragment)
         };
 
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };
@@ -57,6 +58,7 @@ int Application::run()
                            .add_graphics_buffers()
                            .add_descriptor_set_layout(layout_builder)
                            .add_sampler()
+                           .add_shadow_sampler()
                            .add_texture_factory()
                            .add_material_factory()
                            .add_shadow_mapping()

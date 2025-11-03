@@ -72,6 +72,27 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
 {
     auto* command_buffer = m_context->graphics_queue().begin_command();
 
+    auto resolution = m_context->shadow_mapping().resolution();
+    float rf = static_cast<float>(resolution);
+    VkViewport viewport{ 0.0f, 0.0f, rf, rf, 0.0f, 1.0f };
+    VkRect2D scissor{ {0, 0}, {rf, rf} };
+    for (size_t index = 0; index < m_context->render_scene().scene().spots_size(); ++index)
+    {
+        auto& spot = m_context->render_scene().scene().spot_at(index);
+        if (!spot.enable)
+        {
+            continue;
+        }
+
+        auto shadow_framebuffer = m_context->shadow_framebuffers().at(index);
+        m_context->shadow_render_pass().begin(command_buffer, shadow_framebuffer, resolution);
+        m_context->shadow_pipeline().bind(command_buffer);
+        vkCmdSetViewport(command_buffer, 0, 1, &viewport);
+        vkCmdSetScissor(command_buffer, 0, 1, &scissor);
+
+
+    }
+
     m_context->render_pass().begin(command_buffer, framebuffer);
 
     m_context->graphics_pipeline().bind(command_buffer);

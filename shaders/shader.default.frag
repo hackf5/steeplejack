@@ -21,6 +21,11 @@ layout(binding = 7, std140) uniform SceneLights {
     Spot spots[kMaxSpots];
 };
 
+layout(binding = 8) uniform sampler2DArray inShadowMaps; // shadow maps (unused)
+layout (binding = 9, std140) uniform ShadowParams {
+    mat4 lightViewProj[kMaxSpots];
+};
+
 layout(location = 0) in vec2 inUV;
 layout(location = 1) in vec4 inColor;
 layout(location = 2) in vec3 inWorldPos;

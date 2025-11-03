@@ -32,6 +32,8 @@ class VulkanContextBuilder : NoCopyOrMove
 
     VulkanContextBuilder& add_sampler();
 
+    VulkanContextBuilder& add_shadow_sampler();
+
     VulkanContextBuilder& add_texture_factory();
 
     VulkanContextBuilder& add_material_factory();

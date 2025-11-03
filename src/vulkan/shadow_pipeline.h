@@ -31,5 +31,10 @@ class ShadowPipeline : public NoCopyOrMove
         const std::string& vertex_shader,
         const std::string& fragment_shader);
     ~ShadowPipeline();
+
+    void bind(VkCommandBuffer command_buffer) const
+    {
+        vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
+    }
 };
 } // namespace steeplejack

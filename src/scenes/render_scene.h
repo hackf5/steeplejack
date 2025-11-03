@@ -47,6 +47,11 @@ class RenderScene : NoCopyOrMove
         return m_fragment_shader;
     }
 
+    const Scene& scene() const
+    {
+        return m_scene;
+    }
+
     virtual void load(const Device& device, MaterialFactory& material_factory, GraphicsBuffers& graphics_buffers) = 0;
 
     void update(uint32_t frame_index, float aspect_ratio)

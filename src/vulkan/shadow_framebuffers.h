@@ -29,14 +29,9 @@ class ShadowFramebuffers : public NoCopyOrMove
         return m_framebuffers.size();
     }
 
-    std::vector<VkFramebuffer>::const_iterator begin() const
+    VkFramebuffer at(size_t index) const
     {
-        return m_framebuffers.begin();
-    }
-
-    std::vector<VkFramebuffer>::const_iterator end() const
-    {
-        return m_framebuffers.end();
+        return m_framebuffers.at(index);
     }
 };
 } // namespace steeplejack

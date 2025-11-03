@@ -8,6 +8,7 @@
 #include "vulkan/device.h"
 
 #include <cstdint>
+#include <span>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -90,13 +91,18 @@ class Scene : public NoCopyOrMove
     {
         return m_lights.ambientColor;
     }
+
     float& ambient_intensity()
     {
         return m_lights.ambientIntensity;
     }
 
-    // Access spot by index (0..7)
-    SceneLights::Spot& spot(size_t index)
+    size_t spots_size() const
+    {
+        return SceneLights::kMaxSpots;
+    }
+
+    const SceneLights::Spot& spot_at(size_t index) const
     {
         return m_lights.spots[index];
     }

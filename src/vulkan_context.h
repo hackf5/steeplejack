@@ -15,6 +15,7 @@
 #include "vulkan/material_factory.h"
 #include "vulkan/render_pass.h"
 #include "vulkan/sampler.h"
+#include "vulkan/shadow_sampler.h"
 #include "vulkan/shadow_framebuffers.h"
 #include "vulkan/shadow_map_array.h"
 #include "vulkan/shadow_pipeline.h"
@@ -38,6 +39,7 @@ class VulkanContext : NoCopyOrMove
     std::unique_ptr<DescriptorSetLayout> m_descriptor_set_layout;
     std::unique_ptr<GraphicsBuffers> m_graphics_buffers;
     std::unique_ptr<Sampler> m_sampler;
+    std::unique_ptr<ShadowSampler> m_shadow_sampler;
     std::unique_ptr<TextureFactory> m_texture_factory;
     std::unique_ptr<MaterialFactory> m_material_factory;
     std::unique_ptr<ShadowMapArray> m_shadow_mapping;
@@ -100,6 +102,11 @@ class VulkanContext : NoCopyOrMove
     const Sampler& sampler() const
     {
         return *m_sampler;
+    }
+
+    const ShadowSampler& shadow_sampler() const
+    {
+        return *m_shadow_sampler;
     }
 
     TextureFactory& texture_factory()
