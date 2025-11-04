@@ -39,11 +39,18 @@ class Scene : public NoCopyOrMove
             glm::vec2 _pad0;
         } spots[kMaxSpots];
     };
+
+    struct ShadowMatrices
+    {
+        glm::mat4 lightViewProj[SceneLights::kMaxSpots];
+    } m_shadow_matrices;
+
     UniformBuffer m_lights_buffers;
+    UniformBuffer m_shadow_matrices_buffers;
     SceneLights m_lights;
 
   public:
-    Scene(const Device& device) : m_camera(device), m_model(), m_lights_buffers(device, sizeof(SceneLights)), m_lights{}
+    Scene(const Device& device) : m_camera(device), m_model(), m_lights_buffers(device, sizeof(SceneLights)), m_shadow_matrices_buffers(device, sizeof(ShadowMatrices)), m_lights{}
     {
         m_lights.ambientColor = glm::vec3(1.0f);
         m_lights.ambientIntensity = 0.1f;
@@ -113,6 +120,7 @@ class Scene : public NoCopyOrMove
     {
         m_camera.flush(frame_index);
         m_lights_buffers[frame_index].copy_from(m_lights);
+        m_shadow_matrices_buffers[frame_index].copy_from(m_shadow_matrices);
         m_model.flush(frame_index);
     }
 
@@ -121,8 +129,13 @@ class Scene : public NoCopyOrMove
         // Reset descriptor writes per frame/draw sequence before rebinding camera and meshes
         pipeline.descriptor_set_layout().reset_writes();
         m_camera.bind(frame_index, pipeline);
+
         // Bind lights UBO at binding 7
         pipeline.descriptor_set_layout().write_uniform_buffer(m_lights_buffers[frame_index].descriptor(), 7);
+
+        // Bind shadow matrices UBO at binding 9
+        pipeline.descriptor_set_layout().write_uniform_buffer(m_shadow_matrices_buffers[frame_index].descriptor(), 9);
+
         m_model.render(command_buffer, frame_index, pipeline);
     }
 };

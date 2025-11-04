@@ -32,6 +32,13 @@ class BufferHost : public Buffer
         copy_to(m_allocation_info.info.pMappedData, data);
     }
 
+    template <typename T> void copy_from_at(const T& data, VkDeviceSize offset)
+    {
+        assert(offset + sizeof(T) <= m_buffer_size);
+        auto* dst = static_cast<std::byte*>(m_allocation_info.info.pMappedData) + offset;
+        copy_to(dst, data);
+    }
+
     template <typename TIter> void copy_from(TIter begin, TIter end)
     {
         copy_to(m_allocation_info.info.pMappedData, begin, end);
