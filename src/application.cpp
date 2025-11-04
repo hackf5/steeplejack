@@ -6,6 +6,7 @@
 #include "spdlog/spdlog.h"
 #include "vulkan_context_builder.h"
 #include "vulkan_engine.h"
+#include "util/runtime_paths.h"
 
 #include <iostream>
 
@@ -32,20 +33,22 @@ int Application::run()
 
     try
     {
-        using namespace steeplejack;
+        // Ensure relative asset paths (e.g., shaders/) resolve regardless of launch CWD
+        set_working_directory_to_executable();
 
         auto layout_builder = [](DescriptorSetLayoutBuilder& builder)
         {
             builder
-                .add_uniform_buffer()           // camera (vertex)
-                .add_uniform_buffer()           // model (vertex)
-                .add_combined_image_sampler()   // baseColor (fragment)
-                .add_uniform_buffer_fragment()  // material params (fragment)
-                .add_combined_image_sampler()   // normal (fragment)
-                .add_combined_image_sampler()   // metallicRoughness / ORM (fragment)
-                .add_combined_image_sampler()   // emissive (fragment)
-                .add_uniform_buffer_fragment()  // scene lights (ambient) (fragment)
-                .add_combined_image_sampler();  // shadow map array (fragment)
+                .add_uniform_buffer()               // camera (vertex)
+                .add_uniform_buffer()               // model (vertex)
+                .add_combined_image_sampler()       // baseColor (fragment)
+                .add_uniform_buffer_fragment()      // material params (fragment)
+                .add_combined_image_sampler()       // normal (fragment)
+                .add_combined_image_sampler()       // metallicRoughness / ORM (fragment)
+                .add_combined_image_sampler()       // emissive (fragment)
+                .add_uniform_buffer_fragment()      // scene lights (ambient) (fragment)
+                .add_combined_image_sampler()       // shadow map array (fragment)
+                .add_uniform_buffer_fragment();     // scene lights (spots) (fragment)
         };
 
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };

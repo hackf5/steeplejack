@@ -1,0 +1,130 @@
+#pragma once
+
+#include "glm_config.hpp"
+#include "util/no_copy_or_move.h"
+#include "vulkan/buffer/uniform_buffer.h"
+#include "vulkan/device.h"
+#include "vulkan/descriptor_set_layout.h"
+
+#include <vulkan/vulkan.h>
+
+namespace steeplejack
+{
+inline constexpr size_t kMaxSpotLights = 8;
+
+// https://stackoverflow.com/a/19957102/323316
+// these structs are std140 aligned for UBO use
+struct AmbientLightUBO
+{
+    glm::vec3 color;
+    float intensity;
+};
+
+struct SpotLightUBO
+{
+    glm::vec3 position;
+    float intensity;
+    glm::vec3 direction;
+    float innerCos;
+    glm::vec3 color;
+    float outerCos;
+    float range;
+    bool enable = false;
+    glm::vec2 _pad0;
+};
+
+struct LightsUBO
+{
+
+    AmbientLightUBO ambient;
+    SpotLightUBO spots[kMaxSpotLights];
+};
+
+struct SpotLightMatrices
+{
+    glm::mat4 viewProj[kMaxSpotLights];
+};
+
+class Lights : public NoCopyOrMove
+{
+  private:
+    LightsUBO m_lights;
+    SpotLightMatrices m_matrices;
+    UniformBuffer m_lights_buffer;
+    UniformBuffer m_matrices_buffer;
+    uint32_t m_lights_binding;
+    uint32_t m_matrices_binding;
+
+  public:
+    Lights(const Device& device);
+
+    void flush(uint32_t frame_index);
+
+    void bind(DescriptorSetLayout& layout, uint32_t frame_index);
+
+    uint32_t lights_binding() const
+    {
+        return m_lights_binding;
+    }
+
+    uint32_t& lights_binding()
+    {
+        return m_lights_binding;
+    }
+
+    uint32_t matrices_binding() const
+    {
+        return m_matrices_binding;
+    }
+
+    uint32_t& matrices_binding()
+    {
+        return m_matrices_binding;
+    }
+
+    glm::vec3 ambient_color() const
+    {
+        return m_lights.ambient.color;
+    }
+
+    glm::vec3& ambient_color()
+    {
+        return m_lights.ambient.color;
+    }
+
+    float ambient_intensity() const
+    {
+        return m_lights.ambient.intensity;
+    }
+
+    float& ambient_intensity()
+    {
+        return m_lights.ambient.intensity;
+    }
+
+    size_t spots_size() const
+    {
+        return kMaxSpotLights;
+    }
+
+    const SpotLightUBO& spot_at(size_t index) const
+    {
+        return m_lights.spots[index];
+    }
+
+    SpotLightUBO& spot_at(size_t index)
+    {
+        return m_lights.spots[index];
+    }
+
+    const SpotLightMatrices& matrices() const
+    {
+        return m_matrices;
+    }
+
+    SpotLightMatrices& matrices()
+    {
+        return m_matrices;
+    }
+};
+} // namespace steeplejack

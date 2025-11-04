@@ -81,6 +81,7 @@ file(GLOB_RECURSE STEEPLEJACK_SOURCES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/src/gui/*.cpp
     ${PROJECT_SOURCE_DIR}/src/model/*.cpp
     ${PROJECT_SOURCE_DIR}/src/scenes/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/util/*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_*context*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_engine.cpp
 )

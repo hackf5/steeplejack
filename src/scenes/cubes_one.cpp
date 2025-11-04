@@ -133,10 +133,10 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
 
     if (!ui_init)
     {
-        ambient_color[0] = m_scene.ambient_color().x;
-        ambient_color[1] = m_scene.ambient_color().y;
-        ambient_color[2] = m_scene.ambient_color().z;
-        ambient_intensity = m_scene.ambient_intensity();
+        ambient_color[0] = m_scene.lights().ambient_color().x;
+        ambient_color[1] = m_scene.lights().ambient_color().y;
+        ambient_color[2] = m_scene.lights().ambient_color().z;
+        ambient_intensity = m_scene.lights().ambient_intensity();
         ui_init = true;
     }
 
@@ -207,7 +207,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     float t0 = animate_lights ? time : 0.0f;
     glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), t0 * glm::radians(spot0.speed_deg), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::vec3 pos0 = glm::vec3(rotX * glm::vec4(0.0f, 0.0f, spot0.radius, 1.0f));
-    auto& s0 = m_scene.spot_at(0);
+    auto& s0 = m_scene.lights().spot_at(0);
     s0.position = pos0;
     s0.intensity = spot0.intensity;
     s0.direction = glm::normalize(-pos0);
@@ -219,7 +219,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     float t1 = animate_lights ? time : 0.0f;
     glm::mat4 rotY = glm::rotate(glm::mat4(1.0f), t1 * glm::radians(spot1.speed_deg), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::vec3 pos1 = glm::vec3(rotY * glm::vec4(spot1.radius, 0.0f, 0.0f, 1.0f));
-    auto& s1 = m_scene.spot_at(1);
+    auto& s1 = m_scene.lights().spot_at(1);
     s1.position = pos1;
     s1.intensity = spot1.intensity;
     s1.direction = glm::normalize(-pos1);
@@ -228,11 +228,9 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     s1.outerCos = glm::cos(glm::radians(spot1.outer_deg));
     s1.range = spot1.range;
 
-    // (Second spotlight disabled for simplicity)
-
     // Apply ambient values from UI
-    m_scene.ambient_color() = glm::vec3(ambient_color[0], ambient_color[1], ambient_color[2]);
-    m_scene.ambient_intensity() = ambient_intensity;
+    m_scene.lights().ambient_color() = glm::vec3(ambient_color[0], ambient_color[1], ambient_color[2]);
+    m_scene.lights().ambient_intensity() = ambient_intensity;
 
     m_scene.flush(frame_index);
 }
