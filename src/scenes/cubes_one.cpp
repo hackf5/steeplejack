@@ -207,7 +207,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     float t0 = animate_lights ? time : 0.0f;
     glm::mat4 rotX = glm::rotate(glm::mat4(1.0f), t0 * glm::radians(spot0.speed_deg), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::vec3 pos0 = glm::vec3(rotX * glm::vec4(0.0f, 0.0f, spot0.radius, 1.0f));
-    auto& s0 = m_scene.spot(0);
+    auto& s0 = m_scene.spot_at(0);
     s0.position = pos0;
     s0.intensity = spot0.intensity;
     s0.direction = glm::normalize(-pos0);
@@ -219,7 +219,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     float t1 = animate_lights ? time : 0.0f;
     glm::mat4 rotY = glm::rotate(glm::mat4(1.0f), t1 * glm::radians(spot1.speed_deg), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::vec3 pos1 = glm::vec3(rotY * glm::vec4(spot1.radius, 0.0f, 0.0f, 1.0f));
-    auto& s1 = m_scene.spot(1);
+    auto& s1 = m_scene.spot_at(1);
     s1.position = pos1;
     s1.intensity = spot1.intensity;
     s1.direction = glm::normalize(-pos1);

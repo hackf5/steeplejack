@@ -114,6 +114,11 @@ class Scene : public NoCopyOrMove
         return m_lights.spots[index];
     }
 
+    SceneLights::Spot& spot_at(size_t index)
+    {
+        return m_lights.spots[index];
+    }
+
     // Single spotlight path extended to two spots via array; more can be added later.
 
     void flush(uint32_t frame_index)
