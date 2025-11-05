@@ -50,4 +50,3 @@ void set_working_directory_to_executable()
     }
 }
 } // namespace steeplejack
-

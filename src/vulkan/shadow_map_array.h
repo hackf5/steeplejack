@@ -1,9 +1,10 @@
 #pragma once
 
-#include "device.h"
-#include "image.h"
-#include "image_view.h"
 #include "util/no_copy_or_move.h"
+#include "vulkan/adhoc_queues.h"
+#include "vulkan/device.h"
+#include "vulkan/image.h"
+#include "vulkan/image_view.h"
 
 #include <memory>
 #include <vector>
@@ -15,6 +16,7 @@ class ShadowMapArray : public NoCopyOrMove
 {
   private:
     const Device& m_device;
+    const AdhocQueues& m_adhoc_queues;
     const Image m_image;
     const ImageView m_array_image_view;
     const std::vector<std::unique_ptr<ImageView>> m_layer_image_views;
@@ -24,7 +26,11 @@ class ShadowMapArray : public NoCopyOrMove
 
   public:
     ShadowMapArray(
-        const Device& device, uint32_t layers, uint32_t resolution = 1024, VkFormat format = VK_FORMAT_D32_SFLOAT);
+        const Device& device,
+        const AdhocQueues& adhoc_queues,
+        uint32_t layers,
+        uint32_t resolution = 1024,
+        VkFormat format = VK_FORMAT_D32_SFLOAT);
     ~ShadowMapArray() = default;
 
     uint32_t layers() const

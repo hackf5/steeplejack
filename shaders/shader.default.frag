@@ -43,9 +43,11 @@ void main() {
     vec3 N = normalize(inWorldNormal);
     vec3 diffuseSum = vec3(0.0);
     for (int i = 0; i < kMaxSpots; ++i) {
-        if (spots[i].enable) {
-            diffuseSum += lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
+        if (!spots[i].enable) {
+            continue;
         }
+
+        diffuseSum += lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
     }
 
     outColor = vec4(ambient + diffuseSum + emissiveCol, baseCol.a);

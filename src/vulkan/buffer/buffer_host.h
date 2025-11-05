@@ -5,7 +5,6 @@
 
 #include <cassert>
 #include <cstddef>
-
 #include <ranges>
 #include <vulkan/vulkan.h>
 

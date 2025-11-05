@@ -9,4 +9,3 @@ namespace steeplejack
 // consistently regardless of how the app is launched.
 void set_working_directory_to_executable();
 } // namespace steeplejack
-

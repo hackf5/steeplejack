@@ -22,8 +22,8 @@ template <typename T> class UniformBufferArray : public UniformBuffer
     }
 
   public:
-    UniformBufferArray(const Device& device, size_t count)
-        : UniformBuffer(device, calculate_stride(device) * count), m_stride(calculate_stride(device)), m_count(count)
+    UniformBufferArray(const Device& device, size_t count) :
+        UniformBuffer(device, calculate_stride(device) * count), m_stride(calculate_stride(device)), m_count(count)
     {
     }
 
@@ -47,8 +47,7 @@ template <typename T> class UniformBufferArray : public UniformBuffer
     {
         const BufferHost& buffer = (*this)[frame_index];
         VkDescriptorBufferInfo info = {};
-        info.buffer = buffer
-        info.offset = m_stride * static_cast<VkDeviceSize>(item_index);
+        info.buffer = buffer info.offset = m_stride * static_cast<VkDeviceSize>(item_index);
         info.range = sizeof(T);
         return info;
     }

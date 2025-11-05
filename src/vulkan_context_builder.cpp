@@ -71,7 +71,8 @@ VulkanContextBuilder& VulkanContextBuilder::add_material_factory()
 
 VulkanContextBuilder& VulkanContextBuilder::add_shadow_mapping(uint32_t shadow_map_count)
 {
-    m_context->m_shadow_mapping = std::make_unique<ShadowMapArray>(*m_context->m_device, shadow_map_count);
+    m_context->m_shadow_mapping =
+        std::make_unique<ShadowMapArray>(*m_context->m_device, *m_context->m_adhoc_queues, shadow_map_count);
     return *this;
 }
 

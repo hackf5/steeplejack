@@ -3,8 +3,8 @@
 #include "glm_config.hpp"
 #include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
-#include "vulkan/device.h"
 #include "vulkan/descriptor_set_layout.h"
+#include "vulkan/device.h"
 
 #include <vulkan/vulkan.h>
 

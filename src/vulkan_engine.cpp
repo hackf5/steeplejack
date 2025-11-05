@@ -74,8 +74,8 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
 
     auto resolution = m_context->shadow_mapping().resolution();
     float rf = static_cast<float>(resolution);
-    VkViewport viewport{ 0.0f, 0.0f, rf, rf, 0.0f, 1.0f };
-    VkRect2D scissor{ {0, 0}, {resolution, resolution} };
+    VkViewport viewport{0.0f, 0.0f, rf, rf, 0.0f, 1.0f};
+    VkRect2D scissor{{0, 0}, {resolution, resolution}};
     auto& scene_lights = m_context->render_scene().scene().lights();
     for (size_t spot_index = 0; spot_index < scene_lights.spots_size(); ++spot_index)
     {
