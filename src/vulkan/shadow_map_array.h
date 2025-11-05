@@ -18,6 +18,9 @@ class ShadowMapArray : public NoCopyOrMove
     const Image m_image;
     const ImageView m_array_image_view;
     const std::vector<std::unique_ptr<ImageView>> m_layer_image_views;
+    const VkImageMemoryBarrier m_memory_barrier;
+
+    VkImageMemoryBarrier create_memory_barrier();
 
   public:
     ShadowMapArray(
@@ -42,6 +45,21 @@ class ShadowMapArray : public NoCopyOrMove
     VkImageView layer_view(uint32_t layer) const
     {
         return *m_layer_image_views.at(layer);
+    }
+
+    void write_memory_barrier(VkCommandBuffer command_buffer) const
+    {
+        vkCmdPipelineBarrier(
+            command_buffer,
+            VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT | VK_PIPELINE_STAGE_LATE_FRAGMENT_TESTS_BIT,
+            VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT,
+            0,
+            0,
+            nullptr,
+            0,
+            nullptr,
+            1,
+            &m_memory_barrier);
     }
 };
 } // namespace steeplejack

@@ -15,7 +15,7 @@ ShadowFramebuffers::ShadowFramebuffers(
 ShadowFramebuffers::~ShadowFramebuffers()
 {
     spdlog::info("Destroying Shadow Framebuffers");
-    for (auto* framebuffer : m_framebuffers)
+    for (auto framebuffer : m_framebuffers)
     {
         vkDestroyFramebuffer(m_device, framebuffer, nullptr);
     }
