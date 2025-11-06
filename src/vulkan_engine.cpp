@@ -93,6 +93,8 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
         vkCmdSetScissor(command_buffer, 0, 1, &scissor);
         vkCmdSetDepthBias(command_buffer, 1.25f, 0.0f, 1.75f);
 
+
+
         m_context->shadow_render_pass().end(command_buffer);
     }
 

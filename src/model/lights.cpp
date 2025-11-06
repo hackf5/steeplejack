@@ -5,8 +5,10 @@ using namespace steeplejack;
 Lights::Lights(const Device& device) :
     m_lights{},
     m_matrices{},
+    m_shadow_lights_buffer(device, kMaxSpotLights),
     m_lights_buffer(device, sizeof(LightsUBO)),
     m_matrices_buffer(device, sizeof(SpotLightMatrices)),
+    m_shadow_lights_binding(0),
     m_lights_binding(0),
     m_matrices_binding(1)
 {
@@ -29,8 +31,33 @@ Lights::Lights(const Device& device) :
     }
 }
 
+void Lights::update()
+{
+    for (size_t i = 0; i < kMaxSpotLights; ++i)
+    {
+        const auto& spot = m_lights.spots[i];
+        if (!spot.enable)
+            continue;
+        auto center = spot.position + glm::normalize(spot.direction);
+        auto view = glm::lookAt(spot.position, center, glm::vec3(0.0f, 0.0f, -1.0f));
+        auto fovY = glm::acos(spot.outerCos) * 2.0f;
+        auto near = 0.075f;
+        auto proj = glm::perspective(fovY, 1.0f, near, spot.range);
+        m_matrices.viewProj[i] = proj * view;
+    }
+}
+
 void Lights::flush(uint32_t frame_index)
 {
+    // Update shadow lights UBO
+    auto& shadow_buffer = m_shadow_lights_buffer[frame_index];
+    for (size_t i = 0; i < kMaxSpotLights; ++i)
+    {
+        if (!m_lights.spots[i].enable)
+            continue;
+        shadow_buffer.copy_from_at(m_matrices.viewProj[i], i);
+    }
+
     // Update lights UBO
     auto& light_buffer = m_lights_buffer[frame_index];
     light_buffer.copy_from(m_lights);
@@ -38,6 +65,13 @@ void Lights::flush(uint32_t frame_index)
     // Update spotlight matrices UBO
     auto& matrix_buffer = m_matrices_buffer[frame_index];
     matrix_buffer.copy_from(m_matrices);
+}
+
+void Lights::bind_shadow(DescriptorSetLayout& layout, uint32_t frame_index)
+{
+    // Bind shadow lights UBO
+    auto& shadow_buffer = m_shadow_lights_buffer[frame_index];
+    layout.write_uniform_buffer(shadow_buffer.descriptor(), m_shadow_lights_binding);
 }
 
 void Lights::bind(DescriptorSetLayout& layout, uint32_t frame_index)

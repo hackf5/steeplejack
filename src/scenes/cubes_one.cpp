@@ -232,6 +232,8 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     m_scene.lights().ambient_color() = glm::vec3(ambient_color[0], ambient_color[1], ambient_color[2]);
     m_scene.lights().ambient_intensity() = ambient_intensity;
 
+    m_scene.lights().update();
+
     m_scene.flush(frame_index);
 }
 // NOLINTEND

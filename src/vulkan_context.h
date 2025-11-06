@@ -85,10 +85,6 @@ class VulkanContext : NoCopyOrMove
     {
         return *m_descriptor_set_layout;
     }
-    DescriptorSetLayout& descriptor_set_layout()
-    {
-        return *m_descriptor_set_layout;
-    }
 
     const GraphicsBuffers& graphics_buffers() const
     {

@@ -18,11 +18,15 @@ class ShadowPipeline : public NoCopyOrMove
     const VkPipelineLayout m_pipeline_layout;
     const VkPipeline m_pipeline;
 
+    PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
+
     std::unique_ptr<DescriptorSetLayout> create_descriptor_set_layout() const;
     VkPipeline create_pipeline(
         const ShadowRenderPass& shadow_render_pass,
         const std::string& vertex_shader,
         const std::string& fragment_shader) const;
+
+    PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
 
   public:
     ShadowPipeline(
@@ -32,9 +36,26 @@ class ShadowPipeline : public NoCopyOrMove
         const std::string& fragment_shader);
     ~ShadowPipeline();
 
+    DescriptorSetLayout& descriptor_set_layout() const
+    {
+        return *m_descriptor_set_layout;
+    }
+
     void bind(VkCommandBuffer command_buffer) const
     {
         vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_pipeline);
+    }
+
+    void push_descriptor_set(VkCommandBuffer command_buffer) const
+    {
+        auto write_descriptor_sets = m_descriptor_set_layout->get_write_descriptor_sets();
+        vkCmdPushDescriptorSetKHR(
+            command_buffer,
+            VK_PIPELINE_BIND_POINT_GRAPHICS,
+            m_pipeline_layout,
+            0,
+            write_descriptor_sets.size(),
+            write_descriptor_sets.data());
     }
 };
 } // namespace steeplejack

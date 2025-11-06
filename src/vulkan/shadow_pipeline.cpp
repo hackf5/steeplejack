@@ -18,7 +18,8 @@ ShadowPipeline::ShadowPipeline(
     m_device(device),
     m_descriptor_set_layout(create_descriptor_set_layout()),
     m_pipeline_layout(m_descriptor_set_layout->create_pipeline_layout()),
-    m_pipeline(create_pipeline(shadow_render_pass, vertex_shader, fragment_shader))
+    m_pipeline(create_pipeline(shadow_render_pass, vertex_shader, fragment_shader)),
+     vkCmdPushDescriptorSetKHR(fetch_vkCmdPushDescriptorSetKHR())
 {
 }
 
@@ -91,4 +92,16 @@ VkPipeline ShadowPipeline::create_pipeline(
     }
 
     return pipeline;
+}
+
+PFN_vkCmdPushDescriptorSetKHR ShadowPipeline::fetch_vkCmdPushDescriptorSetKHR()
+{
+    auto result =
+        reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR"));
+    if (result == nullptr)
+    {
+        throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");
+    }
+
+    return result;
 }

@@ -3,6 +3,7 @@
 #include "glm_config.hpp"
 #include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
+#include "vulkan/buffer/uniform_buffer_array.h"
 #include "vulkan/descriptor_set_layout.h"
 #include "vulkan/device.h"
 
@@ -50,17 +51,33 @@ class Lights : public NoCopyOrMove
   private:
     LightsUBO m_lights;
     SpotLightMatrices m_matrices;
+    UniformBufferArray<glm::mat4> m_shadow_lights_buffer;
     UniformBuffer m_lights_buffer;
     UniformBuffer m_matrices_buffer;
+    uint32_t m_shadow_lights_binding;
     uint32_t m_lights_binding;
     uint32_t m_matrices_binding;
 
   public:
     Lights(const Device& device);
 
+    void update();
+
     void flush(uint32_t frame_index);
 
+    void bind_shadow(DescriptorSetLayout& layout, uint32_t frame_index);
+
     void bind(DescriptorSetLayout& layout, uint32_t frame_index);
+
+    uint32_t shadow_lights_binding() const
+    {
+        return m_shadow_lights_binding;
+    }
+
+    uint32_t& shadow_lights_binding()
+    {
+        return m_shadow_lights_binding;
+    }
 
     uint32_t lights_binding() const
     {

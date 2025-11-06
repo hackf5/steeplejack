@@ -69,13 +69,20 @@ class Scene : public NoCopyOrMove
         return m_lights;
     }
 
-    // Single spotlight path extended to two spots via array; more can be added later.
-
     void flush(uint32_t frame_index)
     {
         m_camera.flush(frame_index);
         m_lights.flush(frame_index);
         m_model.flush(frame_index);
+    }
+
+    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline)
+    {
+        // Reset descriptor writes per frame/draw sequence before rebinding lights and meshes
+        pipeline.descriptor_set_layout().reset_writes();
+
+        m_lights.bind_shadow(pipeline.descriptor_set_layout(), frame_index);
+
     }
 
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)

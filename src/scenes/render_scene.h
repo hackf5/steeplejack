@@ -5,6 +5,7 @@
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
+#include "vulkan/shadow_pipeline.h"
 #include "vulkan/material_factory.h"
 
 #include <chrono>
@@ -58,6 +59,11 @@ class RenderScene : NoCopyOrMove
     {
         auto time = time_delta();
         update(frame_index, aspect_ratio, time);
+    }
+
+    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline)
+    {
+        m_scene.render_shadow(command_buffer, frame_index, pipeline);
     }
 
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
