@@ -46,7 +46,8 @@ void Lights::update()
         }
         auto view = glm::lookAt(spot.position, center, up);
         auto fovY = glm::acos(spot.outerCos) * 2.0f;
-        auto near = 0.075f;
+        // Choose a near plane that balances precision and clipping
+        auto near = glm::max(0.05f, 0.02f * spot.range);
         auto proj = glm::perspective(fovY, 1.0f, near, spot.range);
         proj[1][1] *= -1;
         m_matrices.viewProj[i] = proj * view;

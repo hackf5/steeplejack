@@ -67,7 +67,7 @@ VkPipelineRasterizationStateCreateInfo pipeline::create_shadow_rasterization_sta
     result.rasterizerDiscardEnable = VK_FALSE;
     result.polygonMode = VK_POLYGON_MODE_FILL;
     result.lineWidth = 1.0F;
-    result.cullMode = VK_CULL_MODE_FRONT_BIT;
+    result.cullMode = VK_CULL_MODE_BACK_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
     result.depthBiasConstantFactor = 1.25f;
     result.depthBiasSlopeFactor = 1.75f;
