@@ -4,6 +4,8 @@
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 
+#include <unordered_map>
+#include <utility>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -11,8 +13,18 @@ namespace steeplejack
 template <typename T> class UniformBufferArray : public UniformBuffer
 {
   private:
+    struct PairHash
+    {
+        size_t operator()(const std::pair<size_t, size_t>& p) const noexcept
+        {
+            // simple 64-bit hash combine
+            return (p.first * 1315423911u) ^ (p.second + 0x9e3779b97f4a7c15ULL + (p.first << 6) + (p.first >> 2));
+        }
+    };
+
     const VkDeviceSize m_stride;
     const size_t m_count;
+    std::unordered_map<std::pair<size_t, size_t>, VkDescriptorBufferInfo, PairHash> m_descriptors;
 
     static VkDeviceSize calculate_stride(const Device& device)
     {
@@ -43,13 +55,15 @@ template <typename T> class UniformBufferArray : public UniformBuffer
         buffer.copy_from_at(value, m_stride * static_cast<VkDeviceSize>(item_index));
     };
 
-    VkDescriptorBufferInfo descriptor_at(size_t item_index, size_t frame_index) const
+    VkDescriptorBufferInfo* descriptor_ptr_at(size_t item_index, size_t frame_index)
     {
+        auto key = std::pair<size_t, size_t>{item_index, frame_index};
+        auto& info = m_descriptors[key]; // default-constructs if missing
         const BufferHost& buffer = (*this)[frame_index];
-        VkDescriptorBufferInfo info = {};
-        info.buffer = buffer info.offset = m_stride * static_cast<VkDeviceSize>(item_index);
+        info.buffer = buffer; // uses BufferHost::operator VkBuffer()
+        info.offset = m_stride * static_cast<VkDeviceSize>(item_index);
         info.range = sizeof(T);
-        return info;
+        return &info;
     }
 };
 } // namespace steeplejack

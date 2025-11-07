@@ -88,12 +88,14 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
         auto shadow_framebuffer = m_context->shadow_framebuffers().at(spot_index);
         m_context->shadow_render_pass().begin(command_buffer, shadow_framebuffer, resolution);
         m_context->shadow_pipeline().bind(command_buffer);
+        m_context->graphics_buffers().bind(command_buffer);
 
         vkCmdSetViewport(command_buffer, 0, 1, &viewport);
         vkCmdSetScissor(command_buffer, 0, 1, &scissor);
         vkCmdSetDepthBias(command_buffer, 1.25f, 0.0f, 1.75f);
 
-
+        m_context->render_scene()
+            .render_shadow(command_buffer, m_current_frame, m_context->shadow_pipeline(), spot_index);
 
         m_context->shadow_render_pass().end(command_buffer);
     }

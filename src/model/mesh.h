@@ -6,6 +6,7 @@
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
+#include "vulkan/shadow_pipeline.h"
 #include "vulkan/material.h"
 
 #include <memory>
@@ -55,6 +56,20 @@ class Mesh : NoCopyOrMove
         if (m_material)
         {
             m_material->flush(frame_index);
+        }
+    }
+
+    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline)
+    {
+        pipeline.descriptor_set_layout().write_uniform_buffer(
+            m_uniform_buffers[frame_index].descriptor(),
+            1); // Model UBO at binding 1
+
+        pipeline.push_descriptor_set(command_buffer);
+
+        for (auto& primitive : m_primitives)
+        {
+            primitive.render(command_buffer);
         }
     }
 

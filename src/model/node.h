@@ -107,6 +107,19 @@ class Node : NoCopyOrMove
         }
     }
 
+    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline, size_t spot_index)
+    {
+        if (m_mesh)
+        {
+            m_mesh->render_shadow(command_buffer, frame_index, pipeline);
+        }
+
+        for (auto& child : m_children)
+        {
+            child->render_shadow(command_buffer, frame_index, pipeline, spot_index);
+        }
+    }
+
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
     {
         if (m_mesh)

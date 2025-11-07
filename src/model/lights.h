@@ -65,7 +65,7 @@ class Lights : public NoCopyOrMove
 
     void flush(uint32_t frame_index);
 
-    void bind_shadow(DescriptorSetLayout& layout, uint32_t frame_index);
+    void bind_shadow(DescriptorSetLayout& layout, uint32_t frame_index, size_t spot_index);
 
     void bind(DescriptorSetLayout& layout, uint32_t frame_index);
 

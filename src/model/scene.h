@@ -76,18 +76,17 @@ class Scene : public NoCopyOrMove
         m_model.flush(frame_index);
     }
 
-    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline)
+    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline, size_t spot_index)
     {
-        // Reset descriptor writes per frame/draw sequence before rebinding lights and meshes
         pipeline.descriptor_set_layout().reset_writes();
 
-        m_lights.bind_shadow(pipeline.descriptor_set_layout(), frame_index);
+        m_lights.bind_shadow(pipeline.descriptor_set_layout(), frame_index, spot_index);
 
+        m_model.render_shadow(command_buffer, frame_index, pipeline, spot_index);
     }
 
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
     {
-        // Reset descriptor writes per frame/draw sequence before rebinding camera and meshes
         pipeline.descriptor_set_layout().reset_writes();
 
         m_camera.bind(frame_index, pipeline);

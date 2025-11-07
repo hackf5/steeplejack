@@ -61,9 +61,9 @@ class RenderScene : NoCopyOrMove
         update(frame_index, aspect_ratio, time);
     }
 
-    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline)
+    void render_shadow(VkCommandBuffer command_buffer, uint32_t frame_index, ShadowPipeline& pipeline, size_t spot_index)
     {
-        m_scene.render_shadow(command_buffer, frame_index, pipeline);
+        m_scene.render_shadow(command_buffer, frame_index, pipeline, spot_index);
     }
 
     void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
