@@ -66,9 +66,13 @@ class RenderScene : NoCopyOrMove
         m_scene.render_shadow(command_buffer, frame_index, pipeline, spot_index);
     }
 
-    void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
+    void render(
+        VkCommandBuffer command_buffer,
+        uint32_t frame_index,
+        GraphicsPipeline& pipeline,
+        VkDescriptorImageInfo* shadow = nullptr)
     {
-        m_scene.render(command_buffer, frame_index, pipeline);
+        m_scene.render(command_buffer, frame_index, pipeline, shadow);
     }
 };
 } // namespace steeplejack

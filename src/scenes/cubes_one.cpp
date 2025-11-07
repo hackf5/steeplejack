@@ -128,8 +128,8 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     static bool ui_init = false;
     static float ambient_color[3] = {1.0f, 1.0f, 1.0f};
     static float ambient_intensity = 0.1f;
-    static SpotUI spot0{2.5f, 45.0f, 15.0f, 25.0f, 2.0f, 6.0f, {1.0f, 0.95f, 0.9f}};
-    static SpotUI spot1{2.5f, 60.0f, 12.0f, 22.0f, 2.0f, 6.0f, {0.9f, 0.95f, 1.0f}};
+    static SpotUI spot0{2.5f, 45.0f, 5.5f, 14.5f, 2.0f, 6.0f, {1.0f, 0.95f, 0.9f}};
+    static SpotUI spot1{2.5f, 60.0f, 12.0f, 22.0f, 0.0f, 6.0f, {0.9f, 0.95f, 1.0f}};
 
     if (!ui_init)
     {

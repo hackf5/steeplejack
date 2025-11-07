@@ -25,7 +25,7 @@ layout (binding = 9, std140) uniform ShadowParams {
     mat4 lightViewProj[kMaxSpots];
 };
 
-layout(binding = 8) uniform sampler2DArray inShadowMaps; // shadow maps (unused)
+layout(binding = 8) uniform sampler2DArrayShadow uShadowMap;
 
 
 layout(location = 0) in vec2 inUV;
@@ -47,7 +47,19 @@ void main() {
             continue;
         }
 
-        diffuseSum += lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
+        // Project into light i clip space
+        vec4 l = lightViewProj[i] * vec4(inWorldPos, 1.0);
+        vec3 ndc = l.xyz / l.w;                  // [-1,1]
+        vec2 uv  = ndc.xy * 0.5 + 0.5;           // [0,1]
+        float z  = clamp(ndc.z, 0.0, 1.0);       // [0,1] (no remap if depth is 0..1)
+
+        float vis = 1.0;
+        if (all(greaterThanEqual(uv, vec2(0.0))) && all(lessThanEqual(uv, vec2(1.0))) && z <= 1.0) {
+            // Comparison sampler does LEQUAL; LINEAR filtering gives 2x2 PCF
+            vis = texture(uShadowMap, vec4(uv, float(i), z));
+        }
+
+        diffuseSum += vis * lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
     }
 
     outColor = vec4(ambient + diffuseSum + emissiveCol, baseCol.a);

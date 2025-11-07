@@ -85,12 +85,22 @@ class Scene : public NoCopyOrMove
         m_model.render_shadow(command_buffer, frame_index, pipeline, spot_index);
     }
 
-    void render(VkCommandBuffer command_buffer, uint32_t frame_index, GraphicsPipeline& pipeline)
+    void render(
+        VkCommandBuffer command_buffer,
+        uint32_t frame_index,
+        GraphicsPipeline& pipeline,
+        VkDescriptorImageInfo* shadow = nullptr)
     {
         pipeline.descriptor_set_layout().reset_writes();
 
         m_camera.bind(frame_index, pipeline);
         m_lights.bind(pipeline.descriptor_set_layout(), frame_index);
+
+        if (shadow != nullptr)
+        {
+            // Shadow map array sampler at binding 8
+            pipeline.descriptor_set_layout().write_combined_image_sampler(shadow, 8);
+        }
 
         m_model.render(command_buffer, frame_index, pipeline);
     }

@@ -108,7 +108,15 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
     m_context->swapchain().clip(command_buffer);
     m_context->graphics_buffers().bind(command_buffer);
 
-    m_context->render_scene().render(command_buffer, m_current_frame, m_context->graphics_pipeline());
+    VkDescriptorImageInfo shadow_desc{};
+    shadow_desc.sampler = m_context->shadow_sampler();
+    shadow_desc.imageView = m_context->shadow_mapping().array_view();
+    shadow_desc.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
+    m_context->render_scene().render(
+        command_buffer,
+        m_current_frame,
+        m_context->graphics_pipeline(),
+        &shadow_desc);
     steeplejack::Gui::render(command_buffer);
 
     m_context->render_pass().end(command_buffer);
