@@ -78,10 +78,32 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
         vertex.color = glm::vec4(1.0F);
     }
 
-    // Compute flat face normal after positions are finalized
-    const glm::vec3 e1 = result[1].pos - result[0].pos;
-    const glm::vec3 e2 = result[3].pos - result[0].pos;
-    glm::vec3 n = glm::normalize(glm::cross(e1, e2));
+    // Compute flat face normal via face index (outward, axis-aligned)
+    glm::vec3 n(0.0f);
+    switch (face)
+    {
+    case 0: // bottom
+        n = glm::vec3(0.0f, 0.0f, -1.0f);
+        break;
+    case 1: // top
+        n = glm::vec3(0.0f, 0.0f, 1.0f);
+        break;
+    case 2: // front (+Y)
+        n = glm::vec3(0.0f, -1.0f, 0.0f);
+        break;
+    case 3: // back (-Y)
+        n = glm::vec3(0.0f, 1.0f, 0.0f);
+        break;
+    case 4: // left (-X)
+        n = glm::vec3(-1.0f, 0.0f, 0.0f);
+        break;
+    case 5: // right (+X)
+        n = glm::vec3(1.0f, 0.0f, 0.0f);
+        break;
+    default:
+        throw std::runtime_error("Invalid face index in CubesOne::create_face");
+    }
+
     for (auto& v : result)
     {
         v.normal = n;
@@ -137,17 +159,46 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
         ambient_color[1] = m_scene.lights().ambient_color().y;
         ambient_color[2] = m_scene.lights().ambient_color().z;
         ambient_intensity = m_scene.lights().ambient_intensity();
+        // Initialize camera UI from current camera
+        // Defaults established in load()
+        // We will expose these via ImGui below
         ui_init = true;
     }
 
     static bool animate_model = false;
     static bool animate_lights = true;
 
+
+    static bool show_spot_markers = true;
+    static bool shadows_enabled = true;
+    static int  debug_mode = 0; // 0=none,1=cone,2=NdotL,3=shadowVis,4=normals
+    static int  debug_spot = 0;
+    // Orbit camera controls
+    static float cam_rot_x_deg = 35.0f;
+    static float cam_rot_y_deg = 45.0f;
+    static float cam_rot_z_deg = 0.0f;
+    static float cam_distance  = 3.0f;
     if (ImGui::Begin("Lighting", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
+
+        ImGui::Checkbox("Show Spot Markers", &show_spot_markers);
+        ImGui::SameLine();
+        ImGui::Checkbox("Shadows Enabled", &shadows_enabled);
         ImGui::Checkbox("Animate Model", &animate_model);
         ImGui::SameLine();
         ImGui::Checkbox("Animate Lights", &animate_lights);
+        if (ImGui::CollapsingHeader("Camera (Orbit)", ImGuiTreeNodeFlags_DefaultOpen))
+        {
+            ImGui::SliderFloat("Rot X (deg)", &cam_rot_x_deg, 0.0f, 360.0f, "%.1f");
+            ImGui::SliderFloat("Rot Y (deg)", &cam_rot_y_deg, 0.0f, 360.0f, "%.1f");
+            ImGui::SliderFloat("Rot Z (deg)", &cam_rot_z_deg, 0.0f, 360.0f, "%.1f");
+            ImGui::SliderFloat("Distance", &cam_distance, 0.5f, 20.0f, "%.2f");
+        }
+        const char* dbg_items[] = {"None", "Cone", "NdotL", "ShadowVis", "Normals", "Normals Pass/Fail"};
+        ImGui::Combo("Debug View", &debug_mode, dbg_items, IM_ARRAYSIZE(dbg_items));
+        int maxSpot = static_cast<int>(m_scene.lights().spots_size());
+        ImGui::SliderInt("Debug Spot", &debug_spot, 0, std::max(0, maxSpot - 1));
+
         if (ImGui::CollapsingHeader("Ambient", ImGuiTreeNodeFlags_DefaultOpen))
         {
             ImGui::ColorEdit3("Color", ambient_color);
@@ -180,6 +231,92 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     }
     ImGui::End();
 
+    // Apply debug/shadow settings via ShadowParams.debugParams
+    m_scene.lights().set_shadows_enabled(shadows_enabled);
+    m_scene.lights().set_debug_mode(debug_mode);
+    m_scene.lights().set_debug_spot_index(debug_spot);
+
+    // Draw simple screen-space markers for each enabled spot
+    if (show_spot_markers)
+    {
+        ImDrawList* dl = ImGui::GetForegroundDrawList();
+        const ImVec2 screen = ImGui::GetIO().DisplaySize;
+        const glm::mat4 VP = m_scene.camera().proj() * m_scene.camera().view();
+
+        // Project cube center (world origin) to screen once
+        bool center_visible = false;
+        ImVec2 center_pt{};
+        {
+            glm::vec4 cclip = VP * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+            if (cclip.w > 0.0f)
+            {
+                glm::vec3 cndc = glm::vec3(cclip) / cclip.w;
+                if (cndc.x >= -1.0f && cndc.x <= 1.0f && cndc.y >= -1.0f && cndc.y <= 1.0f)
+                {
+                    center_visible = true;
+                    center_pt = ImVec2((cndc.x * 0.5f + 0.5f) * screen.x, (cndc.y * 0.5f + 0.5f) * screen.y);
+                }
+            }
+        }
+        for (size_t i = 0; i < m_scene.lights().spots_size(); ++i)
+        {
+            const auto& sp = m_scene.lights().spot_at(i);
+            if (!sp.enable || sp.intensity <= 0.0f)
+                continue;
+            glm::vec4 clip = VP * glm::vec4(sp.position, 1.0f);
+            if (clip.w <= 0.0f)
+                continue;
+            glm::vec3 ndc = glm::vec3(clip) / clip.w;
+            if (ndc.x < -1.0f || ndc.x > 1.0f || ndc.y < -1.0f || ndc.y > 1.0f)
+                continue;
+            ImVec2 pt{(ndc.x * 0.5f + 0.5f) * screen.x, (ndc.y * 0.5f + 0.5f) * screen.y};
+            ImU32 col = ImColor(sp.color.x, sp.color.y, sp.color.z, 1.0f);
+            dl->AddCircleFilled(pt, 6.0f, col, 16);
+            dl->AddCircle(pt, 8.0f, col, 16, 2.0f);
+
+            // Draw a line from the spot marker to the cube center
+            if (center_visible)
+            {
+                dl->AddLine(pt, center_pt, col, 2.0f);
+            }
+
+            // Draw an arrow indicating spotlight direction
+            {
+                glm::vec3 dir = glm::normalize(sp.direction);
+                // Choose a reasonable world-space arrow length
+                float arrow_world_len = std::min(std::max(0.25f, 0.5f * sp.range), 2.0f);
+                glm::vec3 tip_world = sp.position + dir * arrow_world_len;
+
+                glm::vec4 tclip = VP * glm::vec4(tip_world, 1.0f);
+                if (tclip.w > 0.0f)
+                {
+                    glm::vec3 tndc = glm::vec3(tclip) / tclip.w;
+                    if (tndc.x >= -1.0f && tndc.x <= 1.0f && tndc.y >= -1.0f && tndc.y <= 1.0f)
+                    {
+                        ImVec2 tip{(tndc.x * 0.5f + 0.5f) * screen.x, (tndc.y * 0.5f + 0.5f) * screen.y};
+                        // Main arrow shaft
+                        dl->AddLine(pt, tip, col, 2.0f);
+
+                        // Arrow head
+                        ImVec2 v{tip.x - pt.x, tip.y - pt.y};
+                        float vlen = std::sqrt(v.x * v.x + v.y * v.y);
+                        if (vlen > 1.0f)
+                        {
+                            ImVec2 dir2{v.x / vlen, v.y / vlen};
+                            float head_len = 10.0f;
+                            float head_w   = 6.0f;
+                            ImVec2 base{tip.x - dir2.x * head_len, tip.y - dir2.y * head_len};
+                            ImVec2 perp{-dir2.y, dir2.x};
+                            ImVec2 left{base.x + perp.x * (head_w * 0.5f), base.y + perp.y * (head_w * 0.5f)};
+                            ImVec2 right{base.x - perp.x * (head_w * 0.5f), base.y - perp.y * (head_w * 0.5f)};
+                            dl->AddTriangleFilled(tip, left, right, col);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     glm::mat4 rotation_x(1.0f), rotation_y(1.0f), rotation_z(1.0f);
     if (animate_model)
     {
@@ -189,7 +326,14 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     }
 
     auto& camera = m_scene.camera();
-    camera.position() = glm::vec3(3.0F, 3.0F, 3.0F);
+    // Orbit camera around origin using XYZ rotations and distance
+    glm::mat4 Rx = glm::rotate(glm::mat4(1.0f), glm::radians(cam_rot_x_deg), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 Ry = glm::rotate(glm::mat4(1.0f), glm::radians(cam_rot_y_deg), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 Rz = glm::rotate(glm::mat4(1.0f), glm::radians(cam_rot_z_deg), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 R  = Rz * Ry * Rx;
+    glm::vec3 base(0.0f, 0.0f, glm::max(0.1f, cam_distance));
+    glm::vec3 cam_pos = glm::vec3(R * glm::vec4(base, 1.0f));
+    camera.position() = cam_pos;
     camera.aspect_ratio() = aspect_ratio;
 
     auto& node = m_scene.model().root_node();

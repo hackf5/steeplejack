@@ -5,18 +5,27 @@
 
 // Standard Lambert diffuse spotlight (soft cone + quadratic attenuation)
 vec3 lambertDiffuse(in Spot light, in vec3 N, in vec3 worldPos, in vec3 baseColor) {
-    vec3 L = normalize(light.position - worldPos);
-    float NdotL = max(dot(N, L), 0.0);
+    // Ensure all vectors are normalized in the space we light in (world)
+    vec3 Nn   = normalize(N);
+    vec3 Ls   = normalize(light.position - worldPos);   // to-light
+    vec3 Lf   = -Ls;                                     // from-light (beam direction)
+    vec3 Dfwd = normalize(light.direction);              // light's forward
 
-    float cosAng = dot(normalize(-light.direction), L);
+    // Diffuse term
+    float NdotL = max(dot(Nn, Ls), 0.0);
+
+    // Spotlight cone with smooth falloff
+    float cosAng = dot(Dfwd, Lf);
     float innerC = light.innerCos;
     float outerC = light.outerCos;
+    // Guard against swapped or equal cones
+    float cone = smoothstep(min(outerC, innerC), max(outerC, innerC), cosAng);
 
-    float cone = clamp((cosAng - outerC) / max(innerC - outerC, 1e-5), 0.0, 1.0);
-
-    float dist = length(light.position - worldPos);
-    float range = light.range;
-    float att = 1.0 / (1.0 + (dist / max(range, 1e-3)) * (dist / max(range, 1e-3)));
+    // Distance attenuation (quadratic-like)
+    float dist  = length(worldPos - light.position);
+    float range = max(light.range, 1e-3);
+    float r     = dist / range;
+    float att   = 1.0 / (1.0 + r * r);
 
     return baseColor * light.color * (light.intensity * NdotL * cone * att);
 }

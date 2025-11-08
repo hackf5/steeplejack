@@ -29,6 +29,9 @@ Lights::Lights(const Device& device) :
         spot.position = glm::vec3(0.0f);
         spot.direction = glm::vec3(0.0f);
     }
+
+    // Enable shadows by default
+    m_matrices.debugParams = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
 }
 
 void Lights::update()

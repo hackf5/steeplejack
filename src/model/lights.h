@@ -44,6 +44,7 @@ struct LightsUBO
 struct SpotLightMatrices
 {
     glm::mat4 viewProj[kMaxSpotLights];
+    glm::vec4 debugParams; // x: shadowsEnabled
 };
 
 class Lights : public NoCopyOrMove
@@ -68,6 +69,21 @@ class Lights : public NoCopyOrMove
     void bind_shadow(DescriptorSetLayout& layout, uint32_t frame_index, size_t spot_index);
 
     void bind(DescriptorSetLayout& layout, uint32_t frame_index);
+
+    void set_shadows_enabled(bool enabled)
+    {
+        m_matrices.debugParams = glm::vec4(enabled ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f);
+    }
+
+    void set_debug_mode(int mode)
+    {
+        m_matrices.debugParams.y = static_cast<float>(mode);
+    }
+
+    void set_debug_spot_index(int idx)
+    {
+        m_matrices.debugParams.z = static_cast<float>(idx);
+    }
 
     uint32_t shadow_lights_binding() const
     {
