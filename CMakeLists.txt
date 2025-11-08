@@ -58,6 +58,7 @@ find_package(glm REQUIRED)
 find_package(vk-bootstrap REQUIRED)
 find_package(VulkanMemoryAllocator CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
+find_package(EnTT CONFIG REQUIRED)
 
 # Source includes for steeplejack headers
 target_include_directories(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src)
@@ -72,6 +73,7 @@ target_link_libraries(steeplejack_engine
         vk-bootstrap::vk-bootstrap
         GPUOpen::VulkanMemoryAllocator
         imgui::imgui
+        EnTT::EnTT
         ${CMAKE_DL_LIBS}
 )
 
@@ -85,8 +87,11 @@ file(GLOB_RECURSE STEEPLEJACK_SOURCES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/src/vulkan_*context*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_engine.cpp
 )
+file(GLOB_RECURSE STEEPLEJACK_ECS_SOURCES CONFIGURE_DEPENDS
+    ${PROJECT_SOURCE_DIR}/src/ecs/*.cpp
+)
 list(REMOVE_ITEM STEEPLEJACK_SOURCES ${PROJECT_SOURCE_DIR}/src/main.cpp)
-target_sources(steeplejack_engine PRIVATE ${STEEPLEJACK_SOURCES})
+target_sources(steeplejack_engine PRIVATE ${STEEPLEJACK_SOURCES} ${STEEPLEJACK_ECS_SOURCES})
 target_sources(steeplejack_engine PRIVATE ${PROJECT_SOURCE_DIR}/src/tiny_gltf.cpp)
 
 
