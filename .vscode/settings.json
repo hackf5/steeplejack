@@ -40,10 +40,22 @@
   "cmake.preferredGenerators": [
     "Ninja"
   ],
+  "cmake.copyCompileCommands": "${workspaceFolder}/compile_commands.json",
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}",
+    "--background-index",
+    "--pch-storage=memory",
+    "--header-insertion=iwyu",
+    "--all-scopes-completion",
+    "--clang-tidy",
+    "--query-driver=C:/msys64/ucrt64/bin/*"
+  ],
   "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
   "C_Cpp.default.compileCommands": "${workspaceFolder}/build/ucrt/debug/compile_commands.json",
+  "C_Cpp.default.cppStandard": "c++23",
   "C_Cpp.formatting": "clangFormat",
   "C_Cpp.clang_format_style": "file",
+  "C_Cpp.intelliSenseEngine": "disabled",
   "C_Cpp.clang_format_path": "C:\\msys64\\ucrt64\\bin\\clang-format.exe",
   "cSpell.words": [
     "ctest",

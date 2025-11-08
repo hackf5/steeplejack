@@ -42,3 +42,4 @@
 
 # build folders
 build/
+.cache
