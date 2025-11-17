@@ -1,12 +1,12 @@
 // ECS scene holder (scaffold)
 #pragma once
 
-#include <entt/entt.hpp>
-
-#include "ecs/resources.h"
 #include "ecs/geometry_store.h"
-#include "ecs/material_store.h"
 #include "ecs/gpu/ubo_caches.h"
+#include "ecs/material_store.h"
+#include "ecs/resources.h"
+
+#include <entt/entt.hpp>
 
 namespace steeplejack::ecs
 {

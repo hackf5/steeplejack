@@ -13,25 +13,25 @@ Lights::Lights(const Device& device) :
     m_matrices_binding(1)
 {
     // Initialize ambient light to white with low intensity
-    m_lights.ambient.color = glm::vec3(1.0f);
-    m_lights.ambient.intensity = 0.1f;
+    m_lights.ambient.color = glm::vec3(1.0F);
+    m_lights.ambient.intensity = 0.1F;
 
     // Initialize spotlights to disabled state with default parameters
     for (auto& spot : m_lights.spots)
     {
         spot = {};
         spot.enable = false;
-        spot.color = glm::vec3(1.0f);
-        spot.intensity = 1.0f;
-        spot.range = 6.0f;
-        spot.innerCos = glm::cos(glm::radians(15.0f));
-        spot.outerCos = glm::cos(glm::radians(25.0f));
-        spot.position = glm::vec3(0.0f);
-        spot.direction = glm::vec3(0.0f);
+        spot.color = glm::vec3(1.0F);
+        spot.intensity = 1.0F;
+        spot.range = 6.0F;
+        spot.innerCos = glm::cos(glm::radians(15.0F));
+        spot.outerCos = glm::cos(glm::radians(25.0F));
+        spot.position = glm::vec3(0.0F);
+        spot.direction = glm::vec3(0.0F);
     }
 
     // Enable shadows by default
-    m_matrices.debugParams = glm::vec4(1.0f, 0.0f, 0.0f, 0.0f);
+    m_matrices.debugParams = glm::vec4(1.0F, 0.0F, 0.0F, 0.0F);
 }
 
 void Lights::update()
@@ -40,18 +40,20 @@ void Lights::update()
     {
         const auto& spot = m_lights.spots[i];
         if (!spot.enable)
-            continue;
-        auto center = spot.position + glm::normalize(spot.direction);
-        auto up = glm::vec3(0.0f, 0.0f, 1.0f);
-        if (glm::abs(glm::dot(up, spot.direction)) > 0.99f)
         {
-            up = glm::vec3(0.0f, 1.0f, 0.0f);
+            continue;
+        }
+        auto center = spot.position + glm::normalize(spot.direction);
+        auto up = glm::vec3(0.0F, 0.0F, 1.0F);
+        if (glm::abs(glm::dot(up, spot.direction)) > 0.99F)
+        {
+            up = glm::vec3(0.0F, 1.0F, 0.0F);
         }
         auto view = glm::lookAt(spot.position, center, up);
-        auto fovY = glm::acos(spot.outerCos) * 2.0f;
+        auto fov_y = glm::acos(spot.outerCos) * 2.0F;
         // Choose a near plane that balances precision and clipping
-        auto near = glm::max(0.05f, 0.02f * spot.range);
-        auto proj = glm::perspective(fovY, 1.0f, near, spot.range);
+        auto near = glm::max(0.05F, 0.02F * spot.range);
+        auto proj = glm::perspective(fov_y, 1.0F, near, spot.range);
         proj[1][1] *= -1;
         m_matrices.viewProj[i] = proj * view;
     }
@@ -63,7 +65,9 @@ void Lights::flush(uint32_t frame_index)
     for (size_t i = 0; i < kMaxSpotLights; ++i)
     {
         if (!m_lights.spots[i].enable)
+        {
             continue;
+        }
         m_shadow_lights_buffer.copy_from_at(m_matrices.viewProj[i], i, frame_index);
     }
 

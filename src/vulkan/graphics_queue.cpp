@@ -118,7 +118,12 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
     m_current_frame = current_frame;
     m_swapchain = swapchain;
 
-    vkWaitForFences(m_device.vk(), 1, &m_in_flight_fences[m_current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
+    vkWaitForFences(
+        m_device.vk(),
+        1,
+        &m_in_flight_fences[m_current_frame],
+        VK_TRUE,
+        std::numeric_limits<uint64_t>::max());
 
     vkResetFences(m_device.vk(), 1, &m_in_flight_fences[m_current_frame]);
 

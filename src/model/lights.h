@@ -60,7 +60,7 @@ class Lights : public NoCopyOrMove
     uint32_t m_matrices_binding;
 
   public:
-    Lights(const Device& device);
+    explicit Lights(const Device& device);
 
     void update();
 

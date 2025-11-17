@@ -1,10 +1,10 @@
 // Geometry store for ECS (minimal)
 #pragma once
 
+#include "ecs/components.h"
+
 #include <cstdint>
 #include <unordered_map>
-
-#include "ecs/components.h"
 
 namespace steeplejack
 {
@@ -42,4 +42,3 @@ class GeometryStore
     }
 };
 } // namespace steeplejack::ecs
-

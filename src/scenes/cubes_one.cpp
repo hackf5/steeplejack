@@ -168,16 +168,15 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     static bool animate_model = false;
     static bool animate_lights = true;
 
-
     static bool show_spot_markers = true;
     static bool shadows_enabled = true;
-    static int  debug_mode = 0; // 0=none,1=cone,2=NdotL,3=shadowVis,4=normals
-    static int  debug_spot = 0;
+    static int debug_mode = 0; // 0=none,1=cone,2=NdotL,3=shadowVis,4=normals
+    static int debug_spot = 0;
     // Orbit camera controls
     static float cam_rot_x_deg = 35.0f;
     static float cam_rot_y_deg = 45.0f;
     static float cam_rot_z_deg = 0.0f;
-    static float cam_distance  = 3.0f;
+    static float cam_distance = 3.0f;
     if (ImGui::Begin("Lighting", nullptr, ImGuiWindowFlags_AlwaysAutoResize))
     {
 
@@ -304,7 +303,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
                         {
                             ImVec2 dir2{v.x / vlen, v.y / vlen};
                             float head_len = 10.0f;
-                            float head_w   = 6.0f;
+                            float head_w = 6.0f;
                             ImVec2 base{tip.x - dir2.x * head_len, tip.y - dir2.y * head_len};
                             ImVec2 perp{-dir2.y, dir2.x};
                             ImVec2 left{base.x + perp.x * (head_w * 0.5f), base.y + perp.y * (head_w * 0.5f)};
@@ -330,7 +329,7 @@ void CubesOne::update(uint32_t frame_index, float aspect_ratio, float time)
     glm::mat4 Rx = glm::rotate(glm::mat4(1.0f), glm::radians(cam_rot_x_deg), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 Ry = glm::rotate(glm::mat4(1.0f), glm::radians(cam_rot_y_deg), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 Rz = glm::rotate(glm::mat4(1.0f), glm::radians(cam_rot_z_deg), glm::vec3(0.0f, 0.0f, 1.0f));
-    glm::mat4 R  = Rz * Ry * Rx;
+    glm::mat4 R = Rz * Ry * Rx;
     glm::vec3 base(0.0f, 0.0f, glm::max(0.1f, cam_distance));
     glm::vec3 cam_pos = glm::vec3(R * glm::vec4(base, 1.0f));
     camera.position() = cam_pos;

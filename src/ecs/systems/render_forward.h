@@ -1,15 +1,15 @@
 // Forward render system (initial wiring)
 #pragma once
 
-#include <entt/entt.hpp>
-#include <vulkan/vulkan.h>
-
 #include "ecs/components.h"
 #include "ecs/scene.h"
 #include "ecs/systems/build_draw_lists.h"
 #include "ecs/systems/flush_ubos.h"
 #include "vulkan/graphics_pipeline.h"
 #include "vulkan/material.h"
+
+#include <entt/entt.hpp>
+#include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
@@ -57,7 +57,9 @@ inline void render_forward(ecs::Scene& scene, VkCommandBuffer cmd, uint32_t fram
             }
             if (mat->metallic_roughness())
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(mat->metallic_roughness()->descriptor(), 5);
+                pipeline.descriptor_set_layout().write_combined_image_sampler(
+                    mat->metallic_roughness()->descriptor(),
+                    5);
             }
             if (mat->emissive())
             {

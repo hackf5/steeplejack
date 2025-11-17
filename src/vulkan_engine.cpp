@@ -73,26 +73,26 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
     auto* command_buffer = m_context->graphics_queue().begin_command();
 
     auto resolution = m_context->shadow_mapping().resolution();
-    float rf = static_cast<float>(resolution);
-    VkViewport viewport{0.0f, 0.0f, rf, rf, 0.0f, 1.0f};
-    VkRect2D scissor{{0, 0}, {resolution, resolution}};
-    auto& scene_lights = m_context->render_scene().scene().lights();
+    auto const rf = static_cast<float>(resolution);
+    VkViewport const viewport{0.0F, 0.0F, rf, rf, 0.0F, 1.0F};
+    VkRect2D const scissor{{0, 0}, {resolution, resolution}};
+    const auto& scene_lights = m_context->render_scene().scene().lights();
     for (size_t spot_index = 0; spot_index < scene_lights.spots_size(); ++spot_index)
     {
-        auto& spot = scene_lights.spot_at(spot_index);
+        const auto& spot = scene_lights.spot_at(spot_index);
         if (!spot.enable)
         {
             continue;
         }
 
-        auto shadow_framebuffer = m_context->shadow_framebuffers().at(spot_index);
+        auto* shadow_framebuffer = m_context->shadow_framebuffers().at(spot_index);
         m_context->shadow_render_pass().begin(command_buffer, shadow_framebuffer, resolution);
         m_context->shadow_pipeline().bind(command_buffer);
         m_context->graphics_buffers().bind(command_buffer);
 
         vkCmdSetViewport(command_buffer, 0, 1, &viewport);
         vkCmdSetScissor(command_buffer, 0, 1, &scissor);
-        vkCmdSetDepthBias(command_buffer, 1.25f, 0.0f, 1.75f);
+        vkCmdSetDepthBias(command_buffer, 1.25F, 0.0F, 1.75F);
 
         m_context->render_scene()
             .render_shadow(command_buffer, m_current_frame, m_context->shadow_pipeline(), spot_index);
@@ -112,11 +112,7 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
     shadow_desc.sampler = m_context->shadow_sampler();
     shadow_desc.imageView = m_context->shadow_mapping().array_view();
     shadow_desc.imageLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
-    m_context->render_scene().render(
-        command_buffer,
-        m_current_frame,
-        m_context->graphics_pipeline(),
-        &shadow_desc);
+    m_context->render_scene().render(command_buffer, m_current_frame, m_context->graphics_pipeline(), &shadow_desc);
     steeplejack::Gui::render(command_buffer);
 
     m_context->render_pass().end(command_buffer);

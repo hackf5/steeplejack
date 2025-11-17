@@ -1,12 +1,10 @@
 // ECS components scaffold for steeplejack
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "glm_config.hpp"
 
 #include <cstdint>
-#include <span>
+#include <entt/entt.hpp>
 #include <string>
 #include <vector>
 

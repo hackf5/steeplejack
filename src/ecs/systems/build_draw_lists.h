@@ -1,10 +1,9 @@
 // Draw list builder (scaffold)
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "ecs/components.h"
 
+#include <entt/entt.hpp>
 #include <vector>
 
 namespace steeplejack::ecs

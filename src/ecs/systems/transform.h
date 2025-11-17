@@ -1,9 +1,9 @@
 // Transform and hierarchy systems (scaffold)
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "ecs/components.h"
+
+#include <entt/entt.hpp>
 
 namespace steeplejack::ecs
 {

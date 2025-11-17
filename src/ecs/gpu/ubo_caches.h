@@ -1,12 +1,12 @@
 // GPU UBO caches for ECS entities (camera and model)
 #pragma once
 
-#include <entt/entt.hpp>
-#include <unordered_map>
-#include <memory>
-
 #include "ecs/components.h"
 #include "vulkan/buffer/uniform_buffer.h"
+
+#include <entt/entt.hpp>
+#include <memory>
+#include <unordered_map>
 
 namespace steeplejack
 {
@@ -96,4 +96,3 @@ class CameraUboCache
     }
 };
 } // namespace steeplejack::ecs
-

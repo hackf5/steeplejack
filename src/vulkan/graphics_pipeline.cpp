@@ -88,8 +88,8 @@ VkPipeline GraphicsPipeline::create_pipeline(
 
 PFN_vkCmdPushDescriptorSetKHR GraphicsPipeline::fetch_vkCmdPushDescriptorSetKHR()
 {
-    auto result =
-        reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(vkGetDeviceProcAddr(m_device.vk(), "vkCmdPushDescriptorSetKHR"));
+    auto result = reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(
+        vkGetDeviceProcAddr(m_device.vk(), "vkCmdPushDescriptorSetKHR"));
     if (result == nullptr)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");

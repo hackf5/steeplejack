@@ -1,11 +1,11 @@
 // Systems to flush ECS data into GPU UBOs
 #pragma once
 
-#include <entt/entt.hpp>
-
 #include "ecs/components.h"
 #include "ecs/gpu/ubo_caches.h"
 #include "vulkan/device.h"
+
+#include <entt/entt.hpp>
 
 namespace steeplejack::ecs
 {
@@ -42,7 +42,8 @@ inline entt::entity find_main_camera(entt::registry& reg)
     return cam;
 }
 
-inline CameraUbo* flush_camera_ubo(entt::registry& reg, const Device& device, CameraUboCache& cache, uint32_t frame_index)
+inline CameraUbo*
+flush_camera_ubo(entt::registry& reg, const Device& device, CameraUboCache& cache, uint32_t frame_index)
 {
     entt::entity cam_e = find_main_camera(reg);
     if (cam_e == entt::null)
@@ -55,4 +56,3 @@ inline CameraUbo* flush_camera_ubo(entt::registry& reg, const Device& device, Ca
     return cu;
 }
 } // namespace steeplejack::ecs
-

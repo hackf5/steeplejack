@@ -6,8 +6,8 @@
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
-#include "vulkan/shadow_pipeline.h"
 #include "vulkan/material.h"
+#include "vulkan/shadow_pipeline.h"
 
 #include <memory>
 #include <vector>

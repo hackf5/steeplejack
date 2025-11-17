@@ -36,4 +36,3 @@ struct Resources
 
 } // namespace ecs
 } // namespace steeplejack
-

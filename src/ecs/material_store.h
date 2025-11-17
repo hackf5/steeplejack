@@ -1,10 +1,10 @@
 // Material store for ECS (minimal bridge to engine Material)
 #pragma once
 
+#include "ecs/components.h"
+
 #include <cstdint>
 #include <unordered_map>
-
-#include "ecs/components.h"
 
 namespace steeplejack
 {
@@ -34,4 +34,3 @@ class MaterialStore
     }
 };
 } // namespace steeplejack::ecs
-
