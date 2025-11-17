@@ -1,7 +1,5 @@
 #include "vulkan_context_builder.h"
 
-#include <stdexcept>
-
 using namespace steeplejack;
 
 VulkanContextBuilder& VulkanContextBuilder::add_window(int width, int height, const std::string& title)

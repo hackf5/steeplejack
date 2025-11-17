@@ -6,7 +6,6 @@
 #include "vulkan/texture.h"
 
 #include <cstdint>
-#include <format>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -25,6 +24,12 @@ class TextureFactory
   public:
     TextureFactory(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues);
 
+    TextureFactory(const TextureFactory&) = delete;
+    TextureFactory& operator=(const TextureFactory&) = delete;
+    TextureFactory(TextureFactory&&) = delete;
+    TextureFactory& operator=(TextureFactory&&) = delete;
+    ~TextureFactory() = default;
+
     void load_texture(
         const std::string& name,
         const std::string& texture_name,
@@ -42,7 +47,7 @@ class TextureFactory
 
     bool has(const std::string& name) const
     {
-        return m_textures.find(name) != m_textures.end();
+        return m_textures.contains(name);
     }
 
     // Ensure a 1x1 RGBA texture exists with given color
@@ -50,7 +55,10 @@ class TextureFactory
         const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space)
     {
         if (has(name))
+        {
             return;
+        }
+
         const std::array<std::byte, 4> px{std::byte{r}, std::byte{g}, std::byte{b}, std::byte{a}};
         m_textures[name] = std::make_unique<Texture>(
             m_device,

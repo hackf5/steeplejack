@@ -1,5 +1,3 @@
-#define GLM_FORCE_DEFAULT_ALIGNED_GENTYPES
-
 #include "application.h"
 
 #include "scenes/cubes_one.h"
@@ -7,8 +5,6 @@
 #include "util/runtime_paths.h"
 #include "vulkan_context_builder.h"
 #include "vulkan_engine.h"
-
-#include <iostream>
 
 namespace
 {

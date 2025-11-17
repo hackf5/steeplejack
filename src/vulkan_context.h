@@ -1,7 +1,6 @@
 #pragma once
 
 #include "gui/gui.h"
-#include "model/scene.h"
 #include "scenes/render_scene.h"
 #include "vulkan/adhoc_queues.h"
 #include "vulkan/depth_buffer.h"
@@ -21,7 +20,6 @@
 #include "vulkan/shadow_sampler.h"
 #include "vulkan/swapchain.h"
 #include "vulkan/texture_factory.h"
-#include "vulkan/vertex.h"
 #include "vulkan/window.h"
 
 #include <memory>
@@ -60,6 +58,7 @@ class VulkanContext
     VulkanContext& operator=(const VulkanContext&) = delete;
     VulkanContext(VulkanContext&&) = delete;
     VulkanContext& operator=(VulkanContext&&) = delete;
+    ~VulkanContext() = default;
 
     Window& window()
     {
@@ -80,17 +79,17 @@ class VulkanContext
     {
         return *m_graphics_queue;
     }
-    const GraphicsQueue& graphics_queue() const
+    [[nodiscard]] const GraphicsQueue& graphics_queue() const
     {
         return *m_graphics_queue;
     }
 
-    const DescriptorSetLayout& descriptor_set_layout() const
+    [[nodiscard]] const DescriptorSetLayout& descriptor_set_layout() const
     {
         return *m_descriptor_set_layout;
     }
 
-    const GraphicsBuffers& graphics_buffers() const
+    [[nodiscard]] const GraphicsBuffers& graphics_buffers() const
     {
         return *m_graphics_buffers;
     }
@@ -99,12 +98,12 @@ class VulkanContext
         return *m_graphics_buffers;
     }
 
-    const Sampler& sampler() const
+    [[nodiscard]] const Sampler& sampler() const
     {
         return *m_sampler;
     }
 
-    const ShadowSampler& shadow_sampler() const
+    [[nodiscard]] const ShadowSampler& shadow_sampler() const
     {
         return *m_shadow_sampler;
     }
@@ -139,7 +138,7 @@ class VulkanContext
         return *m_shadow_pipeline;
     }
 
-    const RenderScene& render_scene() const
+    [[nodiscard]] const RenderScene& render_scene() const
     {
         return *m_render_scene;
     }
@@ -148,22 +147,22 @@ class VulkanContext
         return *m_render_scene;
     }
 
-    const Swapchain& swapchain() const
+    [[nodiscard]] const Swapchain& swapchain() const
     {
         return *m_swapchain;
     }
 
-    const RenderPass& render_pass() const
+    [[nodiscard]] const RenderPass& render_pass() const
     {
         return *m_render_pass;
     }
 
-    const Framebuffers& framebuffers() const
+    [[nodiscard]] const Framebuffers& framebuffers() const
     {
         return *m_framebuffers;
     }
 
-    const GraphicsPipeline& graphics_pipeline() const
+    [[nodiscard]] const GraphicsPipeline& graphics_pipeline() const
     {
         return *m_graphics_pipeline;
     }
@@ -172,7 +171,7 @@ class VulkanContext
         return *m_graphics_pipeline;
     }
 
-    const Gui& gui() const
+    [[nodiscard]] const Gui& gui() const
     {
         return *m_gui;
     }

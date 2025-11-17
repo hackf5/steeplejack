@@ -1,6 +1,5 @@
 #pragma once
 
-#include "scenes/render_scene.h"
 #include "vulkan_context.h"
 
 #include <memory>
@@ -25,12 +24,13 @@ class VulkanEngine
     }
 
   public:
-    VulkanEngine(std::unique_ptr<VulkanContext> context);
+    explicit VulkanEngine(std::unique_ptr<VulkanContext> context);
 
     VulkanEngine(const VulkanEngine&) = delete;
     VulkanEngine& operator=(const VulkanEngine&) = delete;
     VulkanEngine(VulkanEngine&&) = delete;
     VulkanEngine& operator=(VulkanEngine&&) = delete;
+    ~VulkanEngine() = default;
 
     void run();
 };

@@ -4,8 +4,6 @@
 #include "spdlog/spdlog.h"
 #include "vulkan_context_builder.h"
 
-#include <chrono>
-
 using namespace steeplejack;
 
 VulkanEngine::VulkanEngine(std::unique_ptr<VulkanContext> context) : m_context(std::move(context)) {}

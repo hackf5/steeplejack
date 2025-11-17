@@ -5,8 +5,6 @@
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
 
-#include <array>
-#include <memory>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -25,11 +23,10 @@ class Camera
     glm::vec3 m_position;
     glm::vec3 m_target;
 
-    float m_fov;
-    float m_aspect_ratio;
-    float m_near;
-    float m_far;
-
+    float m_fov{45.0F};
+    float m_aspect_ratio{1.0F};
+    float m_near{0.1F};
+    float m_far{10.0F};
     bool m_dirty = true;
 
     UniformBlock m_uniform_block;
@@ -50,15 +47,11 @@ class Camera
     }
 
   public:
-    Camera(const Device& device) :
+    explicit Camera(const Device& device) :
         m_uniform_buffers(device, sizeof(UniformBlock)),
         m_position(glm::zero<glm::vec3>()),
         m_target(glm::zero<glm::vec3>()),
-        m_fov(45.0f),
-        m_aspect_ratio(1.0f),
-        m_near(0.1f),
-        m_far(10.0f),
-        m_uniform_block({glm::identity<glm::mat4>(), glm::identity<glm::mat4>()})
+        m_uniform_block({.proj=glm::identity<glm::mat4>(), .view=glm::identity<glm::mat4>()})
     {
     }
 
@@ -66,6 +59,7 @@ class Camera
     Camera& operator=(const Camera&) = delete;
     Camera(Camera&&) = delete;
     Camera& operator=(Camera&&) = delete;
+    ~Camera() = default;
 
     const glm::vec3& position() const
     {

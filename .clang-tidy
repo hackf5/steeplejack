@@ -26,9 +26,14 @@ Checks: >
   ,-llvm-*
   ,-llvmlibc-*
   ,-zircon-*
+
   # Vulkan allowances (tighten later if desired)
   ,-cppcoreguidelines-pro-type-reinterpret-cast
   ,-cppcoreguidelines-pro-type-vararg
+
+  # Reenable later once config is implemented
+  ,-cppcoreguidelines-avoid-magic-numbers
+  ,-readability-magic-numbers
 
 WarningsAsErrors: ''
 HeaderFilterRegex: '^(src|include)/'

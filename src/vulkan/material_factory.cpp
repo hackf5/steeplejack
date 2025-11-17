@@ -6,6 +6,26 @@
 #include <format>
 #include <tiny_gltf.h>
 
+namespace
+{
+constexpr auto kDefaultNormal = "__default.normal.flat";
+constexpr auto kDefaultMr = "__default.mr.neutral";
+constexpr auto kDefaultEmissive = "__default.emissive.black";
+constexpr auto kDefaultBaseColor = "__default.baseColor.white";
+
+constexpr unsigned char kAlphaOpaque = 255;
+constexpr unsigned char kChannelMax = 255;
+constexpr unsigned char kChannelMin = 0;
+
+constexpr unsigned char kNormalR = 128;
+constexpr unsigned char kNormalG = 128;
+constexpr unsigned char kNormalB = 255;
+
+constexpr unsigned char kMetallicMax = 255;
+constexpr unsigned char kRoughnessMax = 255;
+constexpr unsigned char kMetallicZero = 0;
+} // namespace
+
 using namespace steeplejack;
 
 MaterialFactory::MaterialFactory(const Device& device, TextureFactory& textures) :
@@ -45,12 +65,14 @@ Material& MaterialFactory::create_unlit(const std::string& name, const std::stri
     m_materials[name] = std::move(material);
 
     // Defaults for other maps
-    m_textures.ensure_texture_rgba_1x1("__default.normal.flat", 128, 128, 255, 255, TextureColorSpace::Linear);
-    m_textures.ensure_texture_rgba_1x1("__default.mr.neutral", 255, 255, 0, 255, TextureColorSpace::Linear);
-    m_textures.ensure_texture_rgba_1x1("__default.emissive.black", 0, 0, 0, 255, TextureColorSpace::Srgb);
-    ref.set_normal(m_textures["__default.normal.flat"]);
-    ref.set_metallic_roughness(m_textures["__default.mr.neutral"]);
-    ref.set_emissive(m_textures["__default.emissive.black"]);
+    m_textures.ensure_texture_rgba_1x1(
+        kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
+    m_textures.ensure_texture_rgba_1x1(
+        kDefaultMr, kMetallicMax, kRoughnessMax, kMetallicZero, kAlphaOpaque, TextureColorSpace::Linear);
+    m_textures.ensure_texture_rgba_1x1(kDefaultEmissive, 0, 0, 0, kAlphaOpaque, TextureColorSpace::Srgb);
+    ref.set_normal(m_textures[kDefaultNormal]);
+    ref.set_metallic_roughness(m_textures[kDefaultMr]);
+    ref.set_emissive(m_textures[kDefaultEmissive]);
     return ref;
 }
 
@@ -92,7 +114,7 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
             std::format("Material index {} out of range for {}", material_index, full_path.string()));
     }
 
-    const auto& mat = model.materials[static_cast<size_t>(material_index)];
+    const auto& mat = model.materials.at(static_cast<size_t>(material_index));
 
     auto material = std::make_unique<Material>(m_device);
 
@@ -100,10 +122,10 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
     if (mat.pbrMetallicRoughness.baseColorFactor.size() == 4)
     {
         auto& f = material->base_color_factor();
-        f.r = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor[0]);
-        f.g = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor[1]);
-        f.b = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor[2]);
-        f.a = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor[3]);
+        f.r = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(0));
+        f.g = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(1));
+        f.b = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(2));
+        f.a = static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(3));
     }
 
     material->set_double_sided(mat.doubleSided);
@@ -125,10 +147,10 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
     const auto tex_index = mat.pbrMetallicRoughness.baseColorTexture.index;
     if (tex_index >= 0 && static_cast<size_t>(tex_index) < model.textures.size())
     {
-        const int img_index = model.textures[static_cast<size_t>(tex_index)].source;
+        const int img_index = model.textures.at(static_cast<size_t>(tex_index)).source;
         if (img_index >= 0 && static_cast<size_t>(img_index) < model.images.size())
         {
-            const auto& image = model.images[static_cast<size_t>(img_index)];
+            const auto& image = model.images.at(static_cast<size_t>(img_index));
             if (!image.uri.empty())
             {
                 const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
@@ -149,10 +171,10 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
     // Normal texture (linear)
     if (mat.normalTexture.index >= 0 && static_cast<size_t>(mat.normalTexture.index) < model.textures.size())
     {
-        const int img_index_n = model.textures[static_cast<size_t>(mat.normalTexture.index)].source;
+        const int img_index_n = model.textures.at(static_cast<size_t>(mat.normalTexture.index)).source;
         if (img_index_n >= 0 && static_cast<size_t>(img_index_n) < model.images.size())
         {
-            const auto& img = model.images[static_cast<size_t>(img_index_n)];
+            const auto& img = model.images.at(static_cast<size_t>(img_index_n));
             if (!img.uri.empty())
             {
                 const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
@@ -169,10 +191,10 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
         static_cast<size_t>(mat.pbrMetallicRoughness.metallicRoughnessTexture.index) < model.textures.size())
     {
         const int img_index_mr =
-            model.textures[static_cast<size_t>(mat.pbrMetallicRoughness.metallicRoughnessTexture.index)].source;
+            model.textures.at(static_cast<size_t>(mat.pbrMetallicRoughness.metallicRoughnessTexture.index)).source;
         if (img_index_mr >= 0 && static_cast<size_t>(img_index_mr) < model.images.size())
         {
-            const auto& img = model.images[static_cast<size_t>(img_index_mr)];
+            const auto& img = model.images.at(static_cast<size_t>(img_index_mr));
             if (!img.uri.empty())
             {
                 const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
@@ -187,10 +209,10 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
     // Emissive texture (sRGB)
     if (mat.emissiveTexture.index >= 0 && static_cast<size_t>(mat.emissiveTexture.index) < model.textures.size())
     {
-        const int img_index_e = model.textures[static_cast<size_t>(mat.emissiveTexture.index)].source;
+        const int img_index_e = model.textures.at(static_cast<size_t>(mat.emissiveTexture.index)).source;
         if (img_index_e >= 0 && static_cast<size_t>(img_index_e) < model.images.size())
         {
-            const auto& img = model.images[static_cast<size_t>(img_index_e)];
+            const auto& img = model.images.at(static_cast<size_t>(img_index_e));
             if (!img.uri.empty())
             {
                 const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
@@ -207,31 +229,34 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     // Provide default textures for any missing maps
     // baseColor default: white (sRGB)
-    m_textures.ensure_texture_rgba_1x1("__default.baseColor.white", 255, 255, 255, 255, TextureColorSpace::Srgb);
+    m_textures.ensure_texture_rgba_1x1(
+        kDefaultBaseColor, kChannelMax, kChannelMax, kChannelMax, kAlphaOpaque, TextureColorSpace::Srgb);
     if (ref.base_color() == nullptr)
     {
-        ref.set_base_color(m_textures["__default.baseColor.white"]);
+        ref.set_base_color(m_textures[kDefaultBaseColor]);
     }
 
     // normal default: (0.5, 0.5, 1.0) linear
-    m_textures.ensure_texture_rgba_1x1("__default.normal.flat", 128, 128, 255, 255, TextureColorSpace::Linear);
+    m_textures.ensure_texture_rgba_1x1(
+        kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
     if (ref.normal() == nullptr)
     {
-        ref.set_normal(m_textures["__default.normal.flat"]);
+        ref.set_normal(m_textures[kDefaultNormal]);
     }
 
     // metallic-roughness default: occlusion=1, roughness=1, metallic=0 (linear)
-    m_textures.ensure_texture_rgba_1x1("__default.mr.neutral", 255, 255, 0, 255, TextureColorSpace::Linear);
+    m_textures.ensure_texture_rgba_1x1(
+        kDefaultMr, kMetallicMax, kRoughnessMax, kMetallicZero, kAlphaOpaque, TextureColorSpace::Linear);
     if (ref.metallic_roughness() == nullptr)
     {
-        ref.set_metallic_roughness(m_textures["__default.mr.neutral"]);
+        ref.set_metallic_roughness(m_textures[kDefaultMr]);
     }
 
     // emissive default: black (sRGB)
-    m_textures.ensure_texture_rgba_1x1("__default.emissive.black", 0, 0, 0, 255, TextureColorSpace::Srgb);
+    m_textures.ensure_texture_rgba_1x1(kDefaultEmissive, kChannelMin, kChannelMin, kChannelMin, kAlphaOpaque, TextureColorSpace::Srgb);
     if (ref.emissive() == nullptr)
     {
-        ref.set_emissive(m_textures["__default.emissive.black"]);
+        ref.set_emissive(m_textures[kDefaultEmissive]);
     }
     return ref;
 }

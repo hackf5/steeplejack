@@ -15,12 +15,13 @@ class VulkanContextBuilder
   public:
     VulkanContextBuilder() : m_context(std::make_unique<VulkanContext>()) {}
 
-    VulkanContextBuilder(std::unique_ptr<VulkanContext> context) : m_context(std::move(context)) {}
+    explicit VulkanContextBuilder(std::unique_ptr<VulkanContext> context) : m_context(std::move(context)) {}
 
     VulkanContextBuilder(const VulkanContextBuilder&) = delete;
     VulkanContextBuilder& operator=(const VulkanContextBuilder&) = delete;
     VulkanContextBuilder(VulkanContextBuilder&&) = delete;
     VulkanContextBuilder& operator=(VulkanContextBuilder&&) = delete;
+    ~VulkanContextBuilder() = default;
 
     VulkanContextBuilder& add_window(int width, int height, const std::string& title);
 
