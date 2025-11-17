@@ -60,7 +60,7 @@ VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
 void ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer, uint32_t resolution) const
 {
     VkClearValue clear_value = {};
-    clear_value.depthStencil = {.depth = 1.0f, .stencil = 0};
+    clear_value.depthStencil = {.depth = 1.0F, .stencil = 0};
 
     VkRenderPassBeginInfo render_pass_info = {};
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;

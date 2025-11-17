@@ -59,6 +59,7 @@
   "C_Cpp.clang_format_path": "C:\\msys64\\ucrt64\\bin\\clang-format.exe",
   "cSpell.words": [
     "ctest",
+    "elifdef",
     "entt",
     "GLFW",
     "GLSL",

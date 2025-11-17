@@ -69,9 +69,12 @@ VkPipelineRasterizationStateCreateInfo pipeline::create_shadow_rasterization_sta
     result.lineWidth = 1.0F;
     result.cullMode = VK_CULL_MODE_BACK_BIT;
     result.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
-    result.depthBiasConstantFactor = 1.25f;
-    result.depthBiasSlopeFactor = 1.75f;
-    result.depthBiasClamp = 0.0f;
+
+    // NOLINTBEGIN
+    result.depthBiasConstantFactor = 1.25F;
+    result.depthBiasSlopeFactor = 1.75F;
+    result.depthBiasClamp = 0.0F;
+    // NOLINTEND
 
     return result;
 }

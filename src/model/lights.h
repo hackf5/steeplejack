@@ -5,6 +5,7 @@
 #include "vulkan/buffer/uniform_buffer_array.h"
 #include "vulkan/descriptor_set_layout.h"
 #include "vulkan/device.h"
+#include <array>
 
 #include <vulkan/vulkan.h>
 
@@ -37,12 +38,12 @@ struct LightsUBO
 {
 
     AmbientLightUBO ambient;
-    SpotLightUBO spots[kMaxSpotLights];
+    std::array<SpotLightUBO, kMaxSpotLights> spots;
 };
 
 struct SpotLightMatrices
 {
-    glm::mat4 viewProj[kMaxSpotLights];
+    std::array<glm::mat4, kMaxSpotLights> viewProj;
     glm::vec4 debugParams; // x: shadowsEnabled
 };
 
@@ -65,6 +66,7 @@ class Lights
     Lights& operator=(const Lights&) = delete;
     Lights(Lights&&) = delete;
     Lights& operator=(Lights&&) = delete;
+    ~Lights() = default;
 
     void update();
 
@@ -76,7 +78,7 @@ class Lights
 
     void set_shadows_enabled(bool enabled)
     {
-        m_matrices.debugParams = glm::vec4(enabled ? 1.0f : 0.0f, 0.0f, 0.0f, 0.0f);
+        m_matrices.debugParams = glm::vec4(enabled ? 1.0F : 0.0F, 0.0F, 0.0F, 0.0F);
     }
 
     void set_debug_mode(int mode)
@@ -139,19 +141,19 @@ class Lights
         return m_lights.ambient.intensity;
     }
 
-    size_t spots_size() const
+    static size_t spots_size()
     {
         return kMaxSpotLights;
     }
 
     const SpotLightUBO& spot_at(size_t index) const
     {
-        return m_lights.spots[index];
+        return m_lights.spots.at(index);
     }
 
     SpotLightUBO& spot_at(size_t index)
     {
-        return m_lights.spots[index];
+        return m_lights.spots.at(index);
     }
 
     const SpotLightMatrices& matrices() const

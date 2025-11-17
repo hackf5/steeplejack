@@ -1,3 +1,4 @@
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)
 #include "model/lights.h"
 
 using namespace steeplejack;
@@ -12,6 +13,7 @@ Lights::Lights(const Device& device) :
     m_lights_binding(0),
     m_matrices_binding(1)
 {
+
     // Initialize ambient light to white with low intensity
     m_lights.ambient.color = glm::vec3(1.0F);
     m_lights.ambient.intensity = 0.1F;
@@ -38,7 +40,7 @@ void Lights::update()
 {
     for (size_t i = 0; i < kMaxSpotLights; ++i)
     {
-        const auto& spot = m_lights.spots[i];
+        const auto& spot = m_lights.spots.at(i);
         if (!spot.enable)
         {
             continue;
@@ -55,7 +57,7 @@ void Lights::update()
         auto near = glm::max(0.05F, 0.02F * spot.range);
         auto proj = glm::perspective(fov_y, 1.0F, near, spot.range);
         proj[1][1] *= -1;
-        m_matrices.viewProj[i] = proj * view;
+        m_matrices.viewProj.at(i) = proj * view;
     }
 }
 
@@ -64,11 +66,11 @@ void Lights::flush(uint32_t frame_index)
     // Update shadow lights UBO
     for (size_t i = 0; i < kMaxSpotLights; ++i)
     {
-        if (!m_lights.spots[i].enable)
+        if (!m_lights.spots.at(i).enable)
         {
             continue;
         }
-        m_shadow_lights_buffer.copy_from_at(m_matrices.viewProj[i], i, frame_index);
+        m_shadow_lights_buffer.copy_from_at(m_matrices.viewProj.at(i), i, frame_index);
     }
 
     // Update lights UBO
@@ -97,3 +99,5 @@ void Lights::bind(DescriptorSetLayout& layout, uint32_t frame_index)
     auto& matrix_buffer = m_matrices_buffer[frame_index];
     layout.write_uniform_buffer(matrix_buffer.descriptor(), m_matrices_binding);
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

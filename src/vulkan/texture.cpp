@@ -190,7 +190,7 @@ Texture::Texture(
     // Transition, upload, transition
     transition_image_layout(adhoc_queues, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
-    StagingBuffer staging_buffer(m_device, rgba_pixels);
+    StagingBuffer const staging_buffer(m_device, rgba_pixels);
     copy_staging_buffer_to_image(staging_buffer, adhoc_queues);
 
     transition_image_layout(

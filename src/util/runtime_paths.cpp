@@ -1,11 +1,15 @@
+// spellchecker: ignore wpath
+
 #include "runtime_paths.h"
 
-#if defined(_WIN32)
+#ifdef _WIN32
 #include <windows.h>
-#elif defined(__linux__)
+#elifdef __linux__
 #include <limits.h>
 #include <unistd.h>
 #endif
+
+#include <array>
 
 #include "spdlog/spdlog.h"
 
@@ -13,23 +17,23 @@ namespace steeplejack
 {
 static std::filesystem::path executable_directory()
 {
-#if defined(_WIN32)
-    wchar_t wpath[MAX_PATH];
-    DWORD len = GetModuleFileNameW(nullptr, wpath, MAX_PATH);
+#ifdef _WIN32
+    std::array<wchar_t, MAX_PATH> wpath = {};
+    DWORD const len = GetModuleFileNameW(nullptr, wpath.data(), MAX_PATH);
     if (len == 0 || len == MAX_PATH)
     {
         return std::filesystem::current_path();
     }
-    std::filesystem::path exe_path(wpath);
+    std::filesystem::path const exe_path(wpath.data());
     return exe_path.parent_path();
-#elif defined(__linux__)
-    char buf[PATH_MAX];
-    ssize_t len = ::readlink("/proc/self/exe", buf, sizeof(buf));
-    if (len <= 0 || static_cast<size_t>(len) >= sizeof(buf))
+#elifdef __linux__
+    std::array<char, PATH_MAX> buf;
+    ssize_t len = ::readlink("/proc/self/exe", buf.data(), buf.size());
+    if (len <= 0 || static_cast<size_t>(len) >= buf.size())
     {
         return std::filesystem::current_path();
     }
-    std::filesystem::path exe_path(std::string(buf, static_cast<size_t>(len)));
+    std::filesystem::path exe_path(std::string(buf.data(), static_cast<size_t>(len)));
     return exe_path.parent_path();
 #else
     return std::filesystem::current_path();

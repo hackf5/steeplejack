@@ -9,7 +9,7 @@
 using namespace steeplejack;
 
 MaterialFactory::MaterialFactory(const Device& device, TextureFactory& textures) :
-    m_device(device), m_textures(textures), m_materials()
+    m_device(device), m_textures(textures)
 {
 }
 
@@ -63,23 +63,34 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     tinygltf::TinyGLTF loader;
     tinygltf::Model model;
-    std::string err, warn;
+    std::string err;
+    std::string warn;
 
     const auto ext = full_path.extension().string();
     bool loaded = false;
     if (ext == ".glb" || ext == ".GLB")
+    {
         loaded = loader.LoadBinaryFromFile(&model, &err, &warn, full_path.string());
+    }
     else
+    {
         loaded = loader.LoadASCIIFromFile(&model, &err, &warn, full_path.string());
+    }
 
     if (!warn.empty())
+    {
         spdlog::warn("tinygltf warn {}: {}", full_path.string(), warn);
+    }
     if (!loaded)
+    {
         throw std::runtime_error(std::format("Failed to load glTF {}: {}", full_path.string(), err));
+    }
 
     if (material_index < 0 || static_cast<size_t>(material_index) >= model.materials.size())
+    {
         throw std::runtime_error(
             std::format("Material index {} out of range for {}", material_index, full_path.string()));
+    }
 
     const auto& mat = model.materials[static_cast<size_t>(material_index)];
 
@@ -97,11 +108,17 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     material->set_double_sided(mat.doubleSided);
     if (mat.alphaMode == "MASK")
+    {
         material->set_alpha_mode(AlphaMode::Mask);
+    }
     else if (mat.alphaMode == "BLEND")
+    {
         material->set_alpha_mode(AlphaMode::Blend);
+    }
     else
+    {
         material->set_alpha_mode(AlphaMode::Opaque);
+    }
     material->alpha_cutoff() = static_cast<float>(mat.alphaCutoff);
 
     // Base color texture if present
@@ -192,21 +209,29 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
     // baseColor default: white (sRGB)
     m_textures.ensure_texture_rgba_1x1("__default.baseColor.white", 255, 255, 255, 255, TextureColorSpace::Srgb);
     if (ref.base_color() == nullptr)
+    {
         ref.set_base_color(m_textures["__default.baseColor.white"]);
+    }
 
     // normal default: (0.5, 0.5, 1.0) linear
     m_textures.ensure_texture_rgba_1x1("__default.normal.flat", 128, 128, 255, 255, TextureColorSpace::Linear);
     if (ref.normal() == nullptr)
+    {
         ref.set_normal(m_textures["__default.normal.flat"]);
+    }
 
     // metallic-roughness default: occlusion=1, roughness=1, metallic=0 (linear)
     m_textures.ensure_texture_rgba_1x1("__default.mr.neutral", 255, 255, 0, 255, TextureColorSpace::Linear);
     if (ref.metallic_roughness() == nullptr)
+    {
         ref.set_metallic_roughness(m_textures["__default.mr.neutral"]);
+    }
 
     // emissive default: black (sRGB)
     m_textures.ensure_texture_rgba_1x1("__default.emissive.black", 0, 0, 0, 255, TextureColorSpace::Srgb);
     if (ref.emissive() == nullptr)
+    {
         ref.set_emissive(m_textures["__default.emissive.black"]);
+    }
     return ref;
 }

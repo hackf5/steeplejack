@@ -42,9 +42,13 @@ fi
 
 cd "${ROOT_DIR}"
 
-# Gather C++ source files
+# Gather C++ source/header files
+patterns=(
+  '*.cpp' '*.cc' '*.cxx'
+  '*.h' '*.hh' '*.hpp' '*.hxx'
+)
 if [[ ${FULL} -eq 1 ]]; then
-  mapfile -d '' FILES < <(git ls-files -z -- '*.cpp' '*.cc' '*.cxx')
+  mapfile -d '' FILES < <(git ls-files -z -- "${patterns[@]}")
 else
   # Determine a reasonable base for changed files
   if git rev-parse --abbrev-ref --symbolic-full-name @{upstream} >/dev/null 2>&1; then
@@ -60,10 +64,10 @@ else
   fi
   # Collect unstaged, staged, committed-changed, and new files; unique the list (zero-terminated safe)
   mapfile -d '' FILES < <({
-      git diff -z --name-only --diff-filter=ACMR HEAD -- '*.cpp' '*.cc' '*.cxx' ;
-      git diff -z --name-only --diff-filter=ACMR "${base_commit}...HEAD" -- '*.cpp' '*.cc' '*.cxx' ;
-      git diff -z --name-only --cached --diff-filter=ACMR -- '*.cpp' '*.cc' '*.cxx' ;
-      git ls-files -z --others --exclude-standard -- '*.cpp' '*.cc' '*.cxx' ;
+      git diff -z --name-only --diff-filter=ACMR HEAD -- "${patterns[@]}" ;
+      git diff -z --name-only --diff-filter=ACMR "${base_commit}...HEAD" -- "${patterns[@]}" ;
+      git diff -z --name-only --cached --diff-filter=ACMR -- "${patterns[@]}" ;
+      git ls-files -z --others --exclude-standard -- "${patterns[@]}" ;
     } | sort -zu)
   if [[ ${#FILES[@]} -eq 0 ]]; then
     echo "No changed C++ files. Use '--all' for full lint."

@@ -77,7 +77,7 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
     VkViewport const viewport{0.0F, 0.0F, rf, rf, 0.0F, 1.0F};
     VkRect2D const scissor{{0, 0}, {resolution, resolution}};
     const auto& scene_lights = m_context->render_scene().scene().lights();
-    for (size_t spot_index = 0; spot_index < scene_lights.spots_size(); ++spot_index)
+    for (size_t spot_index = 0; spot_index < steeplejack::Lights::spots_size(); ++spot_index)
     {
         const auto& spot = scene_lights.spot_at(spot_index);
         if (!spot.enable)
