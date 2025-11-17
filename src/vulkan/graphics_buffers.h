@@ -4,7 +4,6 @@
 #include "buffer/buffer_gpu.h"
 #include "device.h"
 #include "util/memory.h"
-#include "util/no_copy_or_move.h"
 #include "vertex.h"
 
 #include <array>
@@ -15,7 +14,7 @@
 
 namespace steeplejack
 {
-class GraphicsBuffers : NoCopyOrMove
+class GraphicsBuffers
 {
   private:
     const Device& m_device;
@@ -26,6 +25,11 @@ class GraphicsBuffers : NoCopyOrMove
 
   public:
     GraphicsBuffers(const Device& device, const AdhocQueues& adhoc_queues);
+
+    GraphicsBuffers(const GraphicsBuffers&) = delete;
+    GraphicsBuffers& operator=(const GraphicsBuffers&) = delete;
+    GraphicsBuffers(GraphicsBuffers&&) = delete;
+    GraphicsBuffers& operator=(GraphicsBuffers&&) = delete;
 
     template <typename TIter> void load_vertexes(TIter begin, TIter end)
     {

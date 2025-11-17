@@ -1,7 +1,6 @@
 #pragma once
 
 #include "node.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/graphics_pipeline.h"
 #include "vulkan/shadow_pipeline.h"
 
@@ -9,12 +8,18 @@
 
 namespace steeplejack
 {
-class Model : NoCopyOrMove
+class Model
 {
   private:
     Node m_root_node;
 
   public:
+    Model() = default;
+    Model(const Model&) = delete;
+    Model& operator=(const Model&) = delete;
+    Model(Model&&) = delete;
+    Model& operator=(Model&&) = delete;
+
     const Node& root_node() const
     {
         return m_root_node;

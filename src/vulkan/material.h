@@ -1,7 +1,6 @@
 #pragma once
 
 #include "glm_config.hpp"
-#include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/texture.h"
@@ -15,7 +14,7 @@ enum class AlphaMode
     Blend
 };
 
-class Material : NoCopyOrMove
+class Material
 {
   private:
     // Textures (extend beyond base pass)
@@ -42,6 +41,11 @@ class Material : NoCopyOrMove
 
   public:
     explicit Material(const Device& device) : m_uniform_buffers(device, sizeof(UniformBlock)) {}
+
+    Material(const Material&) = delete;
+    Material& operator=(const Material&) = delete;
+    Material(Material&&) = delete;
+    Material& operator=(Material&&) = delete;
 
     // Base color
     Texture* base_color() const

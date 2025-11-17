@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 
 #include <vma/vk_mem_alloc.h>
@@ -8,7 +7,7 @@
 
 namespace steeplejack
 {
-class Buffer : NoCopyOrMove
+class Buffer
 {
   protected:
     struct AllocationInfo
@@ -42,7 +41,12 @@ class Buffer : NoCopyOrMove
         VmaAllocationCreateFlags allocation_flags = 0);
     ~Buffer();
 
-    VkDeviceSize size() const
+    Buffer(const Buffer&) = delete;
+    Buffer& operator=(const Buffer&) = delete;
+    Buffer(Buffer&&) = delete;
+    Buffer& operator=(Buffer&&) = delete;
+
+    [[nodiscard]] VkDeviceSize size() const
     {
         return m_buffer_size;
     }
@@ -52,7 +56,7 @@ class Buffer : NoCopyOrMove
         return m_allocation_info.buffer;
     }
 
-    const VkBuffer* ptr() const
+    [[nodiscard]] const VkBuffer* ptr() const
     {
         return &m_allocation_info.buffer;
     }

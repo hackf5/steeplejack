@@ -1,7 +1,6 @@
 #pragma once
 
 #include "glm_config.hpp"
-#include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
@@ -12,7 +11,7 @@
 
 namespace steeplejack
 {
-class Camera : NoCopyOrMove
+class Camera
 {
   private:
     struct UniformBlock
@@ -62,6 +61,11 @@ class Camera : NoCopyOrMove
         m_uniform_block({glm::identity<glm::mat4>(), glm::identity<glm::mat4>()})
     {
     }
+
+    Camera(const Camera&) = delete;
+    Camera& operator=(const Camera&) = delete;
+    Camera(Camera&&) = delete;
+    Camera& operator=(Camera&&) = delete;
 
     const glm::vec3& position() const
     {

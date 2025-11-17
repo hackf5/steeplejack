@@ -1,7 +1,6 @@
 #pragma once
 
 #include "descriptor_set_layout_info.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 
 #include <array>
@@ -10,7 +9,7 @@
 
 namespace steeplejack
 {
-class DescriptorSetLayout : NoCopyOrMove
+class DescriptorSetLayout
 {
   private:
     const Device& m_device;
@@ -25,6 +24,11 @@ class DescriptorSetLayout : NoCopyOrMove
   public:
     DescriptorSetLayout(const Device& device, std::vector<DescriptorSetLayoutInfo> layout_infos);
     ~DescriptorSetLayout();
+
+    DescriptorSetLayout(const DescriptorSetLayout&) = delete;
+    DescriptorSetLayout& operator=(const DescriptorSetLayout&) = delete;
+    DescriptorSetLayout(DescriptorSetLayout&&) = delete;
+    DescriptorSetLayout& operator=(DescriptorSetLayout&&) = delete;
 
     explicit operator VkDescriptorSetLayout() const
     {

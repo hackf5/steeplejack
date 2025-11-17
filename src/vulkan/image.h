@@ -1,14 +1,13 @@
 #pragma once
 
 #include "device.h"
-#include "util/no_copy_or_move.h"
 
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class Image : public NoCopyOrMove
+class Image
 {
   public:
     struct ImageInfo
@@ -47,6 +46,11 @@ class Image : public NoCopyOrMove
         VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT,
         uint32_t array_layers = 1);
     ~Image();
+
+    Image(const Image&) = delete;
+    Image& operator=(const Image&) = delete;
+    Image(Image&&) = delete;
+    Image& operator=(Image&&) = delete;
 
     operator VkImage() const
     {

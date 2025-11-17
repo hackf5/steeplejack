@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 

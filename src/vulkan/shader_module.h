@@ -1,13 +1,12 @@
 #pragma once
 
 #include "device.h"
-#include "util/no_copy_or_move.h"
 
 #include <string>
 
 namespace steeplejack
 {
-class ShaderModule : NoCopyOrMove
+class ShaderModule
 {
   private:
     const Device& m_device;
@@ -23,6 +22,11 @@ class ShaderModule : NoCopyOrMove
   public:
     ShaderModule(const Device& device, std::string name);
     ~ShaderModule();
+
+    ShaderModule(const ShaderModule&) = delete;
+    ShaderModule& operator=(const ShaderModule&) = delete;
+    ShaderModule(ShaderModule&&) = delete;
+    ShaderModule& operator=(ShaderModule&&) = delete;
 
     const std::string& name() const
     {

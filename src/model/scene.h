@@ -4,7 +4,6 @@
 #include "glm_config.hpp"
 #include "model.h"
 #include "model/lights.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
@@ -15,7 +14,7 @@
 
 namespace steeplejack
 {
-class Scene : public NoCopyOrMove
+class Scene
 {
   private:
     Camera m_camera;
@@ -38,6 +37,11 @@ class Scene : public NoCopyOrMove
         m_lights.lights_binding() = 7;
         m_lights.matrices_binding() = 9;
     }
+
+    Scene(const Scene&) = delete;
+    Scene& operator=(const Scene&) = delete;
+    Scene(Scene&&) = delete;
+    Scene& operator=(Scene&&) = delete;
 
     const Camera& camera() const
     {

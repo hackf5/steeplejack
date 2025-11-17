@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util/no_copy_or_move.h"
 #include "vulkan/descriptor_set_layout_builder.h"
 #include "vulkan_context.h"
 
@@ -8,7 +7,7 @@
 
 namespace steeplejack
 {
-class VulkanContextBuilder : NoCopyOrMove
+class VulkanContextBuilder
 {
   private:
     std::unique_ptr<VulkanContext> m_context;
@@ -17,6 +16,11 @@ class VulkanContextBuilder : NoCopyOrMove
     VulkanContextBuilder() : m_context(std::make_unique<VulkanContext>()) {}
 
     VulkanContextBuilder(std::unique_ptr<VulkanContext> context) : m_context(std::move(context)) {}
+
+    VulkanContextBuilder(const VulkanContextBuilder&) = delete;
+    VulkanContextBuilder& operator=(const VulkanContextBuilder&) = delete;
+    VulkanContextBuilder(VulkanContextBuilder&&) = delete;
+    VulkanContextBuilder& operator=(VulkanContextBuilder&&) = delete;
 
     VulkanContextBuilder& add_window(int width, int height, const std::string& title);
 

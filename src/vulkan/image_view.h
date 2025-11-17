@@ -2,14 +2,13 @@
 
 #include "device.h"
 #include "image.h"
-#include "util/no_copy_or_move.h"
 
 #include <optional>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class ImageView : public NoCopyOrMove
+class ImageView
 {
   private:
     const Device& m_device;
@@ -26,6 +25,11 @@ class ImageView : public NoCopyOrMove
         VkImageAspectFlags aspect_mask,
         std::optional<uint32_t> base_layer = std::nullopt);
     ~ImageView();
+
+    ImageView(const ImageView&) = delete;
+    ImageView& operator=(const ImageView&) = delete;
+    ImageView(ImageView&&) = delete;
+    ImageView& operator=(ImageView&&) = delete;
 
     operator VkImageView() const
     {

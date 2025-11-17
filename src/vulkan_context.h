@@ -3,7 +3,6 @@
 #include "gui/gui.h"
 #include "model/scene.h"
 #include "scenes/render_scene.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/adhoc_queues.h"
 #include "vulkan/depth_buffer.h"
 #include "vulkan/descriptor_set_layout.h"
@@ -29,7 +28,7 @@
 
 namespace steeplejack
 {
-class VulkanContext : NoCopyOrMove
+class VulkanContext
 {
   private:
     std::unique_ptr<Window> m_window;
@@ -56,6 +55,11 @@ class VulkanContext : NoCopyOrMove
 
   public:
     VulkanContext() = default;
+
+    VulkanContext(const VulkanContext&) = delete;
+    VulkanContext& operator=(const VulkanContext&) = delete;
+    VulkanContext(VulkanContext&&) = delete;
+    VulkanContext& operator=(VulkanContext&&) = delete;
 
     Window& window()
     {

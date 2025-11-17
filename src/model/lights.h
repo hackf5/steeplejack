@@ -1,7 +1,6 @@
 #pragma once
 
 #include "glm_config.hpp"
-#include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/buffer/uniform_buffer_array.h"
 #include "vulkan/descriptor_set_layout.h"
@@ -47,7 +46,7 @@ struct SpotLightMatrices
     glm::vec4 debugParams; // x: shadowsEnabled
 };
 
-class Lights : public NoCopyOrMove
+class Lights
 {
   private:
     LightsUBO m_lights;
@@ -61,6 +60,11 @@ class Lights : public NoCopyOrMove
 
   public:
     explicit Lights(const Device& device);
+
+    Lights(const Lights&) = delete;
+    Lights& operator=(const Lights&) = delete;
+    Lights(Lights&&) = delete;
+    Lights& operator=(Lights&&) = delete;
 
     void update();
 

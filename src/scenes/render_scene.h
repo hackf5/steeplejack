@@ -1,7 +1,6 @@
 #pragma once
 
 #include "model/scene.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
@@ -13,7 +12,7 @@
 
 namespace steeplejack
 {
-class RenderScene : NoCopyOrMove
+class RenderScene
 {
   private:
     const std::string m_vertex_shader;
@@ -38,6 +37,11 @@ class RenderScene : NoCopyOrMove
     }
 
     virtual ~RenderScene() = default;
+
+    RenderScene(const RenderScene&) = delete;
+    RenderScene& operator=(const RenderScene&) = delete;
+    RenderScene(RenderScene&&) = delete;
+    RenderScene& operator=(RenderScene&&) = delete;
 
     const std::string& vertex_shader() const
     {

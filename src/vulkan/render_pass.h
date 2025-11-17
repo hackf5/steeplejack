@@ -3,11 +3,10 @@
 #include "depth_buffer.h"
 #include "device.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 namespace steeplejack
 {
-class RenderPass : NoCopyOrMove
+class RenderPass
 {
   private:
     const Device& m_device;
@@ -20,6 +19,11 @@ class RenderPass : NoCopyOrMove
   public:
     RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer);
     ~RenderPass();
+
+    RenderPass(const RenderPass&) = delete;
+    RenderPass& operator=(const RenderPass&) = delete;
+    RenderPass(RenderPass&&) = delete;
+    RenderPass& operator=(RenderPass&&) = delete;
 
     operator VkRenderPass() const
     {

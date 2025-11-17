@@ -2,7 +2,6 @@
 
 #include "glm_config.hpp"
 #include "mesh.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/graphics_pipeline.h"
 
 #include <memory>
@@ -11,7 +10,7 @@
 
 namespace steeplejack
 {
-class Node : NoCopyOrMove
+class Node
 {
   private:
     Node* m_parent;
@@ -28,6 +27,9 @@ class Node : NoCopyOrMove
     Node(Node* parent = nullptr, std::unique_ptr<Mesh> mesh = nullptr) : m_parent(parent), m_mesh(std::move(mesh)) {}
 
     Node(const Node&) = delete;
+    Node& operator=(const Node&) = delete;
+    Node(Node&&) = delete;
+    Node& operator=(Node&&) = delete;
 
     Node* parent() const
     {

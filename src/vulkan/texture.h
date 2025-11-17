@@ -10,7 +10,6 @@
 #include "image_view.h"
 #include "sampler.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 #include <memory>
 #include <string>
@@ -26,7 +25,7 @@ enum class TextureColorSpace
     Linear
 };
 
-class Texture : public NoCopyOrMove
+class Texture
 {
   private:
     const Device& m_device;
@@ -61,6 +60,11 @@ class Texture : public NoCopyOrMove
         int height,
         TextureColorSpace color_space,
         std::span<const std::byte> rgba_pixels);
+
+    Texture(const Texture&) = delete;
+    Texture& operator=(const Texture&) = delete;
+    Texture(Texture&&) = delete;
+    Texture& operator=(Texture&&) = delete;
 
     VkDescriptorImageInfo* descriptor()
     {

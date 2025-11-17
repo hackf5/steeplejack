@@ -1,14 +1,13 @@
 #pragma once
 
 #include "VkBootstrap.h"
-#include "util/no_copy_or_move.h"
 #include "window.h"
 
 #include <vma/vk_mem_alloc.h>
 
 namespace steeplejack
 {
-class Device : NoCopyOrMove
+class Device
 {
   private:
     const Window& m_window;
@@ -32,6 +31,11 @@ class Device : NoCopyOrMove
     Device(const Window& window, bool enable_validation_layers);
 
     ~Device();
+
+    Device(const Device&) = delete;
+    Device& operator=(const Device&) = delete;
+    Device(Device&&) = delete;
+    Device& operator=(Device&&) = delete;
 
     static const uint32_t kMaxFramesInFlight = 2;
 

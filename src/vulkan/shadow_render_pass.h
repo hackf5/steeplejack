@@ -1,13 +1,12 @@
 #pragma once
 
 #include "device.h"
-#include "util/no_copy_or_move.h"
 
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class ShadowRenderPass : public NoCopyOrMove
+class ShadowRenderPass
 {
   private:
     const Device& m_device;
@@ -18,6 +17,11 @@ class ShadowRenderPass : public NoCopyOrMove
   public:
     ShadowRenderPass(const Device& device, VkFormat depth_format = VK_FORMAT_D32_SFLOAT);
     ~ShadowRenderPass();
+
+    ShadowRenderPass(const ShadowRenderPass&) = delete;
+    ShadowRenderPass& operator=(const ShadowRenderPass&) = delete;
+    ShadowRenderPass(ShadowRenderPass&&) = delete;
+    ShadowRenderPass& operator=(ShadowRenderPass&&) = delete;
 
     operator VkRenderPass() const
     {

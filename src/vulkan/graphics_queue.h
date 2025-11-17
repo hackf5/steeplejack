@@ -3,14 +3,13 @@
 #include "device.h"
 #include "framebuffers.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 #include <memory>
 #include <vector>
 
 namespace steeplejack
 {
-class GraphicsQueue : NoCopyOrMove
+class GraphicsQueue
 {
   private:
     const Device& m_device;
@@ -35,6 +34,11 @@ class GraphicsQueue : NoCopyOrMove
   public:
     GraphicsQueue(const Device& device);
     ~GraphicsQueue();
+
+    GraphicsQueue(const GraphicsQueue&) = delete;
+    GraphicsQueue& operator=(const GraphicsQueue&) = delete;
+    GraphicsQueue(GraphicsQueue&&) = delete;
+    GraphicsQueue& operator=(GraphicsQueue&&) = delete;
 
     VkFramebuffer
     prepare_framebuffer(uint32_t current_frame, const Swapchain& swapchain, const Framebuffers& framebuffers);

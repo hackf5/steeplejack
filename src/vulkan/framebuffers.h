@@ -5,13 +5,12 @@
 #include "multisampler.h"
 #include "render_pass.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 #include <vector>
 
 namespace steeplejack
 {
-class Framebuffers : NoCopyOrMove
+class Framebuffers
 {
   private:
     const Device& m_device;
@@ -29,6 +28,11 @@ class Framebuffers : NoCopyOrMove
         const RenderPass& render_pass,
         const DepthBuffer& depth_buffer);
     ~Framebuffers();
+
+    Framebuffers(const Framebuffers&) = delete;
+    Framebuffers& operator=(const Framebuffers&) = delete;
+    Framebuffers(Framebuffers&&) = delete;
+    Framebuffers& operator=(Framebuffers&&) = delete;
 
     [[nodiscard]] VkFramebuffer get(uint32_t image_index) const
     {

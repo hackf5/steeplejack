@@ -4,13 +4,12 @@
 #include "image.h"
 #include "image_view.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class Multisampler : public NoCopyOrMove
+class Multisampler
 {
   private:
     const Device& m_device;
@@ -19,6 +18,11 @@ class Multisampler : public NoCopyOrMove
 
   public:
     Multisampler(const Device& device, const Swapchain& swapchain);
+
+    Multisampler(const Multisampler&) = delete;
+    Multisampler& operator=(const Multisampler&) = delete;
+    Multisampler(Multisampler&&) = delete;
+    Multisampler& operator=(Multisampler&&) = delete;
 
     VkImageView image_view() const
     {

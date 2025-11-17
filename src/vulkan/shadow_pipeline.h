@@ -3,14 +3,13 @@
 #include "descriptor_set_layout.h"
 #include "device.h"
 #include "shadow_render_pass.h"
-#include "util/no_copy_or_move.h"
 
 #include <memory>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class ShadowPipeline : public NoCopyOrMove
+class ShadowPipeline
 {
   private:
     const Device& m_device;
@@ -35,6 +34,11 @@ class ShadowPipeline : public NoCopyOrMove
         const std::string& vertex_shader,
         const std::string& fragment_shader);
     ~ShadowPipeline();
+
+    ShadowPipeline(const ShadowPipeline&) = delete;
+    ShadowPipeline& operator=(const ShadowPipeline&) = delete;
+    ShadowPipeline(ShadowPipeline&&) = delete;
+    ShadowPipeline& operator=(ShadowPipeline&&) = delete;
 
     DescriptorSetLayout& descriptor_set_layout() const
     {

@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util/no_copy_or_move.h"
 #include "vulkan/adhoc_queues.h"
 #include "vulkan/device.h"
 #include "vulkan/image.h"
@@ -12,7 +11,7 @@
 
 namespace steeplejack
 {
-class ShadowMapArray : public NoCopyOrMove
+class ShadowMapArray
 {
   private:
     const Device& m_device;
@@ -32,6 +31,11 @@ class ShadowMapArray : public NoCopyOrMove
         uint32_t resolution = 1024,
         VkFormat format = VK_FORMAT_D32_SFLOAT);
     ~ShadowMapArray() = default;
+
+    ShadowMapArray(const ShadowMapArray&) = delete;
+    ShadowMapArray& operator=(const ShadowMapArray&) = delete;
+    ShadowMapArray(ShadowMapArray&&) = delete;
+    ShadowMapArray& operator=(ShadowMapArray&&) = delete;
 
     uint32_t layers() const
     {

@@ -1,7 +1,6 @@
 #pragma once
 
 #define GLFW_INCLUDE_VULKAN
-#include "util/no_copy_or_move.h"
 
 #include <GLFW/glfw3.h>
 #include <functional>
@@ -9,7 +8,7 @@
 
 namespace steeplejack
 {
-class Window : NoCopyOrMove
+class Window
 {
   public:
     typedef std::function<void(int, int)> framebuffer_resize_callback_t;
@@ -27,6 +26,11 @@ class Window : NoCopyOrMove
   public:
     Window(int width, int height, const std::string& title);
     ~Window();
+
+    Window(const Window&) = delete;
+    Window& operator=(const Window&) = delete;
+    Window(Window&&) = delete;
+    Window& operator=(Window&&) = delete;
 
     VkSurfaceKHR create_window_surface(VkInstance instance) const;
 

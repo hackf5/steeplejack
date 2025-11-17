@@ -1,7 +1,6 @@
 #pragma once
 
 #include "scenes/render_scene.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan_context.h"
 
 #include <memory>
@@ -9,7 +8,7 @@
 
 namespace steeplejack
 {
-class VulkanEngine : NoCopyOrMove
+class VulkanEngine
 {
   private:
     std::unique_ptr<VulkanContext> m_context;
@@ -27,6 +26,11 @@ class VulkanEngine : NoCopyOrMove
 
   public:
     VulkanEngine(std::unique_ptr<VulkanContext> context);
+
+    VulkanEngine(const VulkanEngine&) = delete;
+    VulkanEngine& operator=(const VulkanEngine&) = delete;
+    VulkanEngine(VulkanEngine&&) = delete;
+    VulkanEngine& operator=(VulkanEngine&&) = delete;
 
     void run();
 };

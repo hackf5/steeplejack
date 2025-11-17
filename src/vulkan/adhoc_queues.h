@@ -1,14 +1,13 @@
 #pragma once
 
 #include "device.h"
-#include "util/no_copy_or_move.h"
 
 #include <cstdint>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class AdhocQueue : NoCopyOrMove
+class AdhocQueue
 {
   public:
     enum QueueFamily : std::uint8_t
@@ -35,11 +34,16 @@ class AdhocQueue : NoCopyOrMove
   public:
     ~AdhocQueue();
 
+    AdhocQueue(const AdhocQueue&) = delete;
+    AdhocQueue& operator=(const AdhocQueue&) = delete;
+    AdhocQueue(AdhocQueue&&) = delete;
+    AdhocQueue& operator=(AdhocQueue&&) = delete;
+
     [[nodiscard]] VkCommandBuffer begin() const;
     void submit_and_wait() const;
 };
 
-class AdhocQueues : NoCopyOrMove
+class AdhocQueues
 {
   private:
     const AdhocQueue m_transfer_queue;
@@ -53,6 +57,11 @@ class AdhocQueues : NoCopyOrMove
         m_present_queue(device, AdhocQueue::present)
     {
     }
+
+    AdhocQueues(const AdhocQueues&) = delete;
+    AdhocQueues& operator=(const AdhocQueues&) = delete;
+    AdhocQueues(AdhocQueues&&) = delete;
+    AdhocQueues& operator=(AdhocQueues&&) = delete;
 
     [[nodiscard]] const AdhocQueue& transfer() const
     {

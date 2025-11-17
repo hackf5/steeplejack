@@ -5,7 +5,6 @@
 #include "render_pass.h"
 #include "shader_module.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 #include <memory>
 #include <string>
@@ -14,7 +13,7 @@
 
 namespace steeplejack
 {
-class GraphicsPipeline : NoCopyOrMove
+class GraphicsPipeline
 {
   private:
     const Device& m_device;
@@ -38,6 +37,11 @@ class GraphicsPipeline : NoCopyOrMove
         const std::string& vertex_shader,
         const std::string& fragment_shader);
     ~GraphicsPipeline();
+
+    GraphicsPipeline(const GraphicsPipeline&) = delete;
+    GraphicsPipeline& operator=(const GraphicsPipeline&) = delete;
+    GraphicsPipeline(GraphicsPipeline&&) = delete;
+    GraphicsPipeline& operator=(GraphicsPipeline&&) = delete;
 
     operator VkPipeline() const
     {

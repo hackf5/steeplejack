@@ -2,7 +2,6 @@
 
 #include "glm_config.hpp"
 #include "primitive.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
@@ -14,7 +13,7 @@
 
 namespace steeplejack
 {
-class Mesh : NoCopyOrMove
+class Mesh
 {
   private:
     struct UniformBlock
@@ -35,6 +34,11 @@ class Mesh : NoCopyOrMove
         m_material(material)
     {
     }
+
+    Mesh(const Mesh&) = delete;
+    Mesh& operator=(const Mesh&) = delete;
+    Mesh(Mesh&&) = delete;
+    Mesh& operator=(Mesh&&) = delete;
 
     const glm::mat4& model() const
     {

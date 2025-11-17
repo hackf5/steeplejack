@@ -4,13 +4,12 @@
 #include "image.h"
 #include "image_view.h"
 #include "swapchain.h"
-#include "util/no_copy_or_move.h"
 
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class DepthBuffer : public NoCopyOrMove
+class DepthBuffer
 {
   private:
     const Image m_image;
@@ -18,6 +17,11 @@ class DepthBuffer : public NoCopyOrMove
 
   public:
     DepthBuffer(const Device& device, const Swapchain& swapchain);
+
+    DepthBuffer(const DepthBuffer&) = delete;
+    DepthBuffer& operator=(const DepthBuffer&) = delete;
+    DepthBuffer(DepthBuffer&&) = delete;
+    DepthBuffer& operator=(DepthBuffer&&) = delete;
 
     [[nodiscard]] VkImageView image_view() const
     {

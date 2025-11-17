@@ -1,13 +1,12 @@
 #pragma once
 
 #include "device.h"
-#include "util/no_copy_or_move.h"
 
 #include <vector>
 
 namespace steeplejack
 {
-class Swapchain : NoCopyOrMove
+class Swapchain
 {
   private:
     const Device& m_device;
@@ -27,6 +26,11 @@ class Swapchain : NoCopyOrMove
   public:
     Swapchain(const Device& device);
     ~Swapchain();
+
+    Swapchain(const Swapchain&) = delete;
+    Swapchain& operator=(const Swapchain&) = delete;
+    Swapchain(Swapchain&&) = delete;
+    Swapchain& operator=(Swapchain&&) = delete;
 
     operator VkSwapchainKHR() const
     {

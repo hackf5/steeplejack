@@ -1,7 +1,6 @@
 #pragma once
 
 #include "buffer_host.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 
 #include <array>
@@ -9,7 +8,7 @@
 
 namespace steeplejack
 {
-class UniformBuffer : NoCopyOrMove
+class UniformBuffer
 {
   private:
     using BuffersT = std::array<std::unique_ptr<BufferHost>, Device::kMaxFramesInFlight>;
@@ -29,6 +28,11 @@ class UniformBuffer : NoCopyOrMove
 
   public:
     UniformBuffer(const Device& device, VkDeviceSize size) : m_buffers(create_buffers(device, size)) {}
+
+    UniformBuffer(const UniformBuffer&) = delete;
+    UniformBuffer& operator=(const UniformBuffer&) = delete;
+    UniformBuffer(UniformBuffer&&) = delete;
+    UniformBuffer& operator=(UniformBuffer&&) = delete;
 
     BufferHost& operator[](size_t index)
     {

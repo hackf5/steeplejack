@@ -3,14 +3,13 @@
 #include "device.h"
 #include "shadow_map_array.h"
 #include "shadow_render_pass.h"
-#include "util/no_copy_or_move.h"
 
 #include <vector>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-class ShadowFramebuffers : public NoCopyOrMove
+class ShadowFramebuffers
 {
   private:
     const Device& m_device;
@@ -23,6 +22,11 @@ class ShadowFramebuffers : public NoCopyOrMove
     ShadowFramebuffers(
         const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass);
     ~ShadowFramebuffers();
+
+    ShadowFramebuffers(const ShadowFramebuffers&) = delete;
+    ShadowFramebuffers& operator=(const ShadowFramebuffers&) = delete;
+    ShadowFramebuffers(ShadowFramebuffers&&) = delete;
+    ShadowFramebuffers& operator=(ShadowFramebuffers&&) = delete;
 
     size_t size() const
     {

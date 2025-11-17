@@ -2,7 +2,6 @@
 
 #include "glm_config.hpp"
 #include "render_scene.h"
-#include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
 #include "vulkan/graphics_pipeline.h"
