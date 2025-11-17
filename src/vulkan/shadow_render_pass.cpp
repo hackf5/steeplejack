@@ -57,7 +57,8 @@ VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
     return render_pass;
 }
 
-void ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer, uint32_t resolution) const
+ShadowRenderPass::Scope
+ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer, uint32_t resolution) const
 {
     VkClearValue clear_value = {};
     clear_value.depthStencil = {.depth = 1.0F, .stencil = 0};
@@ -71,4 +72,5 @@ void ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer frame
     render_pass_info.pClearValues = &clear_value;
 
     vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+    return Scope(command_buffer);
 }

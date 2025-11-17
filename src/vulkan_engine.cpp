@@ -84,7 +84,7 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
         }
 
         auto* shadow_framebuffer = m_context->shadow_framebuffers().at(spot_index);
-        m_context->shadow_render_pass().begin(command_buffer, shadow_framebuffer, resolution);
+        auto shadow_scope = m_context->shadow_render_pass().begin(command_buffer, shadow_framebuffer, resolution);
         m_context->shadow_pipeline().bind(command_buffer);
         m_context->graphics_buffers().bind(command_buffer);
 
@@ -94,8 +94,6 @@ void VulkanEngine::render(VkFramebuffer framebuffer)
 
         m_context->render_scene()
             .render_shadow(command_buffer, m_current_frame, m_context->shadow_pipeline(), spot_index);
-
-        m_context->shadow_render_pass().end(command_buffer);
     }
 
     m_context->shadow_mapping().write_memory_barrier(command_buffer);
