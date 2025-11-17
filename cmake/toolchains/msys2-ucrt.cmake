@@ -1,4 +1,4 @@
-# Toolchain settings for building with MSYS2 UCRT64 environment using GCC.
+# Toolchain settings for building with MSYS2 UCRT64 environment using Clang.
 # This toolchain is chained from vcpkg's toolchain via VCPKG_CHAINLOAD_TOOLCHAIN_FILE
 
 set(CMAKE_SYSTEM_NAME Windows)
@@ -8,10 +8,10 @@ set(VCPKG_TARGET_TRIPLET "x64-mingw-dynamic" CACHE STRING "")
 set(VCPKG_HOST_TRIPLET "x64-mingw-dynamic" CACHE STRING "")
 
 if(NOT DEFINED CMAKE_C_COMPILER)
-    set(CMAKE_C_COMPILER gcc)
+    set(CMAKE_C_COMPILER clang)
 endif()
 if(NOT DEFINED CMAKE_CXX_COMPILER)
-    set(CMAKE_CXX_COMPILER g++)
+    set(CMAKE_CXX_COMPILER clang++)
 endif()
 
 set(CMAKE_MAKE_PROGRAM ninja CACHE FILEPATH "Ninja executable" FORCE)

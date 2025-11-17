@@ -26,3 +26,4 @@ The build uses CMake presets under the hood (`ucrt-debug`/`ucrt-release`). Ensur
 
 - Dependencies come from `vcpkg.json`. With `VCPKG_ROOT` set (per the docs), the build script pulls them automatically.
 - VS Code users can select any of the MSYS2 presets in `CMakePresets.json` (e.g., `ucrt-debug`) if they prefer the IDE workflow.
+- The MSYS2 toolchain defaults to Clang (`cmake/toolchains/msys2-ucrt.cmake`); ensure `mingw-w64-ucrt-x86_64-clang` is installed per the setup guide.

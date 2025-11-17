@@ -55,6 +55,7 @@ Launch the **UCRT64 / MSYS2** profile for day-to-day development.
       mingw-w64-ucrt-x86_64-toolchain \
       mingw-w64-ucrt-x86_64-make \
       mingw-w64-ucrt-x86_64-pkgconf \
+      mingw-w64-ucrt-x86_64-clang \
       mingw-w64-ucrt-x86_64-cmake \
       mingw-w64-ucrt-x86_64-glslang \
       mingw-w64-ucrt-x86_64-clang-tools-extra
@@ -62,6 +63,7 @@ Launch the **UCRT64 / MSYS2** profile for day-to-day development.
 
 Notes:
 
+- `mingw-w64-ucrt-x86_64-clang` provides the Clang/LLVM compilers the CMake toolchain is configured to use.
 - `mingw-w64-ucrt-x86_64-glslang` provides the GLSL tools used to compile shaders during the build.
 - `mingw-w64-ucrt-x86_64-clang-tools-extra` provides `clang-format`, `clang-tidy`, and related tooling used by `./sj format` and `./sj lint`.
 
