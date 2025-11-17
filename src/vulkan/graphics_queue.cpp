@@ -116,7 +116,7 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
     assert(m_render_finished_semaphore == nullptr);
 
     m_current_frame = current_frame;
-    m_swapchain = swapchain;
+    m_swapchain = swapchain.vk();
 
     vkWaitForFences(
         m_device.vk(),
@@ -129,7 +129,7 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
 
     VkResult const result = vkAcquireNextImageKHR(
         m_device.vk(),
-        swapchain,
+        m_swapchain,
         std::numeric_limits<uint64_t>::max(),
         m_image_available[m_current_frame],
         nullptr,

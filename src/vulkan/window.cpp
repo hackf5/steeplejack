@@ -57,7 +57,7 @@ VkSurfaceKHR Window::create_window_surface(VkInstance instance) const
     return surface;
 }
 
-void Window::register_framebuffer_resize_callback(framebuffer_resize_callback_t callback)
+void Window::register_framebuffer_resize_callback(FramebufferResizeCallback callback)
 {
     m_framebuffer_resize_callback = std::move(callback);
 }

@@ -12,10 +12,10 @@ class ShadowRenderPass
     const Device& m_device;
     const VkRenderPass m_render_pass;
 
-    VkRenderPass create_render_pass(VkFormat depth_format) const;
+    [[nodiscard]] VkRenderPass create_render_pass(VkFormat depth_format) const;
 
   public:
-    ShadowRenderPass(const Device& device, VkFormat depth_format = VK_FORMAT_D32_SFLOAT);
+    explicit ShadowRenderPass(const Device& device, VkFormat depth_format = VK_FORMAT_D32_SFLOAT);
     ~ShadowRenderPass();
 
     ShadowRenderPass(const ShadowRenderPass&) = delete;
@@ -23,7 +23,7 @@ class ShadowRenderPass
     ShadowRenderPass(ShadowRenderPass&&) = delete;
     ShadowRenderPass& operator=(ShadowRenderPass&&) = delete;
 
-    operator VkRenderPass() const
+    [[nodiscard]] VkRenderPass vk() const
     {
         return m_render_pass;
     }

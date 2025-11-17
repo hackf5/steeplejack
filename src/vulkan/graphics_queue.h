@@ -4,7 +4,6 @@
 #include "framebuffers.h"
 #include "swapchain.h"
 
-#include <memory>
 #include <vector>
 
 namespace steeplejack
@@ -32,7 +31,7 @@ class GraphicsQueue
     VkSemaphore m_render_finished_semaphore = nullptr;
 
   public:
-    GraphicsQueue(const Device& device);
+    explicit GraphicsQueue(const Device& device);
     ~GraphicsQueue();
 
     GraphicsQueue(const GraphicsQueue&) = delete;

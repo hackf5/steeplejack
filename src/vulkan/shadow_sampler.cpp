@@ -14,7 +14,7 @@ ShadowSampler::~ShadowSampler()
     vkDestroySampler(m_device.vk(), m_sampler, nullptr);
 }
 
-VkSampler ShadowSampler::create_sampler()
+VkSampler ShadowSampler::create_sampler() const
 {
     spdlog::info("Creating ShadowSampler");
 

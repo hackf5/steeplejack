@@ -12,13 +12,18 @@ class ShadowSampler
     const Device& m_device;
     const VkSampler m_sampler;
 
-    VkSampler create_sampler();
+    [[nodiscard]] VkSampler create_sampler() const;
 
   public:
-    ShadowSampler(const Device& device);
+    explicit ShadowSampler(const Device& device);
     ~ShadowSampler();
 
-    operator VkSampler() const
+    ShadowSampler(const ShadowSampler&) = delete;
+    ShadowSampler& operator=(const ShadowSampler&) = delete;
+    ShadowSampler(ShadowSampler&&) = delete;
+    ShadowSampler& operator=(ShadowSampler&&) = delete;
+
+    [[nodiscard]] VkSampler vk() const
     {
         return m_sampler;
     }

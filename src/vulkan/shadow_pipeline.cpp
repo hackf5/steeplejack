@@ -79,7 +79,7 @@ VkPipeline ShadowPipeline::create_pipeline(
     pipeline_info.pDynamicState = &dynamic_state;
     pipeline_info.pDepthStencilState = &depth_stencil_state;
     pipeline_info.layout = m_pipeline_layout;
-    pipeline_info.renderPass = shadow_render_pass;
+    pipeline_info.renderPass = shadow_render_pass.vk();
     pipeline_info.subpass = 0;
     pipeline_info.basePipelineHandle = nullptr;
 

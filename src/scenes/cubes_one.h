@@ -1,10 +1,11 @@
+// NOLINTBEGIN
+
 #pragma once
 
 #include "glm_config.hpp"
 #include "render_scene.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_buffers.h"
-#include "vulkan/graphics_pipeline.h"
 #include "vulkan/material_factory.h"
 #include "vulkan/vertex.h"
 
@@ -23,7 +24,7 @@ class CubesOne final : public RenderScene
 
     typedef std::array<Vertex, VERTEXES_PER_FACE> face_t;
     typedef std::array<Vertex, VERTEXES_COUNT> vertexes_t;
-    typedef std::array<Vertex::index_t, INDEXES_COUNT> indexes_t;
+    typedef std::array<Vertex::IndexT, INDEXES_COUNT> indexes_t;
 
     const indexes_t m_indexes;
     const vertexes_t m_vertexes;
@@ -46,3 +47,5 @@ class CubesOne final : public RenderScene
     load(const Device& device, MaterialFactory& material_factory, GraphicsBuffers& graphics_buffers) override;
 };
 } // namespace steeplejack
+
+// NOLINTEND

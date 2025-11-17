@@ -2,24 +2,20 @@
 
 #include "adhoc_queues.h"
 #include "buffer/buffer.h"
-#include "buffer/buffer_host.h"
-#include "descriptor_set_layout.h"
 #include "device.h"
-#include "graphics_pipeline.h"
 #include "image.h"
 #include "image_view.h"
 #include "sampler.h"
-#include "swapchain.h"
 
 #include <memory>
+#include <span>
 #include <string>
-#include <vector>
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
-enum class TextureColorSpace
+enum class TextureColorSpace : std::uint8_t
 {
     Srgb,
     Linear
@@ -65,6 +61,7 @@ class Texture
     Texture& operator=(const Texture&) = delete;
     Texture(Texture&&) = delete;
     Texture& operator=(Texture&&) = delete;
+    ~Texture() = default;
 
     VkDescriptorImageInfo* descriptor()
     {

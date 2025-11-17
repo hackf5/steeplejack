@@ -22,7 +22,7 @@ Gui::Gui(const Window& window, const Device& device, const RenderPass& render_pa
 
     ImGui::StyleColorsDark();
 
-    ImGui_ImplGlfw_InitForVulkan(window, true);
+    ImGui_ImplGlfw_InitForVulkan(window.glfw(), true);
 
     ImGui_ImplVulkan_InitInfo init_info = {};
     init_info.Instance = device.instance();

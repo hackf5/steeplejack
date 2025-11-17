@@ -10,7 +10,7 @@
 
 namespace steeplejack
 {
-enum class VertexComponent
+enum class VertexComponent : std::uint8_t
 {
     Position,
     Normal,
@@ -20,9 +20,9 @@ enum class VertexComponent
 
 struct Vertex
 {
-    typedef uint32_t index_t;
+    using IndexT = uint32_t;
 
-    static const VkIndexType vk_index_type = VK_INDEX_TYPE_UINT32;
+    static constexpr VkIndexType kVkIndexType = VK_INDEX_TYPE_UINT32;
 
     static constexpr std::array<VertexComponent, 4> kAllComponents{
         VertexComponent::Position, VertexComponent::UV, VertexComponent::Color, VertexComponent::Normal};

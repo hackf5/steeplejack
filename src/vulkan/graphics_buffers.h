@@ -30,6 +30,7 @@ class GraphicsBuffers
     GraphicsBuffers& operator=(const GraphicsBuffers&) = delete;
     GraphicsBuffers(GraphicsBuffers&&) = delete;
     GraphicsBuffers& operator=(GraphicsBuffers&&) = delete;
+    ~GraphicsBuffers() = default;
 
     template <typename TIter> void load_vertexes(TIter begin, TIter end)
     {
@@ -51,8 +52,8 @@ class GraphicsBuffers
     template <typename TIter> void load_indexes(TIter begin, TIter end)
     {
         static_assert(
-            std::is_same_v<Vertex::index_t, std::decay_t<decltype(*begin)>>,
-            "TIter must be an iterator to Vertex::index_t");
+            std::is_same_v<Vertex::IndexT, std::decay_t<decltype(*begin)>>,
+            "TIter must be an iterator to Vertex::IndexT");
 
         m_index_buffer = std::make_unique<BufferGPU>(
             m_device,

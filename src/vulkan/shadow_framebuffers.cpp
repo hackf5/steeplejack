@@ -35,7 +35,7 @@ std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
 
         VkFramebufferCreateInfo framebuffer_info = {};
         framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebuffer_info.renderPass = shadow_render_pass;
+        framebuffer_info.renderPass = shadow_render_pass.vk();
         framebuffer_info.attachmentCount = 1;
         framebuffer_info.pAttachments = &attachment;
         framebuffer_info.width = shadow_map_array.resolution();

@@ -11,13 +11,13 @@ namespace steeplejack
 class Window
 {
   public:
-    typedef std::function<void(int, int)> framebuffer_resize_callback_t;
+    using FramebufferResizeCallback = std::function<void(int, int)>;
 
   private:
     int m_width;
     int m_height;
 
-    framebuffer_resize_callback_t m_framebuffer_resize_callback;
+    FramebufferResizeCallback m_framebuffer_resize_callback;
 
     GLFWwindow* m_window;
 
@@ -34,19 +34,19 @@ class Window
 
     VkSurfaceKHR create_window_surface(VkInstance instance) const;
 
-    operator GLFWwindow*() const
+    [[nodiscard]] GLFWwindow* glfw() const
     {
         return m_window;
     }
 
-    void register_framebuffer_resize_callback(framebuffer_resize_callback_t callback);
+    void register_framebuffer_resize_callback(FramebufferResizeCallback callback);
 
-    bool should_close() const
+    [[nodiscard]] bool should_close() const
     {
-        return glfwWindowShouldClose(m_window);
+        return glfwWindowShouldClose(m_window) != 0;
     }
 
-    void poll_events() const
+    void poll_events() const // NOLINT(readability-convert-member-functions-to-static)
     {
         glfwPollEvents();
     }
