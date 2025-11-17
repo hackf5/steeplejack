@@ -15,9 +15,9 @@ ShadowFramebuffers::ShadowFramebuffers(
 ShadowFramebuffers::~ShadowFramebuffers()
 {
     spdlog::info("Destroying Shadow Framebuffers");
-    for (auto framebuffer : m_framebuffers)
+    for (auto *framebuffer : m_framebuffers)
     {
-        vkDestroyFramebuffer(m_device, framebuffer, nullptr);
+        vkDestroyFramebuffer(m_device.vk(), framebuffer, nullptr);
     }
 }
 
@@ -31,7 +31,7 @@ std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
 
     for (size_t i = 0; i < shadow_map_array.layers(); ++i)
     {
-        auto attachment = shadow_map_array.layer_view(i);
+        auto* attachment = shadow_map_array.layer_view(i);
 
         VkFramebufferCreateInfo framebuffer_info = {};
         framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
@@ -43,7 +43,7 @@ std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
         framebuffer_info.layers = 1;
 
         VkFramebuffer framebuffer = nullptr;
-        if (vkCreateFramebuffer(m_device, &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
+        if (vkCreateFramebuffer(m_device.vk(), &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create shadow framebuffer");
         }

@@ -15,7 +15,7 @@ RenderPass::RenderPass(const Device& device, const Swapchain& swapchain, const D
 RenderPass::~RenderPass()
 {
     spdlog::info("Destroying Render Pass");
-    vkDestroyRenderPass(m_device, m_render_pass, nullptr);
+    vkDestroyRenderPass(m_device.vk(), m_render_pass, nullptr);
 }
 
 VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) const
@@ -93,7 +93,7 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) con
     render_pass_info.pDependencies = &dependency;
 
     VkRenderPass render_pass = nullptr;
-    if (vkCreateRenderPass(m_device, &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
+    if (vkCreateRenderPass(m_device.vk(), &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create render pass");
     }

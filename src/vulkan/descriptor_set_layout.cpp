@@ -19,7 +19,7 @@ DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::vector<Descr
 
 DescriptorSetLayout::~DescriptorSetLayout()
 {
-    vkDestroyDescriptorSetLayout(m_device, m_descriptor_set_layout, nullptr);
+    vkDestroyDescriptorSetLayout(m_device.vk(), m_descriptor_set_layout, nullptr);
 }
 
 VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
@@ -34,7 +34,7 @@ VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
     pipeline_layout_info.pPushConstantRanges = nullptr;
 
     VkPipelineLayout pipeline_layout = nullptr;
-    if (vkCreatePipelineLayout(m_device, &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS)
+    if (vkCreatePipelineLayout(m_device.vk(), &pipeline_layout_info, nullptr, &pipeline_layout) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline layout");
     }
@@ -63,7 +63,7 @@ VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
     layout_info.pBindings = bindings.data();
 
     VkDescriptorSetLayout layout = nullptr;
-    if (vkCreateDescriptorSetLayout(m_device, &layout_info, nullptr, &layout) != VK_SUCCESS)
+    if (vkCreateDescriptorSetLayout(m_device.vk(), &layout_info, nullptr, &layout) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create descriptor set layout");
     }

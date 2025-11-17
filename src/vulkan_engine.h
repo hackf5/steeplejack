@@ -22,7 +22,7 @@ class VulkanEngine : NoCopyOrMove
 
     void next_frame()
     {
-        m_current_frame = (m_current_frame + 1) % Device::max_frames_in_flight;
+        m_current_frame = (m_current_frame + 1) % Device::kMaxFramesInFlight;
     }
 
   public:

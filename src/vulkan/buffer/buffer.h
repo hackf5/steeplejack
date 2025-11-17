@@ -3,7 +3,6 @@
 #include "util/no_copy_or_move.h"
 #include "vulkan/device.h"
 
-#include <vector>
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
@@ -14,9 +13,9 @@ class Buffer : NoCopyOrMove
   protected:
     struct AllocationInfo
     {
-        const VkBuffer buffer;
-        const VmaAllocation allocation;
-        const VmaAllocationInfo info;
+        VkBuffer buffer;
+        VmaAllocation allocation;
+        VmaAllocationInfo info;
     };
 
     const VmaAllocator m_allocator;
@@ -25,14 +24,14 @@ class Buffer : NoCopyOrMove
     const VmaMemoryUsage m_memory_usage;
     const VmaAllocationCreateFlags m_allocation_flags;
 
-    const AllocationInfo m_allocation_info;
+    AllocationInfo m_allocation_info;
 
     const VkDeviceSize m_buffer_size; // requested buffer size used for descriptors
 
     VkDescriptorBufferInfo m_descriptor;
 
     AllocationInfo create_allocation_info(VkDeviceSize size);
-    VkDescriptorBufferInfo create_descriptor_info() const;
+    [[nodiscard]] VkDescriptorBufferInfo create_descriptor_info() const;
 
   public:
     Buffer(

@@ -11,7 +11,7 @@ ShadowSampler::ShadowSampler(const Device& device) : m_device(device), m_sampler
 ShadowSampler::~ShadowSampler()
 {
     spdlog::info("Destroying ShadowSampler");
-    vkDestroySampler(m_device, m_sampler, nullptr);
+    vkDestroySampler(m_device.vk(), m_sampler, nullptr);
 }
 
 VkSampler ShadowSampler::create_sampler()
@@ -36,7 +36,7 @@ VkSampler ShadowSampler::create_sampler()
     sampler_info.maxLod = 0.0F;
 
     VkSampler sampler = nullptr;
-    if (vkCreateSampler(m_device, &sampler_info, nullptr, &sampler) != VK_SUCCESS)
+    if (vkCreateSampler(m_device.vk(), &sampler_info, nullptr, &sampler) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create shadow sampler");
     }

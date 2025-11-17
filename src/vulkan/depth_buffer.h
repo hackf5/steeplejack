@@ -6,7 +6,6 @@
 #include "swapchain.h"
 #include "util/no_copy_or_move.h"
 
-#include <memory>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -20,12 +19,12 @@ class DepthBuffer : public NoCopyOrMove
   public:
     DepthBuffer(const Device& device, const Swapchain& swapchain);
 
-    VkImageView image_view() const
+    [[nodiscard]] VkImageView image_view() const
     {
         return m_image_view;
     }
 
-    VkFormat format() const
+    [[nodiscard]] VkFormat format() const
     {
         return m_image.image_info().format;
     }

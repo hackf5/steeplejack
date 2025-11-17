@@ -23,7 +23,7 @@ class BufferGPU : public Buffer
 
     void copy_from(const BufferHost& buffer) const
     {
-        auto command_buffer = m_adhoc_queues.transfer().begin();
+        auto *command_buffer = m_adhoc_queues.transfer().begin();
 
         VkBufferCopy copy_region = {};
         copy_region.size = buffer.size();

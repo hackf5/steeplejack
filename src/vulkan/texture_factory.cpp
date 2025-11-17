@@ -9,7 +9,7 @@
 using namespace steeplejack;
 
 TextureFactory::TextureFactory(const Device& device, const Sampler& sampler, const AdhocQueues& adhoc_queues) :
-    m_device(device), m_sampler(sampler), m_adhoc_queues(adhoc_queues), m_textures()
+    m_device(device), m_sampler(sampler), m_adhoc_queues(adhoc_queues)
 {
 }
 

@@ -27,7 +27,7 @@ Gui::Gui(const Window& window, const Device& device, const RenderPass& render_pa
     ImGui_ImplVulkan_InitInfo init_info = {};
     init_info.Instance = device.instance();
     init_info.PhysicalDevice = device.physical_device();
-    init_info.Device = device;
+    init_info.Device = device.vk();
     init_info.QueueFamily = device.graphics_queue_index();
     init_info.Queue = device.graphics_queue();
     init_info.RenderPass = render_pass;
@@ -36,8 +36,8 @@ Gui::Gui(const Window& window, const Device& device, const RenderPass& render_pa
     init_info.PipelineCache = nullptr;
     init_info.Allocator = nullptr;
 
-    init_info.MinImageCount = Device::max_frames_in_flight;
-    init_info.ImageCount = Device::max_frames_in_flight;
+    init_info.MinImageCount = Device::kMaxFramesInFlight;
+    init_info.ImageCount = Device::kMaxFramesInFlight;
     init_info.CheckVkResultFn = check_vk_result;
     init_info.MSAASamples = device.msaa_samples();
 
@@ -61,7 +61,7 @@ VkDescriptorPool Gui::create_descriptor_pool()
     pool_info.pPoolSizes = pool_sizes.data();
 
     VkDescriptorPool descriptor_pool = nullptr;
-    if (vkCreateDescriptorPool(m_device, &pool_info, nullptr, &descriptor_pool) != VK_SUCCESS)
+    if (vkCreateDescriptorPool(m_device.vk(), &pool_info, nullptr, &descriptor_pool) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create descriptor pool");
     }
@@ -77,7 +77,7 @@ Gui::~Gui()
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
 
-    vkDestroyDescriptorPool(m_device, m_descriptor_pool, nullptr);
+    vkDestroyDescriptorPool(m_device.vk(), m_descriptor_pool, nullptr);
 }
 
 void Gui::check_vk_result(VkResult result)

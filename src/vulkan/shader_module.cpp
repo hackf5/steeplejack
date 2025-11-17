@@ -15,7 +15,7 @@ ShaderModule::ShaderModule(const Device& device, std::string name) :
 ShaderModule::~ShaderModule()
 {
     spdlog::info("Destroying Shader Module: {}", m_name);
-    vkDestroyShaderModule(m_device, m_shader_module, nullptr);
+    vkDestroyShaderModule(m_device.vk(), m_shader_module, nullptr);
 }
 
 std::vector<char> ShaderModule::read_file(const std::string& name)
@@ -50,7 +50,7 @@ VkShaderModule ShaderModule::create_shader_module()
     shader_module_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
     VkShaderModule shader_module = nullptr;
-    if (vkCreateShaderModule(m_device, &shader_module_info, nullptr, &shader_module) != VK_SUCCESS)
+    if (vkCreateShaderModule(m_device.vk(), &shader_module_info, nullptr, &shader_module) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create shader module for " + m_name + " shader");
     }

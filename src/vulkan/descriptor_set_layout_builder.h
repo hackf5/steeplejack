@@ -4,7 +4,6 @@
 #include "descriptor_set_layout_info.h"
 #include "device.h"
 
-#include <algorithm>
 #include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>

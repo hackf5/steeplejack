@@ -6,8 +6,6 @@
 #include "spdlog/spdlog.h"
 #include "vertex.h"
 
-#include <array>
-
 using namespace steeplejack;
 
 ShadowPipeline::ShadowPipeline(
@@ -26,8 +24,8 @@ ShadowPipeline::ShadowPipeline(
 ShadowPipeline::~ShadowPipeline()
 {
     spdlog::info("Destroying Shadow Pipeline");
-    vkDestroyPipeline(m_device, m_pipeline, nullptr);
-    vkDestroyPipelineLayout(m_device, m_pipeline_layout, nullptr);
+    vkDestroyPipeline(m_device.vk(), m_pipeline, nullptr);
+    vkDestroyPipelineLayout(m_device.vk(), m_pipeline_layout, nullptr);
 }
 
 std::unique_ptr<DescriptorSetLayout> ShadowPipeline::create_descriptor_set_layout() const
@@ -86,7 +84,7 @@ VkPipeline ShadowPipeline::create_pipeline(
     pipeline_info.basePipelineHandle = nullptr;
 
     VkPipeline pipeline = nullptr;
-    if (vkCreateGraphicsPipelines(m_device, nullptr, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
+    if (vkCreateGraphicsPipelines(m_device.vk(), nullptr, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create pipeline");
     }
@@ -97,7 +95,7 @@ VkPipeline ShadowPipeline::create_pipeline(
 PFN_vkCmdPushDescriptorSetKHR ShadowPipeline::fetch_vkCmdPushDescriptorSetKHR()
 {
     auto result =
-        reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(vkGetDeviceProcAddr(m_device, "vkCmdPushDescriptorSetKHR"));
+        reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(vkGetDeviceProcAddr(m_device.vk(), "vkCmdPushDescriptorSetKHR"));
     if (result == nullptr)
     {
         throw std::runtime_error("Failed to load vkCmdPushDescriptorSetKHR");

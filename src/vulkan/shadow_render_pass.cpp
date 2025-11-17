@@ -14,7 +14,7 @@ ShadowRenderPass::ShadowRenderPass(const Device& device, VkFormat depth_format) 
 ShadowRenderPass::~ShadowRenderPass()
 {
     spdlog::info("Destroying Shadow Render Pass");
-    vkDestroyRenderPass(m_device, m_render_pass, nullptr);
+    vkDestroyRenderPass(m_device.vk(), m_render_pass, nullptr);
 }
 
 VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
@@ -48,8 +48,8 @@ VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
     render_pass_info.pSubpasses = &subpass;
     render_pass_info.dependencyCount = 0;
 
-    VkRenderPass render_pass;
-    if (vkCreateRenderPass(m_device, &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
+    VkRenderPass render_pass = nullptr;
+    if (vkCreateRenderPass(m_device.vk(), &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create render pass");
     }

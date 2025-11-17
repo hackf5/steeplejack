@@ -28,10 +28,9 @@ class Framebuffers : NoCopyOrMove
         const Swapchain& swapchain,
         const RenderPass& render_pass,
         const DepthBuffer& depth_buffer);
-    Framebuffers(const Framebuffers&) = delete;
     ~Framebuffers();
 
-    VkFramebuffer get(uint32_t image_index) const
+    [[nodiscard]] VkFramebuffer get(uint32_t image_index) const
     {
         return m_framebuffers[image_index];
     }

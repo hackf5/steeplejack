@@ -5,7 +5,6 @@
 #include "vulkan/device.h"
 
 #include <array>
-#include <functional>
 #include <memory>
 
 namespace steeplejack
@@ -13,13 +12,13 @@ namespace steeplejack
 class UniformBuffer : NoCopyOrMove
 {
   private:
-    typedef std::array<std::unique_ptr<BufferHost>, Device::max_frames_in_flight> buffers_t;
+    using BuffersT = std::array<std::unique_ptr<BufferHost>, Device::kMaxFramesInFlight>;
 
-    buffers_t m_buffers;
+    BuffersT m_buffers;
 
-    buffers_t create_buffers(const Device& device, VkDeviceSize size)
+    static BuffersT create_buffers(const Device& device, VkDeviceSize size)
     {
-        buffers_t buffers;
+        BuffersT buffers;
         for (auto& buffer : buffers)
         {
             buffer = std::make_unique<BufferHost>(device, size, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT);
@@ -33,12 +32,12 @@ class UniformBuffer : NoCopyOrMove
 
     BufferHost& operator[](size_t index)
     {
-        return *m_buffers[index];
+        return *m_buffers.at(index);
     }
 
     const BufferHost& operator[](size_t index) const
     {
-        return *m_buffers[index];
+        return *m_buffers.at(index);
     }
 };
 } // namespace steeplejack

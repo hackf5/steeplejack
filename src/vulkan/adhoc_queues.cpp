@@ -15,8 +15,8 @@ AdhocQueue::AdhocQueue(const Device& device, QueueFamily family) :
 AdhocQueue::~AdhocQueue()
 {
     spdlog::info("Destroying Buffer Transfer Queue");
-    vkFreeCommandBuffers(m_device, m_command_pool, 1, &m_command_buffer);
-    vkDestroyCommandPool(m_device, m_command_pool, nullptr);
+    vkFreeCommandBuffers(m_device.vk(), m_command_pool, 1, &m_command_buffer);
+    vkDestroyCommandPool(m_device.vk(), m_command_pool, nullptr);
 }
 
 VkQueue AdhocQueue::get_queue(QueueFamily family) const
@@ -57,7 +57,7 @@ VkCommandPool AdhocQueue::create_command_pool(QueueFamily family)
     pool_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
     VkCommandPool command_pool = nullptr;
-    if (vkCreateCommandPool(m_device, &pool_info, nullptr, &command_pool) != VK_SUCCESS)
+    if (vkCreateCommandPool(m_device.vk(), &pool_info, nullptr, &command_pool) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create buffer transfer queue command pool");
     }
@@ -74,7 +74,7 @@ VkCommandBuffer AdhocQueue::create_command_buffer()
     alloc_info.commandBufferCount = 1;
 
     VkCommandBuffer command_buffer = nullptr;
-    if (vkAllocateCommandBuffers(m_device, &alloc_info, &command_buffer) != VK_SUCCESS)
+    if (vkAllocateCommandBuffers(m_device.vk(), &alloc_info, &command_buffer) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to allocate command buffers");
     }

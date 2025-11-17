@@ -4,7 +4,6 @@
 #include "util/no_copy_or_move.h"
 #include "window.h"
 
-#include <memory>
 #include <vma/vk_mem_alloc.h>
 
 namespace steeplejack
@@ -34,76 +33,83 @@ class Device : NoCopyOrMove
 
     ~Device();
 
-    static const uint32_t max_frames_in_flight = 2;
+    static const uint32_t kMaxFramesInFlight = 2;
 
-    operator const vkb::Device&() const
+    [[nodiscard]] const vkb::Device&  vkb() const
     {
         return m_device;
     }
 
-    operator VkDevice() const
+    [[nodiscard]] VkDevice  vk() const
     {
         return m_device.device;
     }
 
-    VkPhysicalDeviceProperties properties() const
+    [[nodiscard]] VkPhysicalDeviceProperties properties() const
     {
         return m_device.physical_device.properties;
     }
 
-    VkSampleCountFlagBits msaa_samples() const
+    [[nodiscard]] VkSampleCountFlagBits msaa_samples() const
     {
         auto counts = m_device.physical_device.properties.limits.framebufferColorSampleCounts &
             m_device.physical_device.properties.limits.framebufferDepthSampleCounts;
-        if (counts & VK_SAMPLE_COUNT_64_BIT)
+        if ((counts & VK_SAMPLE_COUNT_64_BIT) != 0U)
+        {
             return VK_SAMPLE_COUNT_64_BIT;
-        if (counts & VK_SAMPLE_COUNT_32_BIT)
+        }
+        if ((counts & VK_SAMPLE_COUNT_32_BIT) != 0U) {
             return VK_SAMPLE_COUNT_32_BIT;
-        if (counts & VK_SAMPLE_COUNT_16_BIT)
+}
+        if ((counts & VK_SAMPLE_COUNT_16_BIT) != 0U) {
             return VK_SAMPLE_COUNT_16_BIT;
-        if (counts & VK_SAMPLE_COUNT_8_BIT)
+}
+        if ((counts & VK_SAMPLE_COUNT_8_BIT) != 0U) {
             return VK_SAMPLE_COUNT_8_BIT;
-        if (counts & VK_SAMPLE_COUNT_4_BIT)
+}
+        if ((counts & VK_SAMPLE_COUNT_4_BIT) != 0U) {
             return VK_SAMPLE_COUNT_4_BIT;
-        if (counts & VK_SAMPLE_COUNT_2_BIT)
+}
+        if ((counts & VK_SAMPLE_COUNT_2_BIT) != 0U) {
             return VK_SAMPLE_COUNT_2_BIT;
+}
 
         return VK_SAMPLE_COUNT_1_BIT;
     }
 
-    VkInstance instance() const
+    [[nodiscard]] VkInstance instance() const
     {
         return m_instance.instance;
     }
 
-    VkPhysicalDevice physical_device() const
+    [[nodiscard]] VkPhysicalDevice physical_device() const
     {
         return m_device.physical_device;
     }
 
-    VkQueue graphics_queue() const
+    [[nodiscard]] VkQueue graphics_queue() const
     {
         return m_graphics_queue;
     }
-    uint32_t graphics_queue_index() const
+    [[nodiscard]] uint32_t graphics_queue_index() const
     {
         return m_device.get_queue_index(vkb::QueueType::graphics).value();
     }
 
-    VkQueue present_queue() const
+    [[nodiscard]] VkQueue present_queue() const
     {
         return m_present_queue;
     }
-    uint32_t present_queue_index() const
+    [[nodiscard]] uint32_t present_queue_index() const
     {
         return m_device.get_queue_index(vkb::QueueType::present).value();
     }
 
-    VkQueue transfer_queue() const
+    [[nodiscard]] VkQueue transfer_queue() const
     {
         return m_transfer_queue;
     }
-    uint32_t transfer_queue_index() const
+    [[nodiscard]] uint32_t transfer_queue_index() const
     {
         return m_device.get_queue_index(vkb::QueueType::transfer).value();
     }
@@ -113,7 +119,7 @@ class Device : NoCopyOrMove
         vkDeviceWaitIdle(m_device);
     }
 
-    VmaAllocator allocator() const
+    [[nodiscard]] VmaAllocator allocator() const
     {
         return m_allocator;
     }

@@ -7,7 +7,11 @@
       "command": "build",
       "targets": [
         "steeplejack"
-      ]
-    }
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
   ]
 }

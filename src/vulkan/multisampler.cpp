@@ -1,7 +1,5 @@
 #include "multisampler.h"
 
-#include "spdlog/spdlog.h"
-
 using namespace steeplejack;
 
 Multisampler::Multisampler(const Device& device, const Swapchain& swapchain) :

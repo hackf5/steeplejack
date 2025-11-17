@@ -5,7 +5,6 @@
 #include "vulkan/device.h"
 
 #include <array>
-#include <memory>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -27,12 +26,12 @@ class DescriptorSetLayout : NoCopyOrMove
     DescriptorSetLayout(const Device& device, std::vector<DescriptorSetLayoutInfo> layout_infos);
     ~DescriptorSetLayout();
 
-    operator VkDescriptorSetLayout() const
+    explicit operator VkDescriptorSetLayout() const
     {
         return m_descriptor_set_layout;
     }
 
-    VkPipelineLayout create_pipeline_layout() const;
+    [[nodiscard]] VkPipelineLayout create_pipeline_layout() const;
 
     void reset_writes();
 

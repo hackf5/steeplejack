@@ -11,7 +11,7 @@ GraphicsQueue::GraphicsQueue(const Device& device) :
     m_graphics_queue(device.graphics_queue()),
     m_command_pool(create_command_pool()),
     m_command_buffers(create_command_buffers()),
-    m_image_available(create_semaphores(Device::max_frames_in_flight)),
+    m_image_available(create_semaphores(Device::kMaxFramesInFlight)),
     m_in_flight_fences(create_fences())
 {
 }
@@ -22,15 +22,15 @@ GraphicsQueue::~GraphicsQueue()
 
     for (auto* fence : m_in_flight_fences)
     {
-        vkDestroyFence(m_device, fence, nullptr);
+        vkDestroyFence(m_device.vk(), fence, nullptr);
     }
 
     for (auto* semaphore : m_image_available)
     {
-        vkDestroySemaphore(m_device, semaphore, nullptr);
+        vkDestroySemaphore(m_device.vk(), semaphore, nullptr);
     }
 
-    vkDestroyCommandPool(m_device, m_command_pool, nullptr);
+    vkDestroyCommandPool(m_device.vk(), m_command_pool, nullptr);
 }
 
 VkCommandPool GraphicsQueue::create_command_pool()
@@ -43,7 +43,7 @@ VkCommandPool GraphicsQueue::create_command_pool()
     create_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
 
     VkCommandPool command_pool = nullptr;
-    if (vkCreateCommandPool(m_device, &create_info, nullptr, &command_pool) != VK_SUCCESS)
+    if (vkCreateCommandPool(m_device.vk(), &create_info, nullptr, &command_pool) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create command pool");
     }
@@ -59,10 +59,10 @@ std::vector<VkCommandBuffer> GraphicsQueue::create_command_buffers()
     allocate_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
     allocate_info.commandPool = m_command_pool;
     allocate_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocate_info.commandBufferCount = Device::max_frames_in_flight;
+    allocate_info.commandBufferCount = Device::kMaxFramesInFlight;
 
     std::vector<VkCommandBuffer> command_buffers(allocate_info.commandBufferCount);
-    if (vkAllocateCommandBuffers(m_device, &allocate_info, command_buffers.data()) != VK_SUCCESS)
+    if (vkAllocateCommandBuffers(m_device.vk(), &allocate_info, command_buffers.data()) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to allocate command buffers");
     }
@@ -80,7 +80,7 @@ std::vector<VkSemaphore> GraphicsQueue::create_semaphores(size_t count)
         VkSemaphoreCreateInfo create_info{};
         create_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-        if (vkCreateSemaphore(m_device, &create_info, nullptr, &semaphore) != VK_SUCCESS)
+        if (vkCreateSemaphore(m_device.vk(), &create_info, nullptr, &semaphore) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create semaphore");
         }
@@ -93,14 +93,14 @@ std::vector<VkFence> GraphicsQueue::create_fences()
 {
     spdlog::info("Creating Fences");
 
-    std::vector<VkFence> fences(Device::max_frames_in_flight);
+    std::vector<VkFence> fences(Device::kMaxFramesInFlight);
     for (auto& fence : fences)
     {
         VkFenceCreateInfo create_info{};
         create_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
         create_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-        if (vkCreateFence(m_device, &create_info, nullptr, &fence) != VK_SUCCESS)
+        if (vkCreateFence(m_device.vk(), &create_info, nullptr, &fence) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create fence");
         }
@@ -118,12 +118,12 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
     m_current_frame = current_frame;
     m_swapchain = swapchain;
 
-    vkWaitForFences(m_device, 1, &m_in_flight_fences[m_current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
+    vkWaitForFences(m_device.vk(), 1, &m_in_flight_fences[m_current_frame], VK_TRUE, std::numeric_limits<uint64_t>::max());
 
-    vkResetFences(m_device, 1, &m_in_flight_fences[m_current_frame]);
+    vkResetFences(m_device.vk(), 1, &m_in_flight_fences[m_current_frame]);
 
     VkResult const result = vkAcquireNextImageKHR(
-        m_device,
+        m_device.vk(),
         swapchain,
         std::numeric_limits<uint64_t>::max(),
         m_image_available[m_current_frame],
@@ -192,7 +192,7 @@ void GraphicsQueue::submit_command() const
     submit_info.signalSemaphoreCount = 1;
     submit_info.pSignalSemaphores = signal_semaphores.data();
 
-    vkResetFences(m_device, 1, &m_in_flight_fences[m_current_frame]);
+    vkResetFences(m_device.vk(), 1, &m_in_flight_fences[m_current_frame]);
 
     if (vkQueueSubmit(m_graphics_queue, 1, &submit_info, m_in_flight_fences[m_current_frame]) != VK_SUCCESS)
     {

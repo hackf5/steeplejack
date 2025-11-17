@@ -16,7 +16,7 @@ ImageView::~ImageView()
 {
     spdlog::info("Destroying Image View");
 
-    vkDestroyImageView(m_device, m_image_view, nullptr);
+    vkDestroyImageView(m_device.vk(), m_image_view, nullptr);
 }
 
 VkImageView ImageView::create_image_view(VkImageAspectFlags aspect_mask, std::optional<uint32_t> base_layer)
@@ -47,7 +47,7 @@ VkImageView ImageView::create_image_view(VkImageAspectFlags aspect_mask, std::op
     image_view_info.subresourceRange.layerCount = base_layer.has_value() ? 1 : array_layers;
 
     VkImageView image_view = nullptr;
-    if (vkCreateImageView(m_device, &image_view_info, nullptr, &image_view) != VK_SUCCESS)
+    if (vkCreateImageView(m_device.vk(), &image_view_info, nullptr, &image_view) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create image view");
     }

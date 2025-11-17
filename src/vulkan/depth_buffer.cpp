@@ -1,7 +1,5 @@
 #include "depth_buffer.h"
 
-#include "spdlog/spdlog.h"
-
 using namespace steeplejack;
 
 DepthBuffer::DepthBuffer(const Device& device, const Swapchain& swapchain) :

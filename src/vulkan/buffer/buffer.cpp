@@ -1,7 +1,5 @@
 #include "buffer.h"
 
-#include "spdlog/spdlog.h"
-
 using namespace steeplejack;
 
 Buffer::Buffer(

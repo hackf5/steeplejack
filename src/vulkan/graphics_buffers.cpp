@@ -1,7 +1,6 @@
 #include "graphics_buffers.h"
 
 #include <array>
-#include <type_traits>
 
 using namespace steeplejack;
 

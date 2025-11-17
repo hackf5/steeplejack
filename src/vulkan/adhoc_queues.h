@@ -3,7 +3,7 @@
 #include "device.h"
 #include "util/no_copy_or_move.h"
 
-#include <vector>
+#include <cstdint>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -11,7 +11,7 @@ namespace steeplejack
 class AdhocQueue : NoCopyOrMove
 {
   public:
-    enum QueueFamily
+    enum QueueFamily : std::uint8_t
     {
         graphics,
         present,
@@ -27,15 +27,15 @@ class AdhocQueue : NoCopyOrMove
     const VkCommandPool m_command_pool;
     const VkCommandBuffer m_command_buffer;
 
-    VkQueue get_queue(QueueFamily family) const;
-    uint32_t get_queue_index(QueueFamily family) const;
+    [[nodiscard]] VkQueue get_queue(QueueFamily family) const;
+    [[nodiscard]] uint32_t get_queue_index(QueueFamily family) const;
     VkCommandPool create_command_pool(QueueFamily family);
     VkCommandBuffer create_command_buffer();
 
   public:
     ~AdhocQueue();
 
-    VkCommandBuffer begin() const;
+    [[nodiscard]] VkCommandBuffer begin() const;
     void submit_and_wait() const;
 };
 
@@ -54,15 +54,15 @@ class AdhocQueues : NoCopyOrMove
     {
     }
 
-    const AdhocQueue& transfer() const
+    [[nodiscard]] const AdhocQueue& transfer() const
     {
         return m_transfer_queue;
     }
-    const AdhocQueue& graphics() const
+    [[nodiscard]] const AdhocQueue& graphics() const
     {
         return m_graphics_queue;
     }
-    const AdhocQueue& present() const
+    [[nodiscard]] const AdhocQueue& present() const
     {
         return m_present_queue;
     }

@@ -20,7 +20,7 @@ Framebuffers::~Framebuffers()
     spdlog::info("Destroying Framebuffers");
     for (auto* framebuffer : m_framebuffers)
     {
-        vkDestroyFramebuffer(m_device, framebuffer, nullptr);
+        vkDestroyFramebuffer(m_device.vk(), framebuffer, nullptr);
     }
 }
 
@@ -50,7 +50,7 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
         framebuffer_info.layers = 1;
 
         VkFramebuffer framebuffer = nullptr;
-        if (vkCreateFramebuffer(m_device, &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
+        if (vkCreateFramebuffer(m_device.vk(), &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create framebuffer");
         }

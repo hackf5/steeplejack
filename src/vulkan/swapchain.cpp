@@ -21,12 +21,12 @@ Swapchain::~Swapchain()
 
     for (auto* semaphore : m_render_finished)
     {
-        vkDestroySemaphore(m_device, semaphore, nullptr);
+        vkDestroySemaphore(m_device.vk(), semaphore, nullptr);
     }
 
     for (auto* image_view : m_swapchain_image_views)
     {
-        vkDestroyImageView(m_device, image_view, nullptr);
+        vkDestroyImageView(m_device.vk(), image_view, nullptr);
     }
 
     vkb::destroy_swapchain(m_swapchain);
@@ -36,7 +36,7 @@ vkb::Swapchain Swapchain::create_swapchain()
 {
     spdlog::info("Creating Swapchain");
 
-    vkb::SwapchainBuilder swapchain_builder{m_device};
+    vkb::SwapchainBuilder swapchain_builder{m_device.vkb()};
 
     auto swapchain_ret = swapchain_builder.set_desired_present_mode(VK_PRESENT_MODE_MAILBOX_KHR).build();
     if (!swapchain_ret)
@@ -85,7 +85,7 @@ std::vector<VkSemaphore> Swapchain::create_semaphores(size_t count)
         VkSemaphoreCreateInfo create_info{};
         create_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
-        if (vkCreateSemaphore(m_device, &create_info, nullptr, &semaphore) != VK_SUCCESS)
+        if (vkCreateSemaphore(m_device.vk(), &create_info, nullptr, &semaphore) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create semaphore");
         }
