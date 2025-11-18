@@ -7,6 +7,14 @@
 #include <string>
 #include <unordered_map>
 
+namespace tinygltf
+{
+class Model;
+struct Material;
+struct TextureInfo;
+struct NormalTextureInfo;
+} // namespace tinygltf
+
 namespace steeplejack
 {
 class MaterialFactory
@@ -15,6 +23,17 @@ class MaterialFactory
     const Device& m_device;
     TextureFactory& m_textures;
     std::unordered_map<std::string, std::unique_ptr<Material>> m_materials;
+
+    template <typename TexInfo, typename Setter>
+    void load_texture_if_present(
+        const tinygltf::Model& model,
+        const std::string& name,
+        const std::string& gltf_relpath,
+        const TexInfo& tex_info,
+        const std::string& suffix,
+        TextureColorSpace color_space,
+        Setter&& setter) const;
+    void apply_defaults(Material& target);
 
   public:
     MaterialFactory(const Device& device, TextureFactory& textures);

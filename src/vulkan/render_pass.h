@@ -3,6 +3,7 @@
 #include "depth_buffer.h"
 #include "device.h"
 #include "render_pass_scope.h"
+
 #include <cassert>
 
 namespace steeplejack
@@ -18,7 +19,6 @@ class RenderPass
     [[nodiscard]] VkRenderPass create_render_pass(const DepthBuffer& depth_buffer) const;
 
   public:
-
     RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer);
     ~RenderPass();
 

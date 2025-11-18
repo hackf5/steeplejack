@@ -5,8 +5,8 @@
 #include "vulkan/buffer/uniform_buffer_array.h"
 #include "vulkan/descriptor_set_layout.h"
 #include "vulkan/device.h"
-#include <array>
 
+#include <array>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack

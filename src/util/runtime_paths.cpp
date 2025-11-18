@@ -9,10 +9,10 @@
 #include <unistd.h>
 #endif
 
+#include "spdlog/spdlog.h"
+
 #include <array>
 #include <filesystem>
-
-#include "spdlog/spdlog.h"
 
 namespace steeplejack
 {

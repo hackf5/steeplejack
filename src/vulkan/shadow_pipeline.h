@@ -25,7 +25,8 @@ class ShadowPipeline
         const std::string& vertex_shader,
         const std::string& fragment_shader) const;
 
-    [[nodiscard]] PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR(); // NOLINT(readability-identifier-naming)
+    [[nodiscard]] PFN_vkCmdPushDescriptorSetKHR
+    fetch_vkCmdPushDescriptorSetKHR(); // NOLINT(readability-identifier-naming)
 
   public:
     ShadowPipeline(

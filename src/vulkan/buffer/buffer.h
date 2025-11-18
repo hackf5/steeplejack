@@ -6,7 +6,6 @@
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
-
 namespace steeplejack
 {
 class Buffer

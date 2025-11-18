@@ -51,7 +51,7 @@ class Camera
         m_uniform_buffers(device, sizeof(UniformBlock)),
         m_position(glm::zero<glm::vec3>()),
         m_target(glm::zero<glm::vec3>()),
-        m_uniform_block({.proj=glm::identity<glm::mat4>(), .view=glm::identity<glm::mat4>()})
+        m_uniform_block({.proj = glm::identity<glm::mat4>(), .view = glm::identity<glm::mat4>()})
     {
     }
 

@@ -8,9 +8,10 @@
 
 namespace steeplejack::pipeline
 {
-inline constexpr VkViewport kPlaceholderViewport{.x=0, .y=0, .width=1, .height=1, .minDepth=0.0F, .maxDepth=1.0F};
+inline constexpr VkViewport kPlaceholderViewport{
+    .x = 0, .y = 0, .width = 1, .height = 1, .minDepth = 0.0F, .maxDepth = 1.0F};
 
-inline constexpr VkRect2D kPlaceholderScissor{.offset{.x=0, .y=0}, .extent {.width=1, .height=1}};
+inline constexpr VkRect2D kPlaceholderScissor{.offset{.x = 0, .y = 0}, .extent{.width = 1, .height = 1}};
 
 std::vector<VkPipelineShaderStageCreateInfo>
 create_shader_stages(const ShaderModule& vertex_shader, const ShaderModule& fragment_shader);
