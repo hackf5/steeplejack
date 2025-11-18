@@ -57,7 +57,7 @@ VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
     return render_pass;
 }
 
-ShadowRenderPass::Scope
+RenderPassScope
 ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer, uint32_t resolution) const
 {
     VkClearValue clear_value = {};
@@ -72,5 +72,6 @@ ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffe
     render_pass_info.pClearValues = &clear_value;
 
     vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
-    return Scope(command_buffer);
+
+    return RenderPassScope(command_buffer);
 }

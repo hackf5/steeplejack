@@ -101,7 +101,7 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) con
     return render_pass;
 }
 
-void RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer) const
+RenderPassScope RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer) const
 {
     VkRenderPassBeginInfo render_pass_info = {};
     render_pass_info.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -117,4 +117,6 @@ void RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer
     render_pass_info.pClearValues = clear_values.data();
 
     vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+
+    return RenderPassScope(command_buffer);
 };
