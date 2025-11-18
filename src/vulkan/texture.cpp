@@ -160,7 +160,7 @@ VkDescriptorImageInfo Texture::create_image_descriptor_info(const Sampler& sampl
     VkDescriptorImageInfo image_info = {};
     image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
     image_info.imageView = m_image_view;
-    image_info.sampler = sampler;
+    image_info.sampler = sampler.vk();
 
     return image_info;
 }

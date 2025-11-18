@@ -28,12 +28,12 @@ class ShadowFramebuffers
     ShadowFramebuffers(ShadowFramebuffers&&) = delete;
     ShadowFramebuffers& operator=(ShadowFramebuffers&&) = delete;
 
-    size_t size() const
+    [[nodiscard]] size_t size() const
     {
         return m_framebuffers.size();
     }
 
-    VkFramebuffer at(size_t index) const
+    [[nodiscard]] VkFramebuffer at(size_t index) const
     {
         return m_framebuffers.at(index);
     }

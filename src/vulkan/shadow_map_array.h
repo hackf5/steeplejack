@@ -37,22 +37,22 @@ class ShadowMapArray
     ShadowMapArray(ShadowMapArray&&) = delete;
     ShadowMapArray& operator=(ShadowMapArray&&) = delete;
 
-    uint32_t layers() const
+    [[nodiscard]] uint32_t layers() const
     {
         return m_image.image_info().array_layers;
     }
 
-    uint32_t resolution() const
+    [[nodiscard]] uint32_t resolution() const
     {
         return m_image.image_info().width;
     }
 
-    VkImageView array_view() const
+    [[nodiscard]] VkImageView array_view() const
     {
         return m_array_image_view;
     }
 
-    VkImageView layer_view(uint32_t layer) const
+    [[nodiscard]] VkImageView layer_view(uint32_t layer) const
     {
         return *m_layer_image_views.at(layer);
     }

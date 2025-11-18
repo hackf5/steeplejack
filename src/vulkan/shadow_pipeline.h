@@ -17,15 +17,15 @@ class ShadowPipeline
     const VkPipelineLayout m_pipeline_layout;
     const VkPipeline m_pipeline;
 
-    PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
+    PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR; // NOLINT(readability-identifier-naming)
 
-    std::unique_ptr<DescriptorSetLayout> create_descriptor_set_layout() const;
-    VkPipeline create_pipeline(
+    [[nodiscard]] std::unique_ptr<DescriptorSetLayout> create_descriptor_set_layout() const;
+    [[nodiscard]] VkPipeline create_pipeline(
         const ShadowRenderPass& shadow_render_pass,
         const std::string& vertex_shader,
         const std::string& fragment_shader) const;
 
-    PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
+    [[nodiscard]] PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR(); // NOLINT(readability-identifier-naming)
 
   public:
     ShadowPipeline(
@@ -40,7 +40,7 @@ class ShadowPipeline
     ShadowPipeline(ShadowPipeline&&) = delete;
     ShadowPipeline& operator=(ShadowPipeline&&) = delete;
 
-    DescriptorSetLayout& descriptor_set_layout() const
+    [[nodiscard]] DescriptorSetLayout& descriptor_set_layout() const
     {
         return *m_descriptor_set_layout;
     }

@@ -38,7 +38,7 @@ std::vector<char> ShaderModule::read_file(const std::string& name)
     return buffer;
 }
 
-VkShaderModule ShaderModule::create_shader_module()
+VkShaderModule ShaderModule::create_shader_module() const
 {
     spdlog::info("Creating Shader Module: {}", m_name);
 

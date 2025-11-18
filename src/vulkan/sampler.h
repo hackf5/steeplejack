@@ -12,13 +12,18 @@ class Sampler
     const Device& m_device;
     const VkSampler m_sampler;
 
-    VkSampler create_sampler();
+    [[nodiscard]] VkSampler create_sampler() const;
 
   public:
-    Sampler(const Device& device);
+    explicit Sampler(const Device& device);
     ~Sampler();
 
-    operator VkSampler() const
+    Sampler(const Sampler&) = delete;
+    Sampler& operator=(const Sampler&) = delete;
+    Sampler(Sampler&&) = delete;
+    Sampler& operator=(Sampler&&) = delete;
+
+    [[nodiscard]] VkSampler vk() const
     {
         return m_sampler;
     }

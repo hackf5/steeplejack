@@ -8,13 +8,13 @@ pipeline::create_shader_stages(const ShaderModule& vertex_shader, const ShaderMo
     VkPipelineShaderStageCreateInfo vert_stage_info = {};
     vert_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     vert_stage_info.stage = VK_SHADER_STAGE_VERTEX_BIT;
-    vert_stage_info.module = vertex_shader;
+    vert_stage_info.module = vertex_shader.vk();
     vert_stage_info.pName = "main";
 
     VkPipelineShaderStageCreateInfo frag_stage_info = {};
     frag_stage_info.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
     frag_stage_info.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-    frag_stage_info.module = fragment_shader;
+    frag_stage_info.module = fragment_shader.vk();
     frag_stage_info.pName = "main";
 
     return {vert_stage_info, frag_stage_info};

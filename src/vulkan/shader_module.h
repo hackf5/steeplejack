@@ -17,7 +17,7 @@ class ShaderModule
 
     static std::vector<char> read_file(const std::string& name);
 
-    VkShaderModule create_shader_module();
+    [[nodiscard]] VkShaderModule create_shader_module() const;
 
   public:
     ShaderModule(const Device& device, std::string name);
@@ -28,12 +28,12 @@ class ShaderModule
     ShaderModule(ShaderModule&&) = delete;
     ShaderModule& operator=(ShaderModule&&) = delete;
 
-    const std::string& name() const
+    [[nodiscard]] const std::string& name() const
     {
         return m_name;
     }
 
-    operator VkShaderModule() const
+    [[nodiscard]] VkShaderModule vk() const
     {
         return m_shader_module;
     }

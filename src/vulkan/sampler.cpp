@@ -14,7 +14,7 @@ Sampler::~Sampler()
     vkDestroySampler(m_device.vk(), m_sampler, nullptr);
 }
 
-VkSampler Sampler::create_sampler()
+VkSampler Sampler::create_sampler() const
 {
     spdlog::info("Creating Sampler");
 
