@@ -51,12 +51,12 @@ class Buffer
         return m_buffer_size;
     }
 
-    operator VkBuffer() const
+    [[nodiscard]] VkBuffer vk() const
     {
         return m_allocation_info.buffer;
     }
 
-    [[nodiscard]] const VkBuffer* ptr() const
+    [[nodiscard]] const VkBuffer* vk_ptr() const
     {
         return &m_allocation_info.buffer;
     }

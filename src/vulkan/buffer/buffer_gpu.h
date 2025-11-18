@@ -27,7 +27,7 @@ class BufferGPU : public Buffer
 
         VkBufferCopy copy_region = {};
         copy_region.size = buffer.size();
-        vkCmdCopyBuffer(command_buffer, buffer, *this, 1, &copy_region);
+        vkCmdCopyBuffer(command_buffer, buffer.vk(), this->vk(), 1, &copy_region);
 
         m_adhoc_queues.transfer().submit_and_wait();
     }

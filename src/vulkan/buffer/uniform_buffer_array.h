@@ -59,7 +59,7 @@ template <typename T> class UniformBufferArray : public UniformBuffer
         auto key = std::pair<size_t, size_t>{item_index, frame_index};
         auto& info = m_descriptors[key]; // default-constructs if missing
         const BufferHost& buffer = (*this)[frame_index];
-        info.buffer = buffer; // uses BufferHost::operator VkBuffer()
+        info.buffer = buffer.vk();
         info.offset = m_stride * static_cast<VkDeviceSize>(item_index);
         info.range = sizeof(T);
         return &info;

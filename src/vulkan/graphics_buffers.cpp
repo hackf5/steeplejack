@@ -13,6 +13,6 @@ GraphicsBuffers::GraphicsBuffers(const Device& device, const AdhocQueues& adhoc_
 
 void GraphicsBuffers::bind(VkCommandBuffer command_buffer) const
 {
-    vkCmdBindVertexBuffers(command_buffer, 0, 1, m_vertex_buffer->ptr(), kVertexOffsets.data());
-    vkCmdBindIndexBuffer(command_buffer, *m_index_buffer, 0, Vertex::kVkIndexType);
+    vkCmdBindVertexBuffers(command_buffer, 0, 1, m_vertex_buffer->vk_ptr(), kVertexOffsets.data());
+    vkCmdBindIndexBuffer(command_buffer, m_index_buffer->vk(), 0, Vertex::kVkIndexType);
 }

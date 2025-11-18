@@ -150,7 +150,7 @@ void Texture::copy_staging_buffer_to_image(const Buffer& staging_buffer, const A
     region.imageOffset = offset;
     region.imageExtent = extent;
 
-    vkCmdCopyBufferToImage(command_buffer, staging_buffer, m_image->vk(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+    vkCmdCopyBufferToImage(command_buffer, staging_buffer.vk(), m_image->vk(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
     adhoc_queues.transfer().submit_and_wait();
 }
