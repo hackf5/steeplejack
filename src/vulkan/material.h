@@ -7,7 +7,7 @@
 
 namespace steeplejack
 {
-enum class AlphaMode
+enum class AlphaMode : std::uint8_t
 {
     Opaque,
     Mask,
@@ -24,8 +24,8 @@ class Material
     Texture* m_emissive = nullptr;           // sRGB
 
     // Factors (subset for first step)
-    glm::vec4 m_base_color_factor{1.0f, 1.0f, 1.0f, 1.0f};
-    float m_alpha_cutoff = 0.5f; // for Mask
+    glm::vec4 m_base_color_factor{1.0F, 1.0F, 1.0F, 1.0F};
+    float m_alpha_cutoff = 0.5F; // for Mask
     AlphaMode m_alpha_mode = AlphaMode::Opaque;
     bool m_double_sided = false;
 
@@ -37,7 +37,7 @@ class Material
     };
 
     UniformBuffer m_uniform_buffers;
-    UniformBlock m_uniform_block{glm::vec4(1.0f)};
+    UniformBlock m_uniform_block{glm::vec4(1.0F)};
 
   public:
     explicit Material(const Device& device) : m_uniform_buffers(device, sizeof(UniformBlock)) {}
@@ -46,9 +46,10 @@ class Material
     Material& operator=(const Material&) = delete;
     Material(Material&&) = delete;
     Material& operator=(Material&&) = delete;
+    ~Material() = default;
 
     // Base color
-    Texture* base_color() const
+    [[nodiscard]] Texture* base_color() const
     {
         return m_base_color;
     }
@@ -57,7 +58,7 @@ class Material
         m_base_color = tex;
     }
 
-    Texture* normal() const
+    [[nodiscard]] Texture* normal() const
     {
         return m_normal;
     }
@@ -66,7 +67,7 @@ class Material
         m_normal = tex;
     }
 
-    Texture* metallic_roughness() const
+    [[nodiscard]] Texture* metallic_roughness() const
     {
         return m_metallic_roughness;
     }
@@ -75,7 +76,7 @@ class Material
         m_metallic_roughness = tex;
     }
 
-    Texture* emissive() const
+    [[nodiscard]] Texture* emissive() const
     {
         return m_emissive;
     }
@@ -85,7 +86,7 @@ class Material
     }
 
     // Factors
-    const glm::vec4& base_color_factor() const
+    [[nodiscard]] const glm::vec4& base_color_factor() const
     {
         return m_base_color_factor;
     }
@@ -94,7 +95,7 @@ class Material
         return m_base_color_factor;
     }
 
-    float alpha_cutoff() const
+    [[nodiscard]] float alpha_cutoff() const
     {
         return m_alpha_cutoff;
     }
@@ -103,7 +104,7 @@ class Material
         return m_alpha_cutoff;
     }
 
-    AlphaMode alpha_mode() const
+    [[nodiscard]] AlphaMode alpha_mode() const
     {
         return m_alpha_mode;
     }
@@ -112,7 +113,7 @@ class Material
         m_alpha_mode = mode;
     }
 
-    bool double_sided() const
+    [[nodiscard]] bool double_sided() const
     {
         return m_double_sided;
     }

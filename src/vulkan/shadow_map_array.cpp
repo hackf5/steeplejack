@@ -46,7 +46,7 @@ ShadowMapArray::ShadowMapArray(
     barrier.subresourceRange.levelCount = 1;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount = m_image.image_info().array_layers;
-    barrier.image = m_image;
+    barrier.image = m_image.vk();
 
     vkCmdPipelineBarrier(
         command_buffer,
@@ -74,7 +74,7 @@ VkImageMemoryBarrier ShadowMapArray::create_memory_barrier()
     barrier.newLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_READ_ONLY_OPTIMAL;
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.image = m_image; // from ShadowMapArray
+    barrier.image = m_image.vk();
     barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
     barrier.subresourceRange.baseMipLevel = 0;
     barrier.subresourceRange.levelCount = 1;

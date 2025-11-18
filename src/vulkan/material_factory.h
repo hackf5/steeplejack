@@ -18,6 +18,11 @@ class MaterialFactory
 
   public:
     MaterialFactory(const Device& device, TextureFactory& textures);
+    MaterialFactory(const MaterialFactory&) = delete;
+    MaterialFactory& operator=(const MaterialFactory&) = delete;
+    MaterialFactory(MaterialFactory&&) = delete;
+    MaterialFactory& operator=(MaterialFactory&&) = delete;
+    ~MaterialFactory() = default;
 
     // Clears all materials (does not clear textures)
     void clear();

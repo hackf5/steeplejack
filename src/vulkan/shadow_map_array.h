@@ -49,12 +49,12 @@ class ShadowMapArray
 
     [[nodiscard]] VkImageView array_view() const
     {
-        return m_array_image_view;
+        return m_array_image_view.vk();
     }
 
     [[nodiscard]] VkImageView layer_view(uint32_t layer) const
     {
-        return *m_layer_image_views.at(layer);
+        return m_layer_image_views.at(layer)->vk();
     }
 
     void write_memory_barrier(VkCommandBuffer command_buffer) const

@@ -12,21 +12,21 @@ class Image
   public:
     struct ImageInfo
     {
-        const uint32_t width;
-        const uint32_t height;
-        const VkFormat format;
-        const VkImageUsageFlags usage;
-        const VkImageTiling tiling;
-        const VkSampleCountFlagBits samples;
-        const uint32_t array_layers;
+        uint32_t width;
+        uint32_t height;
+        VkFormat format;
+        VkImageUsageFlags usage;
+        VkImageTiling tiling;
+        VkSampleCountFlagBits samples;
+        uint32_t array_layers;
     };
 
   private:
     struct AllocationInfo
     {
-        const VkImage image;
-        const VmaAllocation allocation;
-        const VmaAllocationInfo info;
+        VkImage image;
+        VmaAllocation allocation;
+        VmaAllocationInfo info;
     };
 
     const Device& m_device;
@@ -52,12 +52,12 @@ class Image
     Image(Image&&) = delete;
     Image& operator=(Image&&) = delete;
 
-    operator VkImage() const
+    [[nodiscard]] VkImage vk() const
     {
         return m_allocation_info.image;
     }
 
-    const ImageInfo& image_info() const
+    [[nodiscard]] const ImageInfo& image_info() const
     {
         return m_image_info;
     }

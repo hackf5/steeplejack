@@ -22,10 +22,11 @@ class DepthBuffer
     DepthBuffer& operator=(const DepthBuffer&) = delete;
     DepthBuffer(DepthBuffer&&) = delete;
     DepthBuffer& operator=(DepthBuffer&&) = delete;
+    ~DepthBuffer() = default;
 
     [[nodiscard]] VkImageView image_view() const
     {
-        return m_image_view;
+        return m_image_view.vk();
     }
 
     [[nodiscard]] VkFormat format() const

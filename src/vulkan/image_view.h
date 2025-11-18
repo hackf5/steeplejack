@@ -31,7 +31,7 @@ class ImageView
     ImageView(ImageView&&) = delete;
     ImageView& operator=(ImageView&&) = delete;
 
-    operator VkImageView() const
+    [[nodiscard]] VkImageView vk() const
     {
         return m_image_view;
     }

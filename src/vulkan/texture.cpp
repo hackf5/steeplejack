@@ -85,7 +85,7 @@ void Texture::transition_image_layout(
     barrier.newLayout = new_layout;
     barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
     barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
-    barrier.image = *m_image;
+    barrier.image = m_image->vk();
     barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     barrier.subresourceRange.baseMipLevel = 0;
     barrier.subresourceRange.levelCount = 1;
@@ -150,7 +150,7 @@ void Texture::copy_staging_buffer_to_image(const Buffer& staging_buffer, const A
     region.imageOffset = offset;
     region.imageExtent = extent;
 
-    vkCmdCopyBufferToImage(command_buffer, staging_buffer, *m_image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
+    vkCmdCopyBufferToImage(command_buffer, staging_buffer, m_image->vk(), VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
     adhoc_queues.transfer().submit_and_wait();
 }
@@ -159,7 +159,7 @@ VkDescriptorImageInfo Texture::create_image_descriptor_info(const Sampler& sampl
 {
     VkDescriptorImageInfo image_info = {};
     image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-    image_info.imageView = m_image_view;
+    image_info.imageView = m_image_view.vk();
     image_info.sampler = sampler.vk();
 
     return image_info;

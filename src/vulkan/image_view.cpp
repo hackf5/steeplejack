@@ -30,7 +30,7 @@ VkImageView ImageView::create_image_view(VkImageAspectFlags aspect_mask, std::op
 
     VkImageViewCreateInfo image_view_info = {};
     image_view_info.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
-    image_view_info.image = m_image;
+    image_view_info.image = m_image.vk();
 
     image_view_info.viewType =
         !base_layer.has_value() && array_layers > 1 ? VK_IMAGE_VIEW_TYPE_2D_ARRAY : VK_IMAGE_VIEW_TYPE_2D;
