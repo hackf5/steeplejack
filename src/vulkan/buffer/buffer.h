@@ -2,14 +2,16 @@
 
 #include "vulkan/device.h"
 
+#include <span>
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
+
 
 namespace steeplejack
 {
 class Buffer
 {
-  protected:
+  private:
     struct AllocationInfo
     {
         VkBuffer buffer;
@@ -32,6 +34,12 @@ class Buffer
     AllocationInfo create_allocation_info(VkDeviceSize size);
     [[nodiscard]] VkDescriptorBufferInfo create_descriptor_info() const;
 
+  protected:
+    [[nodiscard]] std::span<std::byte> mapped_span() const
+    {
+        return {static_cast<std::byte*>(m_allocation_info.info.pMappedData), static_cast<size_t>(m_buffer_size)};
+    }
+
   public:
     Buffer(
         const Device& device,
@@ -46,11 +54,6 @@ class Buffer
     Buffer(Buffer&&) = delete;
     Buffer& operator=(Buffer&&) = delete;
 
-    [[nodiscard]] VkDeviceSize size() const
-    {
-        return m_buffer_size;
-    }
-
     [[nodiscard]] VkBuffer vk() const
     {
         return m_allocation_info.buffer;
@@ -59,6 +62,11 @@ class Buffer
     [[nodiscard]] const VkBuffer* vk_ptr() const
     {
         return &m_allocation_info.buffer;
+    }
+
+    [[nodiscard]] VkDeviceSize size() const
+    {
+        return m_buffer_size;
     }
 
     VkDescriptorBufferInfo* descriptor()

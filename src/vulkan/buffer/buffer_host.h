@@ -12,12 +12,6 @@ namespace steeplejack
 {
 class BufferHost : public Buffer
 {
-  private:
-    void copy_from(void* data, VkDeviceSize size)
-    {
-        memcpy(m_allocation_info.info.pMappedData, data, size);
-    }
-
   public:
     BufferHost(const Device& device, VkDeviceSize size, VkBufferUsageFlags usage) :
         Buffer(
@@ -31,25 +25,24 @@ class BufferHost : public Buffer
 
     template <typename T> void copy_from(const T& data)
     {
-        copy_to(m_allocation_info.info.pMappedData, data);
+        copy_to(mapped_span().data(), data);
     }
 
     template <typename T> void copy_from_at(const T& data, VkDeviceSize offset)
     {
-        assert(offset + sizeof(T) <= m_buffer_size);
-        auto* base = static_cast<std::byte*>(m_allocation_info.info.pMappedData);
-        std::span<std::byte> mapped{base, static_cast<size_t>(m_buffer_size)};
+        assert(offset + sizeof(T) <= size());
+        std::span<std::byte> mapped = mapped_span();
         copy_to(mapped.subspan(static_cast<size_t>(offset)).data(), data);
     }
 
     template <typename TIter> void copy_from(TIter begin, TIter end)
     {
-        copy_to(m_allocation_info.info.pMappedData, begin, end);
+        copy_to(mapped_span().data(), begin, end);
     }
 
     void copy_from(const std::ranges::contiguous_range auto& range)
     {
-        copy_to(m_allocation_info.info.pMappedData, range);
+        copy_to(mapped_span().data(), range);
     }
 };
 } // namespace steeplejack
