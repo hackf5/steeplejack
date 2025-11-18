@@ -255,7 +255,7 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     const fs::path full_path = fs::path("assets/textures") / gltf_relpath;
 
-    tinygltf::Model model = load_gltf_model(full_path);
+    const tinygltf::Model model = load_gltf_model(full_path);
     const auto& mat = get_gltf_material(model, material_index, full_path);
 
     auto material = std::make_unique<Material>(m_device);
