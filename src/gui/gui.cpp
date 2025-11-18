@@ -30,7 +30,7 @@ Gui::Gui(const Window& window, const Device& device, const RenderPass& render_pa
     init_info.Device = device.vk();
     init_info.QueueFamily = device.graphics_queue_index();
     init_info.Queue = device.graphics_queue();
-    init_info.RenderPass = render_pass;
+    init_info.RenderPass = render_pass.vk();
     init_info.DescriptorPool = m_descriptor_pool;
 
     init_info.PipelineCache = nullptr;

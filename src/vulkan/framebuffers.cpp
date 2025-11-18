@@ -42,7 +42,7 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
 
         VkFramebufferCreateInfo framebuffer_info = {};
         framebuffer_info.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
-        framebuffer_info.renderPass = render_pass;
+        framebuffer_info.renderPass = render_pass.vk();
         framebuffer_info.attachmentCount = static_cast<uint32_t>(attachments.size());
         framebuffer_info.pAttachments = attachments.data();
         framebuffer_info.width = swapchain.extent().width;
