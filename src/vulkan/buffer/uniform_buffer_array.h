@@ -17,7 +17,7 @@ template <typename T> class UniformBufferArray : public UniformBuffer
         size_t operator()(const std::pair<size_t, size_t>& p) const noexcept
         {
             // simple 64-bit hash combine
-            return (p.first * 1315423911u) ^ (p.second + 0x9e3779b97f4a7c15ULL + (p.first << 6) + (p.first >> 2));
+            return (p.first * 1315423911U) ^ (p.second + 0x9e3779b97f4a7c15ULL + (p.first << 6) + (p.first >> 2));
         }
     };
 
@@ -38,12 +38,12 @@ template <typename T> class UniformBufferArray : public UniformBuffer
     {
     }
 
-    VkDeviceSize stride() const
+    [[nodiscard]] VkDeviceSize stride() const
     {
         return m_stride;
     }
 
-    size_t count() const
+    [[nodiscard]] size_t count() const
     {
         return m_count;
     }

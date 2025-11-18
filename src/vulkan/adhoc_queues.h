@@ -12,9 +12,9 @@ class AdhocQueue
   public:
     enum QueueFamily : std::uint8_t
     {
-        graphics,
-        present,
-        transfer
+        Graphics,
+        Present,
+        Transfer
     };
 
     AdhocQueue(const Device& device, QueueFamily family);
@@ -51,10 +51,10 @@ class AdhocQueues
     const AdhocQueue m_present_queue;
 
   public:
-    AdhocQueues(const Device& device) :
-        m_transfer_queue(device, AdhocQueue::transfer),
-        m_graphics_queue(device, AdhocQueue::graphics),
-        m_present_queue(device, AdhocQueue::present)
+    explicit AdhocQueues(const Device& device) :
+        m_transfer_queue(device, AdhocQueue::Transfer),
+        m_graphics_queue(device, AdhocQueue::Graphics),
+        m_present_queue(device, AdhocQueue::Present)
     {
     }
 
@@ -62,6 +62,7 @@ class AdhocQueues
     AdhocQueues& operator=(const AdhocQueues&) = delete;
     AdhocQueues(AdhocQueues&&) = delete;
     AdhocQueues& operator=(AdhocQueues&&) = delete;
+    ~AdhocQueues() = default;
 
     [[nodiscard]] const AdhocQueue& transfer() const
     {

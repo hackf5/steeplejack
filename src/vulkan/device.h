@@ -29,7 +29,6 @@ class Device
 
   public:
     Device(const Window& window, bool enable_validation_layers);
-
     ~Device();
 
     Device(const Device&) = delete;

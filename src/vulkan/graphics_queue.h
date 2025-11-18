@@ -42,7 +42,7 @@ class GraphicsQueue
     VkFramebuffer
     prepare_framebuffer(uint32_t current_frame, const Swapchain& swapchain, const Framebuffers& framebuffers);
 
-    VkCommandBuffer begin_command() const;
+    [[nodiscard]] VkCommandBuffer begin_command() const;
     void submit_command() const;
     bool present_framebuffer();
 };

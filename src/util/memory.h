@@ -11,7 +11,7 @@ template <typename TIter> size_t total_bytes(TIter begin, TIter end)
 {
     static_assert(std::contiguous_iterator<TIter>, "TIter must be a contiguous iterator");
     static_assert(
-        std::is_standard_layout_v<std::decay_t<decltype(*begin)>> == true,
+        static_cast<bool>(std::is_standard_layout_v<std::decay_t<decltype(*begin)>>),
         "TIter must be an iterator to a standard layout type");
 
     return sizeof(*begin) * std::distance(begin, end);

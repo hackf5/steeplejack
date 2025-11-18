@@ -33,6 +33,7 @@ class UniformBuffer
     UniformBuffer& operator=(const UniformBuffer&) = delete;
     UniformBuffer(UniformBuffer&&) = delete;
     UniformBuffer& operator=(UniformBuffer&&) = delete;
+    ~UniformBuffer() = default;
 
     BufferHost& operator[](size_t index)
     {

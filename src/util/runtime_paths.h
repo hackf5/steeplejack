@@ -1,7 +1,5 @@
 #pragma once
 
-#include <filesystem>
-
 namespace steeplejack
 {
 // Sets the process working directory to the directory containing the executable.

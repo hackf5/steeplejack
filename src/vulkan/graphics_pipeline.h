@@ -3,10 +3,7 @@
 #include "descriptor_set_layout.h"
 #include "device.h"
 #include "render_pass.h"
-#include "shader_module.h"
-#include "swapchain.h"
 
-#include <memory>
 #include <string>
 #include <vector>
 #include <vulkan/vulkan.h>
@@ -22,12 +19,12 @@ class GraphicsPipeline
     const VkPipelineLayout m_pipeline_layout;
     const VkPipeline m_pipeline;
 
-    PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR;
+    PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR; // NOLINT(readability-identifier-naming)
 
     VkPipeline create_pipeline(
         const RenderPass& render_pass, const std::string& vertex_shader, const std::string& fragment_shader);
 
-    PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR();
+    PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR(); // NOLINT(readability-identifier-naming)
 
   public:
     GraphicsPipeline(
@@ -43,17 +40,12 @@ class GraphicsPipeline
     GraphicsPipeline(GraphicsPipeline&&) = delete;
     GraphicsPipeline& operator=(GraphicsPipeline&&) = delete;
 
-    operator VkPipeline() const
-    {
-        return m_pipeline;
-    }
-
-    VkPipelineLayout layout() const
+    [[nodiscard]] VkPipelineLayout layout() const
     {
         return m_pipeline_layout;
     }
 
-    DescriptorSetLayout& descriptor_set_layout() const
+    [[nodiscard]] DescriptorSetLayout& descriptor_set_layout() const
     {
         return m_descriptor_set_layout;
     }

@@ -23,11 +23,11 @@ VkQueue AdhocQueue::get_queue(QueueFamily family) const
 {
     switch (family)
     {
-    case graphics:
+    case Graphics:
         return m_device.graphics_queue();
-    case present:
+    case Present:
         return m_device.present_queue();
-    case transfer:
+    case Transfer:
         return m_device.transfer_queue();
     default:
         throw std::runtime_error("Invalid queue family");
@@ -38,11 +38,11 @@ uint32_t AdhocQueue::get_queue_index(QueueFamily family) const
 {
     switch (family)
     {
-    case graphics:
+    case Graphics:
         return m_device.graphics_queue_index();
-    case present:
+    case Present:
         return m_device.present_queue_index();
-    case transfer:
+    case Transfer:
         return m_device.transfer_queue_index();
     default:
         throw std::runtime_error("Invalid queue family");

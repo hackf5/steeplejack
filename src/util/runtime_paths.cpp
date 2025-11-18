@@ -10,6 +10,7 @@
 #endif
 
 #include <array>
+#include <filesystem>
 
 #include "spdlog/spdlog.h"
 

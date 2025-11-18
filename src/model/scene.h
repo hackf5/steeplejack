@@ -4,12 +4,10 @@
 #include "glm_config.hpp"
 #include "model.h"
 #include "model/lights.h"
-#include "vulkan/buffer/uniform_buffer.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_pipeline.h"
 
 #include <cstdint>
-#include <span>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
