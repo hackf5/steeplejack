@@ -19,6 +19,8 @@ DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view 
     m_descriptor_set_layouts({m_descriptor_set_layout}),
     m_write_descriptor_sets(create_write_descriptor_sets())
 {
+    spdlog::info("Creating Descriptor Set Layout '{}'", layout_name);
+
     uint32_t max_binding = 0;
     for (const auto& binding : m_layout_definition.bindings)
     {
@@ -40,6 +42,7 @@ DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view 
 
 DescriptorSetLayout::~DescriptorSetLayout()
 {
+    spdlog::info("Destroying Descriptor Set Layout '{}'", m_layout_definition.name);
     vkDestroyDescriptorSetLayout(m_device.vk(), m_descriptor_set_layout, nullptr);
 }
 
@@ -113,34 +116,6 @@ std::vector<VkWriteDescriptorSet> DescriptorSetLayout::create_write_descriptor_s
     return write_descriptor_sets;
 }
 
-size_t DescriptorSetLayout::write_index_for_binding(uint32_t binding) const
-{
-    if (binding >= m_binding_to_write_index.size())
-    {
-        throw std::runtime_error(
-            "Descriptor binding " + std::to_string(binding) + " not found in layout '" + m_layout_definition.name + "'");
-    }
-
-    auto index = m_binding_to_write_index[binding];
-    if (index == std::numeric_limits<size_t>::max())
-    {
-        throw std::runtime_error(
-            "Descriptor binding " + std::to_string(binding) + " not found in layout '" + m_layout_definition.name + "'");
-    }
-
-    return index;
-}
-
-uint32_t DescriptorSetLayout::binding_index(std::string_view name) const
-{
-    return binding_handle(name).binding;
-}
-
-const config::DescriptorBindingDefinition& DescriptorSetLayout::binding(std::string_view name) const
-{
-    return m_layout_definition.require_binding(name);
-}
-
 const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(std::string_view name) const
 {
     auto it = m_binding_handles.find(std::string(name));
@@ -152,16 +127,6 @@ const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(st
     return it->second;
 }
 
-DescriptorSetLayout&
-DescriptorSetLayout::write_combined_image_sampler(VkDescriptorImageInfo* image_info, uint32_t binding_index)
-{
-    auto& write_descriptor_set = m_write_descriptor_sets[write_index_for_binding(binding_index)];
-    write_descriptor_set.dstBinding = binding_index;
-    write_descriptor_set.pImageInfo = image_info;
-
-    return *this;
-}
-
 DescriptorSetLayout& DescriptorSetLayout::write_combined_image_sampler(
     VkDescriptorImageInfo* image_info,
     const BindingHandle& binding_handle)
@@ -169,16 +134,6 @@ DescriptorSetLayout& DescriptorSetLayout::write_combined_image_sampler(
     auto& write_descriptor_set = m_write_descriptor_sets[binding_handle.write_index];
     write_descriptor_set.dstBinding = binding_handle.binding;
     write_descriptor_set.pImageInfo = image_info;
-
-    return *this;
-}
-
-DescriptorSetLayout&
-DescriptorSetLayout::write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, uint32_t binding_index)
-{
-    auto& write_descriptor_set = m_write_descriptor_sets[write_index_for_binding(binding_index)];
-    write_descriptor_set.dstBinding = binding_index;
-    write_descriptor_set.pBufferInfo = buffer_info;
 
     return *this;
 }
