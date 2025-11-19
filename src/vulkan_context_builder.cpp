@@ -26,12 +26,9 @@ VulkanContextBuilder& VulkanContextBuilder::add_graphics_queue()
     return *this;
 }
 
-VulkanContextBuilder&
-VulkanContextBuilder::add_descriptor_set_layout(const std::function<void(DescriptorSetLayoutBuilder&)>& configure)
+VulkanContextBuilder& VulkanContextBuilder::add_descriptor_set_layout(std::string_view layout_name)
 {
-    DescriptorSetLayoutBuilder builder;
-    configure(builder);
-    m_context->m_descriptor_set_layout = builder.build(*m_context->m_device);
+    m_context->m_descriptor_set_layout = std::make_unique<DescriptorSetLayout>(*m_context->m_device, layout_name);
     return *this;
 }
 

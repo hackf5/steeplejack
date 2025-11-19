@@ -1,6 +1,5 @@
 #include "shadow_pipeline.h"
 
-#include "descriptor_set_layout_builder.h"
 #include "pipeline.h"
 #include "shader_module.h"
 #include "spdlog/spdlog.h"
@@ -32,10 +31,7 @@ std::unique_ptr<DescriptorSetLayout> ShadowPipeline::create_descriptor_set_layou
 {
     spdlog::info("Creating Shadow Pipeline Descriptor Set Layout");
 
-    auto layout_builder = DescriptorSetLayoutBuilder();
-    layout_builder.add_uniform_buffer(); // light space matrix (vertex)
-    layout_builder.add_uniform_buffer(); // model matrix (vertex)
-    return layout_builder.build(m_device);
+    return std::make_unique<DescriptorSetLayout>(m_device, "shadow");
 }
 
 VkPipeline ShadowPipeline::create_pipeline(

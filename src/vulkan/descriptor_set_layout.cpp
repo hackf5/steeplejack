@@ -4,13 +4,12 @@
 
 #include <array>
 #include <stdexcept>
-#include <utility>
 
 using namespace steeplejack;
 
-DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::vector<DescriptorSetLayoutInfo> layout_infos) :
+DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view layout_name) :
     m_device(device),
-    m_layout_infos(std::move(std::move(layout_infos))),
+    m_layout_definition(config::DescriptorLayoutConfig::instance().require_layout(layout_name)),
     m_descriptor_set_layout(create_descriptor_set_layout()),
     m_descriptor_set_layouts({m_descriptor_set_layout}),
     m_write_descriptor_sets(create_write_descriptor_sets())
@@ -45,13 +44,13 @@ VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
 VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
 {
     std::vector<VkDescriptorSetLayoutBinding> bindings;
-    for (const auto& info : m_layout_infos)
+    for (const auto& binding_info : m_layout_definition.bindings)
     {
         VkDescriptorSetLayoutBinding binding = {};
-        binding.binding = info.binding;
-        binding.descriptorType = info.descriptor_type;
-        binding.descriptorCount = 1;
-        binding.stageFlags = info.stage_flags;
+        binding.binding = binding_info.binding;
+        binding.descriptorType = binding_info.type;
+        binding.descriptorCount = binding_info.count;
+        binding.stageFlags = binding_info.stage_flags;
         binding.pImmutableSamplers = nullptr;
         bindings.push_back(binding);
     }
@@ -74,15 +73,15 @@ VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
 std::vector<VkWriteDescriptorSet> DescriptorSetLayout::create_write_descriptor_sets()
 {
     std::vector<VkWriteDescriptorSet> write_descriptor_sets;
-    for (const auto& info : m_layout_infos)
+    for (const auto& binding_info : m_layout_definition.bindings)
     {
         VkWriteDescriptorSet write_descriptor_set = {};
         write_descriptor_set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         write_descriptor_set.dstSet = nullptr;
-        write_descriptor_set.dstBinding = info.binding;
+        write_descriptor_set.dstBinding = binding_info.binding;
         write_descriptor_set.dstArrayElement = 0;
-        write_descriptor_set.descriptorType = info.descriptor_type;
-        write_descriptor_set.descriptorCount = 1;
+        write_descriptor_set.descriptorType = binding_info.type;
+        write_descriptor_set.descriptorCount = binding_info.count;
         write_descriptor_set.pBufferInfo = nullptr;
         write_descriptor_set.pImageInfo = nullptr;
         write_descriptor_set.pTexelBufferView = nullptr;

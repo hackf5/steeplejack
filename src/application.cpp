@@ -32,21 +32,6 @@ int Application::run()
         // Ensure relative asset paths (e.g., shaders/) resolve regardless of launch CWD
         set_working_directory_to_executable();
 
-        auto layout_builder = [](DescriptorSetLayoutBuilder& builder)
-        {
-            builder
-                .add_uniform_buffer()           // camera (vertex)
-                .add_uniform_buffer()           // model (vertex)
-                .add_combined_image_sampler()   // baseColor (fragment)
-                .add_uniform_buffer_fragment()  // material params (fragment)
-                .add_combined_image_sampler()   // normal (fragment)
-                .add_combined_image_sampler()   // metallicRoughness / ORM (fragment)
-                .add_combined_image_sampler()   // emissive (fragment)
-                .add_uniform_buffer_fragment()  // scene lights (ambient) (fragment)
-                .add_combined_image_sampler()   // shadow map array (fragment)
-                .add_uniform_buffer_fragment(); // scene lights (spots) (fragment)
-        };
-
         auto scene_factory = [](const Device& device) { return std::make_unique<CubesOne>(device); };
 
         auto context = VulkanContextBuilder()
@@ -55,7 +40,7 @@ int Application::run()
                            .add_graphics_queue()
                            .add_adhoc_queues()
                            .add_graphics_buffers()
-                           .add_descriptor_set_layout(layout_builder)
+                           .add_descriptor_set_layout("default")
                            .add_sampler()
                            .add_shadow_sampler()
                            .add_texture_factory()

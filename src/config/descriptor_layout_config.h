@@ -43,4 +43,4 @@ class DescriptorLayoutConfig
     std::unordered_map<std::string, DescriptorLayoutDefinition> m_layouts;
 };
 
-} // namespace steeplejack
+} // namespace steeplejack::config

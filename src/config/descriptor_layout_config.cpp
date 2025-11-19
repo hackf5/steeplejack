@@ -25,10 +25,7 @@ constexpr std::string_view kStageFlagsKey = "stage_flags";
 std::string to_lower(std::string_view value)
 {
     std::string result(value);
-    std::ranges::transform(
-        result,
-        result.begin(),
-        [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
+    std::ranges::transform(result, result.begin(), [](unsigned char c) { return static_cast<char>(std::tolower(c)); });
     return result;
 }
 
@@ -277,7 +274,7 @@ namespace steeplejack::config
 {
 const DescriptorLayoutConfig& DescriptorLayoutConfig::instance()
 {
-    static DescriptorLayoutConfig instance;
+    static DescriptorLayoutConfig const instance;
     return instance;
 }
 
@@ -291,7 +288,8 @@ DescriptorLayoutConfig::DescriptorLayoutConfig()
 
     if (!std::filesystem::is_directory(directory))
     {
-        throw std::runtime_error(fmt::format("Descriptor layout config path '{}' is not a directory", directory.string()));
+        throw std::runtime_error(
+            fmt::format("Descriptor layout config path '{}' is not a directory", directory.string()));
     }
 
     for (const auto& entry : std::filesystem::directory_iterator(directory))
@@ -332,11 +330,13 @@ const DescriptorLayoutDefinition& DescriptorLayoutConfig::require_layout(std::st
 
 const DescriptorBindingDefinition& DescriptorLayoutDefinition::require_binding(std::string_view binding_name) const
 {
-    auto it = std::ranges::find_if(bindings, [&](const DescriptorBindingDefinition& binding) { return binding.name == binding_name; });
+    auto it = std::ranges::find_if(
+        bindings,
+        [&](const DescriptorBindingDefinition& binding) { return binding.name == binding_name; });
     if (it == bindings.end())
     {
         throw std::runtime_error(fmt::format("Binding '{}' not found in layout '{}'", binding_name, name));
     }
     return *it;
 }
-} // namespace steeplejack
+} // namespace steeplejack::config

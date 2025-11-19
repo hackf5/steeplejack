@@ -1,9 +1,10 @@
 #pragma once
 
-#include "descriptor_set_layout_info.h"
+#include "config/descriptor_layout_config.h"
 #include "vulkan/device.h"
 
 #include <array>
+#include <string_view>
 #include <vector>
 #include <vulkan/vulkan.h>
 
@@ -13,7 +14,7 @@ class DescriptorSetLayout
 {
   private:
     const Device& m_device;
-    const std::vector<DescriptorSetLayoutInfo> m_layout_infos;
+    const config::DescriptorLayoutDefinition& m_layout_definition;
     const VkDescriptorSetLayout m_descriptor_set_layout;
     const std::array<VkDescriptorSetLayout, 1> m_descriptor_set_layouts;
     std::vector<VkWriteDescriptorSet> m_write_descriptor_sets;
@@ -22,7 +23,7 @@ class DescriptorSetLayout
     std::vector<VkWriteDescriptorSet> create_write_descriptor_sets();
 
   public:
-    DescriptorSetLayout(const Device& device, std::vector<DescriptorSetLayoutInfo> layout_infos);
+    DescriptorSetLayout(const Device& device, std::string_view layout_name);
     ~DescriptorSetLayout();
 
     DescriptorSetLayout(const DescriptorSetLayout&) = delete;

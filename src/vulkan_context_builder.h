@@ -1,9 +1,9 @@
 #pragma once
 
-#include "vulkan/descriptor_set_layout_builder.h"
 #include "vulkan_context.h"
 
 #include <functional>
+#include <string_view>
 
 namespace steeplejack
 {
@@ -31,7 +31,7 @@ class VulkanContextBuilder
 
     VulkanContextBuilder& add_graphics_queue();
 
-    VulkanContextBuilder& add_descriptor_set_layout(const std::function<void(DescriptorSetLayoutBuilder&)>& configure);
+    VulkanContextBuilder& add_descriptor_set_layout(std::string_view layout_name);
 
     VulkanContextBuilder& add_graphics_buffers();
 
