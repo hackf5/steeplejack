@@ -83,6 +83,7 @@ file(GLOB_RECURSE STEEPLEJACK_SOURCES CONFIGURE_DEPENDS
     ${PROJECT_SOURCE_DIR}/src/gui/*.cpp
     ${PROJECT_SOURCE_DIR}/src/model/*.cpp
     ${PROJECT_SOURCE_DIR}/src/scenes/*.cpp
+    ${PROJECT_SOURCE_DIR}/src/config/*.cpp
     ${PROJECT_SOURCE_DIR}/src/util/*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_*context*.cpp
     ${PROJECT_SOURCE_DIR}/src/vulkan_engine.cpp
@@ -108,6 +109,16 @@ add_subdirectory(shaders)
 
 # Assets after targets exist so add_dependencies() resolves
 add_subdirectory(assets)
+
+# Copy runtime configuration into the build directory
+set(STEEPLEJACK_CONFIG_SOURCE_DIR ${PROJECT_SOURCE_DIR}/config)
+set(STEEPLEJACK_CONFIG_OUTPUT_DIR ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/config)
+add_custom_target(steeplejack_config
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${STEEPLEJACK_CONFIG_SOURCE_DIR} ${STEEPLEJACK_CONFIG_OUTPUT_DIR}
+    COMMENT "Copying config files"
+)
+add_dependencies(steeplejack steeplejack_config)
 
 if (STEEPLEJACK_BUILD_TESTS)
     include(CTest)

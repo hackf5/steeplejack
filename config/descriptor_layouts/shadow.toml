@@ -1,0 +1,18 @@
+# Shadow pipeline descriptor set layout.
+#
+# Matches ShadowPipeline::create_descriptor_set_layout() so we can parse the
+# layout from TOML instead of hardcoding bindings.
+
+name = "shadow"
+
+[[bindings]]
+name = "lightSpaceMatrix"
+binding = 0
+type = "uniform_buffer"
+stage_flags = ["vertex"]
+
+[[bindings]]
+name = "modelMatrix"
+binding = 1
+type = "uniform_buffer"
+stage_flags = ["vertex"]

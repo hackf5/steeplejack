@@ -6,10 +6,16 @@
   "dependencies": [
     "catch2",
     "entt",
-    "glslang",
     "glfw3",
     "glm",
-    { "name": "imgui", "features": ["glfw-binding", "vulkan-binding"] },
+    "glslang",
+    {
+      "name": "imgui",
+      "features": [
+        "glfw-binding",
+        "vulkan-binding"
+      ]
+    },
     "nlohmann-json",
     "spdlog",
     "spirv-tools",
@@ -17,6 +23,7 @@
     "tinygltf",
     "vk-bootstrap",
     "vulkan",
-    "vulkan-memory-allocator"
+    "vulkan-memory-allocator",
+    "tomlplusplus"
   ]
 }

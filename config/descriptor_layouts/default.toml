@@ -1,0 +1,67 @@
+# Primary graphics pipeline descriptor set layout.
+#
+# Mirrors the layout built inside Application::run() so we have a serialised
+# description available at runtime and for tooling. Names align with the data
+# bound during rendering.
+
+name = "default"
+
+[[bindings]]
+name = "camera"
+binding = 0
+type = "uniform_buffer"
+stage_flags = ["vertex"]
+
+[[bindings]]
+name = "model"
+binding = 1
+type = "uniform_buffer"
+stage_flags = ["vertex"]
+
+[[bindings]]
+name = "baseColor"
+binding = 2
+type = "combined_image_sampler"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "materialParams"
+binding = 3
+type = "uniform_buffer"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "normal"
+binding = 4
+type = "combined_image_sampler"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "metallicRoughness"
+binding = 5
+type = "combined_image_sampler"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "emissive"
+binding = 6
+type = "combined_image_sampler"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "sceneLightsAmbient"
+binding = 7
+type = "uniform_buffer"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "shadowMapArray"
+binding = 8
+type = "combined_image_sampler"
+stage_flags = ["fragment"]
+
+[[bindings]]
+name = "sceneLightsSpots"
+binding = 9
+type = "uniform_buffer"
+stage_flags = ["fragment"]
