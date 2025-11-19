@@ -55,9 +55,16 @@ class Lights
     UniformBufferArray<glm::mat4> m_shadow_lights_buffer;
     UniformBuffer m_lights_buffer;
     UniformBuffer m_matrices_buffer;
-    uint32_t m_shadow_lights_binding;
-    uint32_t m_lights_binding;
-    uint32_t m_matrices_binding;
+
+    const DescriptorSetLayout* m_cached_shadow_layout = nullptr;
+    DescriptorSetLayout::BindingHandle m_shadow_matrix_handle{};
+
+    const DescriptorSetLayout* m_cached_graphics_layout = nullptr;
+    DescriptorSetLayout::BindingHandle m_scene_lights_handle{};
+    DescriptorSetLayout::BindingHandle m_scene_spots_handle{};
+
+    void cache_shadow_bindings(const DescriptorSetLayout& layout);
+    void cache_graphics_bindings(const DescriptorSetLayout& layout);
 
   public:
     explicit Lights(const Device& device);
@@ -89,36 +96,6 @@ class Lights
     void set_debug_spot_index(int idx)
     {
         m_matrices.debugParams.z = static_cast<float>(idx);
-    }
-
-    uint32_t shadow_lights_binding() const
-    {
-        return m_shadow_lights_binding;
-    }
-
-    uint32_t& shadow_lights_binding()
-    {
-        return m_shadow_lights_binding;
-    }
-
-    uint32_t lights_binding() const
-    {
-        return m_lights_binding;
-    }
-
-    uint32_t& lights_binding()
-    {
-        return m_lights_binding;
-    }
-
-    uint32_t matrices_binding() const
-    {
-        return m_matrices_binding;
-    }
-
-    uint32_t& matrices_binding()
-    {
-        return m_matrices_binding;
     }
 
     glm::vec3 ambient_color() const

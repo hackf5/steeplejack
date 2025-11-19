@@ -30,6 +30,8 @@ class Camera
     bool m_dirty = true;
 
     UniformBlock m_uniform_block;
+    const DescriptorSetLayout* m_cached_layout = nullptr;
+    DescriptorSetLayout::BindingHandle m_camera_handle{};
 
     void update()
     {
@@ -41,7 +43,7 @@ class Camera
         m_uniform_block.proj = glm::perspective(glm::radians(m_fov), m_aspect_ratio, m_near, m_far);
         m_uniform_block.proj[1][1] *= -1;
 
-        m_uniform_block.view = glm::lookAt(m_position, m_target, glm::vec3(0.0f, 0.0f, 1.0f));
+        m_uniform_block.view = glm::lookAt(m_position, m_target, glm::vec3(0.0F, 0.0F, 1.0F));
 
         m_dirty = false;
     }
@@ -61,7 +63,7 @@ class Camera
     Camera& operator=(Camera&&) = delete;
     ~Camera() = default;
 
-    const glm::vec3& position() const
+    [[nodiscard]] const glm::vec3& position() const
     {
         return m_position;
     }
@@ -140,7 +142,13 @@ class Camera
 
     void bind(uint32_t frame_index, GraphicsPipeline& pipeline)
     {
-        pipeline.descriptor_set_layout().write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), 0);
+        auto& layout = pipeline.descriptor_set_layout();
+        if (m_cached_layout != &layout)
+        {
+            m_cached_layout = &layout;
+            m_camera_handle = layout.binding_handle("camera");
+        }
+        layout.write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), m_camera_handle);
     }
 };
 } // namespace steeplejack

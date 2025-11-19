@@ -3,15 +3,25 @@
 
 using namespace steeplejack;
 
+void Lights::cache_shadow_bindings(const DescriptorSetLayout& layout)
+{
+    m_cached_shadow_layout = &layout;
+    m_shadow_matrix_handle = layout.binding_handle("lightSpaceMatrix");
+}
+
+void Lights::cache_graphics_bindings(const DescriptorSetLayout& layout)
+{
+    m_cached_graphics_layout = &layout;
+    m_scene_lights_handle = layout.binding_handle("sceneLightsAmbient");
+    m_scene_spots_handle = layout.binding_handle("sceneLightsSpots");
+}
+
 Lights::Lights(const Device& device) :
     m_lights{},
     m_matrices{},
     m_shadow_lights_buffer(device, kMaxSpotLights),
     m_lights_buffer(device, sizeof(LightsUBO)),
-    m_matrices_buffer(device, sizeof(SpotLightMatrices)),
-    m_shadow_lights_binding(0),
-    m_lights_binding(0),
-    m_matrices_binding(1)
+    m_matrices_buffer(device, sizeof(SpotLightMatrices))
 {
 
     // Initialize ambient light to white with low intensity
@@ -84,20 +94,30 @@ void Lights::flush(uint32_t frame_index)
 
 void Lights::bind_shadow(DescriptorSetLayout& layout, uint32_t frame_index, size_t spot_index)
 {
+    if (m_cached_shadow_layout != &layout)
+    {
+        cache_shadow_bindings(layout);
+    }
+
     // Bind shadow lights UBO
     auto* shadow_buffer = m_shadow_lights_buffer.descriptor_ptr_at(spot_index, frame_index);
-    layout.write_uniform_buffer(shadow_buffer, m_shadow_lights_binding);
+    layout.write_uniform_buffer(shadow_buffer, m_shadow_matrix_handle);
 }
 
 void Lights::bind(DescriptorSetLayout& layout, uint32_t frame_index)
 {
+    if (m_cached_graphics_layout != &layout)
+    {
+        cache_graphics_bindings(layout);
+    }
+
     // Bind lights UBO
     auto& light_buffer = m_lights_buffer[frame_index];
-    layout.write_uniform_buffer(light_buffer.descriptor(), m_lights_binding);
+    layout.write_uniform_buffer(light_buffer.descriptor(), m_scene_lights_handle);
 
     // Bind spotlight matrices UBO
     auto& matrix_buffer = m_matrices_buffer[frame_index];
-    layout.write_uniform_buffer(matrix_buffer.descriptor(), m_matrices_binding);
+    layout.write_uniform_buffer(matrix_buffer.descriptor(), m_scene_spots_handle);
 }
 
 // NOLINTEND(cppcoreguidelines-avoid-magic-numbers, readability-magic-numbers)

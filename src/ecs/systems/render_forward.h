@@ -27,43 +27,50 @@ inline void render_forward(ecs::Scene& scene, VkCommandBuffer cmd, uint32_t fram
 
     // Ensure model UBOs are flushed for this frame (model matrix binding = 1)
     flush_model_ubos(reg, *scene.resources.device, scene.model_ubos, frame_index);
+    auto& layout = pipeline.descriptor_set_layout();
+    const auto& model_handle = layout.binding_handle("model");
+    const auto& material_params_handle = layout.binding_handle("materialParams");
+    const auto& base_color_handle = layout.binding_handle("baseColor");
+    const auto& normal_handle = layout.binding_handle("normal");
+    const auto& metallic_roughness_handle = layout.binding_handle("metallicRoughness");
+    const auto& emissive_handle = layout.binding_handle("emissive");
 
     // Build draw items
     auto items = build_draw_list(reg);
     if (items.empty())
+    {
         return;
+    }
 
     for (const auto& it : items)
     {
         // Model UBO at binding 1
         if (auto* mu = scene.model_ubos.get(it.entity))
         {
-            pipeline.descriptor_set_layout().write_uniform_buffer((*mu->buffer)[frame_index].descriptor(), 1);
+            layout.write_uniform_buffer((*mu->buffer)[frame_index].descriptor(), model_handle);
         }
 
         // Material descriptors (UBO at 3; textures at 2/4/5/6)
         if (auto* mat = scene.materials.get(it.material))
         {
             // Params UBO
-            pipeline.descriptor_set_layout().write_uniform_buffer(mat->descriptor(frame_index), 3);
+            layout.write_uniform_buffer(mat->descriptor(frame_index), material_params_handle);
             // Textures if present
-            if (mat->base_color())
+            if (mat->base_color() != nullptr)
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(mat->base_color()->descriptor(), 2);
+                layout.write_combined_image_sampler(mat->base_color()->descriptor(), base_color_handle);
             }
-            if (mat->normal())
+            if (mat->normal() != nullptr)
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(mat->normal()->descriptor(), 4);
+                layout.write_combined_image_sampler(mat->normal()->descriptor(), normal_handle);
             }
-            if (mat->metallic_roughness())
+            if (mat->metallic_roughness() != nullptr)
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(
-                    mat->metallic_roughness()->descriptor(),
-                    5);
+                layout.write_combined_image_sampler(mat->metallic_roughness()->descriptor(), metallic_roughness_handle);
             }
-            if (mat->emissive())
+            if (mat->emissive() != nullptr)
             {
-                pipeline.descriptor_set_layout().write_combined_image_sampler(mat->emissive()->descriptor(), 6);
+                layout.write_combined_image_sampler(mat->emissive()->descriptor(), emissive_handle);
             }
         }
 

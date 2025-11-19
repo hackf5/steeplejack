@@ -18,28 +18,35 @@ class Scene
     Camera m_camera;
     Model m_model;
     Lights m_lights;
+    const DescriptorSetLayout* m_cached_graphics_layout = nullptr;
+    DescriptorSetLayout::BindingHandle m_shadow_sampler_handle{};
+
+    void cache_shadow_sampler_binding(DescriptorSetLayout& layout)
+    {
+        m_cached_graphics_layout = &layout;
+        m_shadow_sampler_handle = layout.binding_handle("shadowMapArray");
+    }
 
   public:
-    Scene(const Device& device) : m_camera(device), m_model(), m_lights(device)
+    explicit Scene(const Device& device) : m_camera(device), m_lights(device)
     {
         // First spot default
         m_lights.spot_at(0).enable = true;
-        m_lights.spot_at(0).position = glm::vec3(2.0f, 2.0f, 2.0f);
-        m_lights.spot_at(0).direction = glm::normalize(glm::vec3(-1.0f, -1.0f, -1.0f));
+        m_lights.spot_at(0).position = glm::vec3(2.0F, 2.0F, 2.0F);
+        m_lights.spot_at(0).direction = glm::normalize(glm::vec3(-1.0F, -1.0F, -1.0F));
 
         // Second spot default
         m_lights.spot_at(1).enable = true;
-        m_lights.spot_at(1).position = glm::vec3(-2.0f, 2.0f, 2.0f);
-        m_lights.spot_at(1).direction = glm::normalize(glm::vec3(1.0f, -1.0f, -1.0f));
+        m_lights.spot_at(1).position = glm::vec3(-2.0F, 2.0F, 2.0F);
+        m_lights.spot_at(1).direction = glm::normalize(glm::vec3(1.0F, -1.0F, -1.0F));
 
-        m_lights.lights_binding() = 7;
-        m_lights.matrices_binding() = 9;
     }
 
     Scene(const Scene&) = delete;
     Scene& operator=(const Scene&) = delete;
     Scene(Scene&&) = delete;
     Scene& operator=(Scene&&) = delete;
+    ~Scene() = default;
 
     const Camera& camera() const
     {
@@ -94,15 +101,19 @@ class Scene
         GraphicsPipeline& pipeline,
         VkDescriptorImageInfo* shadow = nullptr)
     {
-        pipeline.descriptor_set_layout().reset_writes();
+        auto& layout = pipeline.descriptor_set_layout();
+        layout.reset_writes();
 
         m_camera.bind(frame_index, pipeline);
-        m_lights.bind(pipeline.descriptor_set_layout(), frame_index);
+        m_lights.bind(layout, frame_index);
 
         if (shadow != nullptr)
         {
-            // Shadow map array sampler at binding 8
-            pipeline.descriptor_set_layout().write_combined_image_sampler(shadow, 8);
+            if (m_cached_graphics_layout != &layout)
+            {
+                cache_shadow_sampler_binding(layout);
+            }
+            layout.write_combined_image_sampler(shadow, m_shadow_sampler_handle);
         }
 
         m_model.render(command_buffer, frame_index, pipeline);
