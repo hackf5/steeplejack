@@ -4,7 +4,7 @@
 #include "device.h"
 #include "shadow_render_pass.h"
 
-#include <memory>
+#include <string_view>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -13,17 +13,16 @@ class ShadowPipeline
 {
   private:
     const Device& m_device;
-    const std::unique_ptr<DescriptorSetLayout> m_descriptor_set_layout;
+    DescriptorSetLayout& m_descriptor_set_layout;
     const VkPipelineLayout m_pipeline_layout;
     const VkPipeline m_pipeline;
 
     PFN_vkCmdPushDescriptorSetKHR vkCmdPushDescriptorSetKHR; // NOLINT(readability-identifier-naming)
 
-    [[nodiscard]] std::unique_ptr<DescriptorSetLayout> create_descriptor_set_layout() const;
     [[nodiscard]] VkPipeline create_pipeline(
         const ShadowRenderPass& shadow_render_pass,
-        const std::string& vertex_shader,
-        const std::string& fragment_shader) const;
+        std::string_view vertex_shader,
+        std::string_view fragment_shader) const;
 
     [[nodiscard]] PFN_vkCmdPushDescriptorSetKHR
     fetch_vkCmdPushDescriptorSetKHR(); // NOLINT(readability-identifier-naming)
@@ -31,9 +30,10 @@ class ShadowPipeline
   public:
     ShadowPipeline(
         const Device& device,
+        DescriptorSetLayout& descriptor_set_layout,
         const ShadowRenderPass& shadow_render_pass,
-        const std::string& vertex_shader,
-        const std::string& fragment_shader);
+        std::string_view vertex_shader,
+        std::string_view fragment_shader);
     ~ShadowPipeline();
 
     ShadowPipeline(const ShadowPipeline&) = delete;
@@ -43,7 +43,7 @@ class ShadowPipeline
 
     [[nodiscard]] DescriptorSetLayout& descriptor_set_layout() const
     {
-        return *m_descriptor_set_layout;
+        return m_descriptor_set_layout;
     }
 
     void bind(VkCommandBuffer command_buffer) const
@@ -53,7 +53,7 @@ class ShadowPipeline
 
     void push_descriptor_set(VkCommandBuffer command_buffer) const
     {
-        auto write_descriptor_sets = m_descriptor_set_layout->get_write_descriptor_sets();
+        auto write_descriptor_sets = m_descriptor_set_layout.get_write_descriptor_sets();
         vkCmdPushDescriptorSetKHR(
             command_buffer,
             VK_PIPELINE_BIND_POINT_GRAPHICS,

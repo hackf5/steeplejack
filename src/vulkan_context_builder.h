@@ -50,7 +50,9 @@ class VulkanContextBuilder
     VulkanContextBuilder& add_shadow_render_pass();
 
     VulkanContextBuilder& add_shadow_pipeline(
-        const std::string& vertex_shader = "shadow.vert", const std::string& fragment_shader = "shadow.frag");
+        std::string_view layout_name = "shadow",
+        const std::string& vertex_shader = "shadow.vert",
+        const std::string& fragment_shader = "shadow.frag");
 
     VulkanContextBuilder& add_scene(const std::function<std::unique_ptr<RenderScene>(const Device&)>& scene_factory);
 
@@ -62,7 +64,7 @@ class VulkanContextBuilder
 
     VulkanContextBuilder& add_framebuffers();
 
-    VulkanContextBuilder& add_graphics_pipeline();
+    VulkanContextBuilder& add_graphics_pipeline(std::string_view layout_name = "default");
 
     VulkanContextBuilder& add_gui();
 

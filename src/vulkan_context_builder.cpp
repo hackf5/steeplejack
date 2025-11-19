@@ -1,5 +1,8 @@
 #include "vulkan_context_builder.h"
 
+#include <stdexcept>
+#include <string>
+
 using namespace steeplejack;
 
 VulkanContextBuilder& VulkanContextBuilder::add_window(int width, int height, const std::string& title)
@@ -28,7 +31,12 @@ VulkanContextBuilder& VulkanContextBuilder::add_graphics_queue()
 
 VulkanContextBuilder& VulkanContextBuilder::add_descriptor_set_layout(std::string_view layout_name)
 {
-    m_context->m_descriptor_set_layout = std::make_unique<DescriptorSetLayout>(*m_context->m_device, layout_name);
+    auto name = std::string(layout_name);
+    if (m_context->m_descriptor_set_layouts.contains(name))
+    {
+        throw std::runtime_error("Descriptor set layout already registered: " + name);
+    }
+    m_context->m_descriptor_set_layouts.emplace(name, std::make_unique<DescriptorSetLayout>(*m_context->m_device, layout_name));
     return *this;
 }
 
@@ -86,11 +94,14 @@ VulkanContextBuilder& VulkanContextBuilder::add_shadow_framebuffers()
     return *this;
 }
 
-VulkanContextBuilder&
-VulkanContextBuilder::add_shadow_pipeline(const std::string& vertex_shader, const std::string& fragment_shader)
+VulkanContextBuilder& VulkanContextBuilder::add_shadow_pipeline(
+    std::string_view layout_name,
+    const std::string& vertex_shader,
+    const std::string& fragment_shader)
 {
     m_context->m_shadow_pipeline = std::make_unique<ShadowPipeline>(
         *m_context->m_device,
+        m_context->descriptor_set_layout(layout_name),
         *m_context->m_shadow_render_pass,
         vertex_shader,
         fragment_shader);
@@ -147,11 +158,11 @@ VulkanContextBuilder& VulkanContextBuilder::add_framebuffers()
     return *this;
 }
 
-VulkanContextBuilder& VulkanContextBuilder::add_graphics_pipeline()
+VulkanContextBuilder& VulkanContextBuilder::add_graphics_pipeline(std::string_view layout_name)
 {
     m_context->m_graphics_pipeline = std::make_unique<GraphicsPipeline>(
         *m_context->m_device,
-        *m_context->m_descriptor_set_layout,
+        m_context->descriptor_set_layout(layout_name),
         *m_context->m_render_pass,
         m_context->m_render_scene->vertex_shader(),
         m_context->m_render_scene->fragment_shader());

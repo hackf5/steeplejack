@@ -9,12 +9,13 @@ using namespace steeplejack;
 
 ShadowPipeline::ShadowPipeline(
     const Device& device,
+    DescriptorSetLayout& descriptor_set_layout,
     const ShadowRenderPass& shadow_render_pass,
-    const std::string& vertex_shader,
-    const std::string& fragment_shader) :
+    std::string_view vertex_shader,
+    std::string_view fragment_shader) :
     m_device(device),
-    m_descriptor_set_layout(create_descriptor_set_layout()),
-    m_pipeline_layout(m_descriptor_set_layout->create_pipeline_layout()),
+    m_descriptor_set_layout(descriptor_set_layout),
+    m_pipeline_layout(m_descriptor_set_layout.create_pipeline_layout()),
     m_pipeline(create_pipeline(shadow_render_pass, vertex_shader, fragment_shader)),
     vkCmdPushDescriptorSetKHR(fetch_vkCmdPushDescriptorSetKHR())
 {
@@ -27,17 +28,10 @@ ShadowPipeline::~ShadowPipeline()
     vkDestroyPipelineLayout(m_device.vk(), m_pipeline_layout, nullptr);
 }
 
-std::unique_ptr<DescriptorSetLayout> ShadowPipeline::create_descriptor_set_layout() const
-{
-    spdlog::info("Creating Shadow Pipeline Descriptor Set Layout");
-
-    return std::make_unique<DescriptorSetLayout>(m_device, "shadow");
-}
-
 VkPipeline ShadowPipeline::create_pipeline(
     const ShadowRenderPass& shadow_render_pass,
-    const std::string& vertex_shader,
-    const std::string& fragment_shader) const
+    std::string_view vertex_shader,
+    std::string_view fragment_shader) const
 {
     spdlog::info("Creating Shadow Pipeline");
 

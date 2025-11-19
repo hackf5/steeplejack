@@ -2,7 +2,7 @@
 
 #include "device.h"
 
-#include <string>
+#include <string_view>
 
 namespace steeplejack
 {
@@ -15,12 +15,12 @@ class ShaderModule
 
     VkShaderModule m_shader_module;
 
-    static std::vector<char> read_file(const std::string& name);
+    static std::vector<char> read_file(std::string_view name);
 
     [[nodiscard]] VkShaderModule create_shader_module() const;
 
   public:
-    ShaderModule(const Device& device, std::string name);
+    ShaderModule(const Device& device, std::string_view name);
     ~ShaderModule();
 
     ShaderModule(const ShaderModule&) = delete;

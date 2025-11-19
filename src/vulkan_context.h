@@ -23,6 +23,10 @@
 #include "vulkan/window.h"
 
 #include <memory>
+#include <stdexcept>
+#include <string>
+#include <string_view>
+#include <unordered_map>
 
 namespace steeplejack
 {
@@ -33,7 +37,7 @@ class VulkanContext
     std::unique_ptr<Device> m_device;
     std::unique_ptr<AdhocQueues> m_adhoc_queues;
     std::unique_ptr<GraphicsQueue> m_graphics_queue;
-    std::unique_ptr<DescriptorSetLayout> m_descriptor_set_layout;
+    std::unordered_map<std::string, std::unique_ptr<DescriptorSetLayout>> m_descriptor_set_layouts;
     std::unique_ptr<GraphicsBuffers> m_graphics_buffers;
     std::unique_ptr<Sampler> m_sampler;
     std::unique_ptr<ShadowSampler> m_shadow_sampler;
@@ -84,9 +88,24 @@ class VulkanContext
         return *m_graphics_queue;
     }
 
-    [[nodiscard]] const DescriptorSetLayout& descriptor_set_layout() const
+    [[nodiscard]] DescriptorSetLayout& descriptor_set_layout(std::string_view name)
     {
-        return *m_descriptor_set_layout;
+        auto it = m_descriptor_set_layouts.find(std::string(name));
+        if (it == m_descriptor_set_layouts.end())
+        {
+            throw std::runtime_error("Descriptor set layout not found: " + std::string(name));
+        }
+        return *it->second;
+    }
+
+    [[nodiscard]] const DescriptorSetLayout& descriptor_set_layout(std::string_view name) const
+    {
+        auto it = m_descriptor_set_layouts.find(std::string(name));
+        if (it == m_descriptor_set_layouts.end())
+        {
+            throw std::runtime_error("Descriptor set layout not found: " + std::string(name));
+        }
+        return *it->second;
     }
 
     [[nodiscard]] const GraphicsBuffers& graphics_buffers() const

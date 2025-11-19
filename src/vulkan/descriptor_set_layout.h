@@ -40,7 +40,7 @@ class DescriptorSetLayout
 
     void reset_writes();
 
-    std::vector<VkWriteDescriptorSet> get_write_descriptor_sets() const;
+    [[nodiscard]] std::vector<VkWriteDescriptorSet> get_write_descriptor_sets() const;
 
     DescriptorSetLayout& write_combined_image_sampler(VkDescriptorImageInfo* image_info, uint32_t binding_index)
     {

@@ -3,12 +3,12 @@
 #include "spdlog/spdlog.h"
 
 #include <fstream>
-#include <utility>
+#include <string_view>
 
 using namespace steeplejack;
 
-ShaderModule::ShaderModule(const Device& device, std::string name) :
-    m_device(device), m_name(std::move(name)), m_shader_module(create_shader_module())
+ShaderModule::ShaderModule(const Device& device, std::string_view name) :
+    m_device(device), m_name(std::string(name)), m_shader_module(create_shader_module())
 {
 }
 
@@ -18,9 +18,9 @@ ShaderModule::~ShaderModule()
     vkDestroyShaderModule(m_device.vk(), m_shader_module, nullptr);
 }
 
-std::vector<char> ShaderModule::read_file(const std::string& name)
+std::vector<char> ShaderModule::read_file(std::string_view name)
 {
-    auto file_name = "shaders/" + name + ".spv";
+    auto file_name = "shaders/" + std::string(name) + ".spv";
     std::ifstream file(file_name, std::ios::ate | std::ios::binary);
 
     if (!file.is_open())
