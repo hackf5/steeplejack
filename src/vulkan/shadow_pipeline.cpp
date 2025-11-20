@@ -28,14 +28,14 @@ ShadowPipeline::~ShadowPipeline()
     vkDestroyPipelineLayout(m_device.vk(), m_pipeline_layout, nullptr);
 }
 
-VkPipeline ShadowPipeline::create_pipeline(
-    const ShadowRenderPass& shadow_render_pass,
-    std::string_view vertex_shader,
-    std::string_view fragment_shader) const
-{
-    spdlog::info("Creating Shadow Pipeline");
+    VkPipeline ShadowPipeline::create_pipeline(
+        const ShadowRenderPass& shadow_render_pass,
+        std::string_view vertex_shader,
+        std::string_view fragment_shader) const
+    {
+        spdlog::info("Creating Shadow Pipeline");
 
-    auto vertex_input_state = VertexInputState(0, Vertex::kPositionOnly);
+        auto vertex_input_state = VertexInputState::make_position_only(0);
 
     auto vertex_shader_module = ShaderModule(m_device, vertex_shader);
     auto fragment_shader_module = ShaderModule(m_device, fragment_shader);

@@ -2,7 +2,6 @@
 
 #include "glm_config.hpp"
 
-#include <array>
 #include <cstdint>
 #include <span>
 #include <vector>
@@ -20,14 +19,9 @@ enum class VertexComponent : std::uint8_t
 
 struct Vertex
 {
-    using IndexT = uint32_t;
+    using Index = uint32_t;
 
     static constexpr VkIndexType kVkIndexType = VK_INDEX_TYPE_UINT32;
-
-    static constexpr std::array<VertexComponent, 4> kAllComponents{
-        VertexComponent::Position, VertexComponent::UV, VertexComponent::Color, VertexComponent::Normal};
-
-    static constexpr std::array<VertexComponent, 1> kPositionOnly{VertexComponent::Position};
 
     glm::vec3 pos;
     glm::vec3 normal;
@@ -43,13 +37,7 @@ struct VertexInputState
 
     VertexInputState(uint32_t binding, std::span<const VertexComponent> components);
 
-  private:
-    static VkVertexInputBindingDescription create_binding(uint32_t binding);
-
-    VkVertexInputAttributeDescription create_attribute(uint32_t location, VertexComponent component) const;
-
-    std::vector<VkVertexInputAttributeDescription> create_attributes(std::span<const VertexComponent> components);
-
-    VkPipelineVertexInputStateCreateInfo create_pipeline();
+    static VertexInputState make_all(uint32_t binding);
+    static VertexInputState make_position_only(uint32_t binding);
 };
 } // namespace steeplejack

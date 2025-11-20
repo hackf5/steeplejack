@@ -24,7 +24,7 @@ class CubesOne final : public RenderScene
 
     typedef std::array<Vertex, VERTEXES_PER_FACE> face_t;
     typedef std::array<Vertex, VERTEXES_COUNT> vertexes_t;
-    typedef std::array<Vertex::IndexT, INDEXES_COUNT> indexes_t;
+    typedef std::array<Vertex::Index, INDEXES_COUNT> indexes_t;
 
     const indexes_t m_indexes;
     const vertexes_t m_vertexes;
