@@ -1,12 +1,11 @@
 #pragma once
 
-#include "adhoc_queues.h"
-#include "buffer/buffer.h"
 #include "device.h"
 #include "image.h"
 #include "image_view.h"
 #include "sampler.h"
 
+#include <cstdint>
 #include <span>
 #include <string>
 #include <vma/vk_mem_alloc.h>
@@ -14,6 +13,8 @@
 
 namespace steeplejack
 {
+class AdhocQueues;
+
 enum class TextureColorSpace : std::uint8_t
 {
     Srgb,
@@ -29,16 +30,6 @@ class Texture
     const ImageView m_image_view;
     VkDescriptorImageInfo m_image_descriptor_info;
     const TextureColorSpace m_color_space;
-
-    Buffer create_staging_buffer(const std::string& name, int& width, int& height);
-    Image create_image(const AdhocQueues& adhoc_queues, TextureColorSpace color_space);
-    VkDescriptorImageInfo create_image_descriptor_info(const Sampler& sampler);
-
-    void transition_image_layout(
-        Image& image, const AdhocQueues& adhoc_queues, VkImageLayout old_layout, VkImageLayout new_layout);
-
-    void copy_staging_buffer_to_image(
-        const Buffer& staging_buffer, const AdhocQueues& adhoc_queues, Image& image);
 
   public:
     Texture(
@@ -64,9 +55,6 @@ class Texture
     Texture& operator=(Texture&&) = delete;
     ~Texture() = default;
 
-    VkDescriptorImageInfo* descriptor()
-    {
-        return &m_image_descriptor_info;
-    }
+    VkDescriptorImageInfo* descriptor();
 };
 } // namespace steeplejack

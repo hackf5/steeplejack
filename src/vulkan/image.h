@@ -44,7 +44,7 @@ class Image
         VkImageUsageFlags usage,
         VkImageTiling tiling,
         VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT,
-    uint32_t array_layers = 1);
+        uint32_t array_layers = 1);
     ~Image();
 
     Image(const Image&) = delete;

@@ -129,8 +129,7 @@ const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(st
 }
 
 DescriptorSetLayout& DescriptorSetLayout::write_combined_image_sampler(
-    VkDescriptorImageInfo* image_info,
-    const BindingHandle& binding_handle)
+    VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle)
 {
     auto& write_descriptor_set = m_write_descriptor_sets[binding_handle.write_index];
     write_descriptor_set.dstBinding = binding_handle.binding;
@@ -161,7 +160,7 @@ void DescriptorSetLayout::reset_writes()
 
 std::span<const VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets() const
 {
-    size_t size  = 0;
+    size_t size = 0;
     for (const auto& write : m_write_descriptor_sets)
     {
         switch (write.descriptorType)

@@ -36,7 +36,9 @@ VulkanContextBuilder& VulkanContextBuilder::add_descriptor_set_layout(std::strin
     {
         throw std::runtime_error("Descriptor set layout already registered: " + name);
     }
-    m_context->m_descriptor_set_layouts.emplace(name, std::make_unique<DescriptorSetLayout>(*m_context->m_device, layout_name));
+    m_context->m_descriptor_set_layouts.emplace(
+        name,
+        std::make_unique<DescriptorSetLayout>(*m_context->m_device, layout_name));
     return *this;
 }
 
@@ -95,9 +97,7 @@ VulkanContextBuilder& VulkanContextBuilder::add_shadow_framebuffers()
 }
 
 VulkanContextBuilder& VulkanContextBuilder::add_shadow_pipeline(
-    std::string_view layout_name,
-    const std::string& vertex_shader,
-    const std::string& fragment_shader)
+    std::string_view layout_name, const std::string& vertex_shader, const std::string& fragment_shader)
 {
     m_context->m_shadow_pipeline = std::make_unique<ShadowPipeline>(
         *m_context->m_device,

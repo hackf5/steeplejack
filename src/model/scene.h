@@ -39,7 +39,6 @@ class Scene
         m_lights.spot_at(1).enable = true;
         m_lights.spot_at(1).position = glm::vec3(-2.0F, 2.0F, 2.0F);
         m_lights.spot_at(1).direction = glm::normalize(glm::vec3(1.0F, -1.0F, -1.0F));
-
     }
 
     Scene(const Scene&) = delete;

@@ -57,7 +57,6 @@ class DescriptorSetLayout
     DescriptorSetLayout&
     write_combined_image_sampler(VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle);
 
-    DescriptorSetLayout&
-    write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle);
+    DescriptorSetLayout& write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle);
 };
 } // namespace steeplejack
