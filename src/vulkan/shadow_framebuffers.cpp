@@ -6,26 +6,11 @@
 
 using namespace steeplejack;
 
-ShadowFramebuffers::ShadowFramebuffers(
-    const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass) :
-    m_device(device), m_framebuffers(create_framebuffers(shadow_map_array, shadow_render_pass))
+namespace
 {
-}
-
-ShadowFramebuffers::~ShadowFramebuffers()
+[[nodiscard]] std::vector<VkFramebuffer> create_framebuffers(
+    const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass)
 {
-    spdlog::info("Destroying Shadow Framebuffers");
-    for (auto* framebuffer : m_framebuffers)
-    {
-        vkDestroyFramebuffer(m_device.vk(), framebuffer, nullptr);
-    }
-}
-
-std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
-    const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass)
-{
-    spdlog::info("Creating Shadow Framebuffers");
-
     std::vector<VkFramebuffer> framebuffers;
     framebuffers.resize(shadow_map_array.layers());
 
@@ -43,7 +28,7 @@ std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
         framebuffer_info.layers = 1;
 
         VkFramebuffer framebuffer = nullptr;
-        if (vkCreateFramebuffer(m_device.vk(), &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
+        if (vkCreateFramebuffer(device.vk(), &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create shadow framebuffer");
         }
@@ -52,4 +37,31 @@ std::vector<VkFramebuffer> ShadowFramebuffers::create_framebuffers(
     }
 
     return framebuffers;
+}
+} // namespace
+
+ShadowFramebuffers::ShadowFramebuffers(
+    const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass) :
+    m_device(device), m_framebuffers(create_framebuffers(device, shadow_map_array, shadow_render_pass))
+{
+    spdlog::info("Creating Shadow Framebuffers");
+}
+
+ShadowFramebuffers::~ShadowFramebuffers()
+{
+    spdlog::info("Destroying Shadow Framebuffers");
+    for (auto* framebuffer : m_framebuffers)
+    {
+        vkDestroyFramebuffer(m_device.vk(), framebuffer, nullptr);
+    }
+}
+
+size_t ShadowFramebuffers::size() const
+{
+    return m_framebuffers.size();
+}
+
+VkFramebuffer ShadowFramebuffers::at(size_t index) const
+{
+    return m_framebuffers.at(index);
 }

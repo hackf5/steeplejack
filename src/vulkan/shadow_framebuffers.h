@@ -15,9 +15,6 @@ class ShadowFramebuffers
     const Device& m_device;
     const std::vector<VkFramebuffer> m_framebuffers;
 
-    std::vector<VkFramebuffer>
-    create_framebuffers(const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass);
-
   public:
     ShadowFramebuffers(
         const Device& device, const ShadowMapArray& shadow_map_array, const ShadowRenderPass& shadow_render_pass);
@@ -28,14 +25,8 @@ class ShadowFramebuffers
     ShadowFramebuffers(ShadowFramebuffers&&) = delete;
     ShadowFramebuffers& operator=(ShadowFramebuffers&&) = delete;
 
-    [[nodiscard]] size_t size() const
-    {
-        return m_framebuffers.size();
-    }
+    [[nodiscard]] size_t size() const;
 
-    [[nodiscard]] VkFramebuffer at(size_t index) const
-    {
-        return m_framebuffers.at(index);
-    }
+    [[nodiscard]] VkFramebuffer at(size_t index) const;
 };
 } // namespace steeplejack
