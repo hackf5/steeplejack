@@ -29,9 +29,9 @@ class Image
         VmaAllocationInfo info;
     };
 
-    const Device& m_device;
-    const ImageInfo m_image_info;
-    const AllocationInfo m_allocation_info;
+    const Device* m_device;
+    ImageInfo m_image_info;
+    AllocationInfo m_allocation_info;
 
     AllocationInfo create_allocation_info();
 
@@ -44,12 +44,12 @@ class Image
         VkImageUsageFlags usage,
         VkImageTiling tiling,
         VkSampleCountFlagBits samples = VK_SAMPLE_COUNT_1_BIT,
-        uint32_t array_layers = 1);
+    uint32_t array_layers = 1);
     ~Image();
 
     Image(const Image&) = delete;
     Image& operator=(const Image&) = delete;
-    Image(Image&&) = delete;
+    Image(Image&&) noexcept;
     Image& operator=(Image&&) = delete;
 
     [[nodiscard]] VkImage vk() const

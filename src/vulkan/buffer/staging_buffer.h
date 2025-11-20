@@ -21,5 +21,11 @@ class StagingBuffer : public BufferHost
     {
         copy_from(range);
     }
+
+    StagingBuffer(const StagingBuffer&) = delete;
+    StagingBuffer& operator=(const StagingBuffer&) = delete;
+    StagingBuffer(StagingBuffer&&) noexcept = default;
+    StagingBuffer& operator=(StagingBuffer&&) = delete;
+    ~StagingBuffer() = default;
 };
 } // namespace steeplejack

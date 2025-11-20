@@ -18,15 +18,15 @@ class Buffer
         VmaAllocationInfo info;
     };
 
-    const VmaAllocator m_allocator;
+    VmaAllocator m_allocator;
 
-    const VkBufferUsageFlags m_usage;
-    const VmaMemoryUsage m_memory_usage;
-    const VmaAllocationCreateFlags m_allocation_flags;
+    VkBufferUsageFlags m_usage;
+    VmaMemoryUsage m_memory_usage;
+    VmaAllocationCreateFlags m_allocation_flags;
 
     AllocationInfo m_allocation_info;
 
-    const VkDeviceSize m_buffer_size; // requested buffer size used for descriptors
+    VkDeviceSize m_buffer_size; // requested buffer size used for descriptors
 
     VkDescriptorBufferInfo m_descriptor;
 
@@ -50,7 +50,7 @@ class Buffer
 
     Buffer(const Buffer&) = delete;
     Buffer& operator=(const Buffer&) = delete;
-    Buffer(Buffer&&) = delete;
+    Buffer(Buffer&&) noexcept;
     Buffer& operator=(Buffer&&) = delete;
 
     [[nodiscard]] VkBuffer vk() const

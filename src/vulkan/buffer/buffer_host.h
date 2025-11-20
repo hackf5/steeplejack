@@ -23,6 +23,12 @@ class BufferHost : public Buffer
     {
     }
 
+    BufferHost(const BufferHost&) = delete;
+    BufferHost& operator=(const BufferHost&) = delete;
+    BufferHost(BufferHost&&) noexcept = default;
+    BufferHost& operator=(BufferHost&&) = delete;
+    ~BufferHost() = default;
+
     template <typename T> void copy_from(const T& data)
     {
         copy_to(mapped_span().data(), data);

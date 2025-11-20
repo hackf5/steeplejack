@@ -13,7 +13,7 @@ Image::Image(
     VkImageTiling tiling,
     VkSampleCountFlagBits samples,
     uint32_t array_layers) :
-    m_device(device),
+    m_device(&device),
     m_image_info(
         {.width = width,
          .height = height,
@@ -30,7 +30,20 @@ Image::~Image()
 {
     spdlog::info("Destroying Image");
 
-    vmaDestroyImage(m_device.allocator(), m_allocation_info.image, m_allocation_info.allocation);
+    if (m_allocation_info.image != nullptr)
+    {
+        vmaDestroyImage(m_device->allocator(), m_allocation_info.image, m_allocation_info.allocation);
+    }
+}
+
+Image::Image(Image&& other) noexcept : m_device(other.m_device), m_image_info(other.m_image_info)
+{
+    m_allocation_info.image = other.m_allocation_info.image;
+    m_allocation_info.allocation = other.m_allocation_info.allocation;
+    m_allocation_info.info = other.m_allocation_info.info;
+
+    other.m_allocation_info.image = nullptr;
+    other.m_allocation_info.allocation = nullptr;
 }
 
 Image::AllocationInfo Image::create_allocation_info()
@@ -59,7 +72,7 @@ Image::AllocationInfo Image::create_allocation_info()
     VkImage image = nullptr;
     VmaAllocation allocation = nullptr;
     VmaAllocationInfo allocation_info;
-    if (vmaCreateImage(m_device.allocator(), &image_info, &image_alloc_info, &image, &allocation, &allocation_info) !=
+    if (vmaCreateImage(m_device->allocator(), &image_info, &image_alloc_info, &image, &allocation, &allocation_info) !=
         VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create image");

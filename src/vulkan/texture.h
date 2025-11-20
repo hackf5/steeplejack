@@ -7,7 +7,6 @@
 #include "image_view.h"
 #include "sampler.h"
 
-#include <memory>
 #include <span>
 #include <string>
 #include <vma/vk_mem_alloc.h>
@@ -24,20 +23,22 @@ enum class TextureColorSpace : std::uint8_t
 class Texture
 {
   private:
-    const Device& m_device;
+    const Device* m_device;
     const std::string m_name;
-    const std::unique_ptr<Image> m_image;
+    Image m_image;
     const ImageView m_image_view;
     VkDescriptorImageInfo m_image_descriptor_info;
     const TextureColorSpace m_color_space;
 
-    std::unique_ptr<Buffer> create_staging_buffer(const std::string& name, int& width, int& height);
-    std::unique_ptr<Image> create_image(const AdhocQueues& adhoc_queues, TextureColorSpace color_space);
+    Buffer create_staging_buffer(const std::string& name, int& width, int& height);
+    Image create_image(const AdhocQueues& adhoc_queues, TextureColorSpace color_space);
     VkDescriptorImageInfo create_image_descriptor_info(const Sampler& sampler);
 
-    void transition_image_layout(const AdhocQueues& adhoc_queues, VkImageLayout old_layout, VkImageLayout new_layout);
+    void transition_image_layout(
+        Image& image, const AdhocQueues& adhoc_queues, VkImageLayout old_layout, VkImageLayout new_layout);
 
-    void copy_staging_buffer_to_image(const Buffer& staging_buffer, const AdhocQueues& adhoc_queues);
+    void copy_staging_buffer_to_image(
+        const Buffer& staging_buffer, const AdhocQueues& adhoc_queues, Image& image);
 
   public:
     Texture(

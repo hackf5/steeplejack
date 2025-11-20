@@ -20,7 +20,25 @@ Buffer::Buffer(
 
 Buffer::~Buffer()
 {
-    vmaDestroyBuffer(m_allocator, m_allocation_info.buffer, m_allocation_info.allocation);
+    if (m_allocation_info.buffer != VK_NULL_HANDLE)
+    {
+        vmaDestroyBuffer(m_allocator, m_allocation_info.buffer, m_allocation_info.allocation);
+    }
+}
+
+Buffer::Buffer(Buffer&& other) noexcept :
+    m_allocator(other.m_allocator),
+    m_usage(other.m_usage),
+    m_memory_usage(other.m_memory_usage),
+    m_allocation_flags(other.m_allocation_flags),
+    m_allocation_info(other.m_allocation_info),
+    m_buffer_size(other.m_buffer_size),
+    m_descriptor(other.m_descriptor)
+{
+    other.m_allocation_info.buffer = VK_NULL_HANDLE;
+    other.m_allocation_info.allocation = nullptr;
+    other.m_allocation_info.info = {};
+    other.m_descriptor = {};
 }
 
 Buffer::AllocationInfo Buffer::create_allocation_info(VkDeviceSize size)
