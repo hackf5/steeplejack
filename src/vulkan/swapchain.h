@@ -18,11 +18,6 @@ class Swapchain
     const VkViewport m_viewport;
     const VkRect2D m_scissor;
 
-    [[nodiscard]] vkb::Swapchain create_swapchain();
-    [[nodiscard]] VkViewport create_viewport() const;
-    [[nodiscard]] VkRect2D create_scissor() const;
-    [[nodiscard]] std::vector<VkSemaphore> create_semaphores(size_t count);
-
   public:
     explicit Swapchain(const Device& device);
     ~Swapchain();
