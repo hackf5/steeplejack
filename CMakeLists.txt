@@ -50,6 +50,12 @@ endfunction()
 
 steeplejack_enable_warnings(steeplejack_engine)
 
+include(CheckIPOSupported)
+check_ipo_supported(RESULT STEEPLEJACK_IPO_SUPPORTED OUTPUT STEEPLEJACK_IPO_ERROR)
+if (NOT STEEPLEJACK_IPO_SUPPORTED)
+    message(WARNING "Interprocedural optimization (LTO) not supported: ${STEEPLEJACK_IPO_ERROR}")
+endif()
+
 # Dependencies via vcpkg
 find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
@@ -103,6 +109,11 @@ add_executable(steeplejack
 target_link_libraries(steeplejack PRIVATE steeplejack_engine)
 target_compile_features(steeplejack PUBLIC cxx_std_23)
 steeplejack_enable_warnings(steeplejack)
+
+if (STEEPLEJACK_IPO_SUPPORTED)
+    set_property(TARGET steeplejack_engine PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+    set_property(TARGET steeplejack PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE TRUE)
+endif()
 
 # Build shaders with glslangValidator into ${CMAKE_BINARY_DIR}/shaders
 add_subdirectory(shaders)
