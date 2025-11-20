@@ -4,14 +4,13 @@
 #include <string>
 #include <unordered_map>
 
-#include "vulkan/texture_types.h"
-
 namespace steeplejack
 {
 class AdhocQueues;
 class Device;
 class Sampler;
 class Texture;
+enum class TextureColorSpace : std::uint8_t;
 
 class TextureFactory
 {
@@ -35,10 +34,6 @@ class TextureFactory
         const std::string& name,
         const std::string& texture_name,
         TextureColorSpace color_space);
-
-    // Load the baseColor (albedo) texture referenced by a glTF/GLB file.
-    // gltf_relpath is relative to assets/textures/ (e.g., "rock_wall_15_1k/rock_wall_15_1k.gltf").
-    void load_texture_from_gltf(const std::string& name, const std::string& gltf_relpath);
 
     void remove_texture(const std::string& name);
 
