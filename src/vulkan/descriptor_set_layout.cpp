@@ -14,10 +14,11 @@ using config::DescriptorLayoutConfig;
 
 DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view layout_name) :
     m_device(device),
-    m_layout_definition(config::DescriptorLayoutConfig::instance().require_layout(layout_name)),
+    m_layout_definition(DescriptorLayoutConfig::instance().require_layout(layout_name)),
     m_descriptor_set_layout(create_descriptor_set_layout()),
     m_descriptor_set_layouts({m_descriptor_set_layout}),
-    m_write_descriptor_sets(create_write_descriptor_sets())
+    m_write_descriptor_sets(create_write_descriptor_sets()),
+    m_active_write_sets(m_write_descriptor_sets.size())
 {
     spdlog::info("Creating Descriptor Set Layout '{}'", layout_name);
 
@@ -158,11 +159,9 @@ void DescriptorSetLayout::reset_writes()
     }
 }
 
-std::vector<VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets() const
+std::span<const VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets() const
 {
-    std::vector<VkWriteDescriptorSet> result;
-    result.reserve(m_write_descriptor_sets.size());
-
+    size_t size  = 0;
     for (const auto& write : m_write_descriptor_sets)
     {
         switch (write.descriptorType)
@@ -173,7 +172,7 @@ std::vector<VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets
         case VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC:
             if (write.pBufferInfo != nullptr)
             {
-                result.push_back(write);
+                m_active_write_sets[size++] = write;
             }
             break;
         case VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER:
@@ -183,7 +182,7 @@ std::vector<VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets
         case VK_DESCRIPTOR_TYPE_INPUT_ATTACHMENT:
             if (write.pImageInfo != nullptr)
             {
-                result.push_back(write);
+                m_active_write_sets[size++] = write;
             }
             break;
         default:
@@ -192,5 +191,5 @@ std::vector<VkWriteDescriptorSet> DescriptorSetLayout::get_write_descriptor_sets
         }
     }
 
-    return result;
+    return {m_active_write_sets.data(), size};
 }

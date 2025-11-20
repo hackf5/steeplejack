@@ -4,6 +4,7 @@
 #include "vulkan/device.h"
 
 #include <array>
+#include <span>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -26,12 +27,13 @@ class DescriptorSetLayout
 
   private:
     const Device& m_device;
-    const config::DescriptorLayoutDefinition& m_layout_definition;
+    const DescriptorLayoutDefinition& m_layout_definition;
     const VkDescriptorSetLayout m_descriptor_set_layout;
     const std::array<VkDescriptorSetLayout, 1> m_descriptor_set_layouts;
     std::vector<VkWriteDescriptorSet> m_write_descriptor_sets;
     std::vector<size_t> m_binding_to_write_index;
     std::unordered_map<std::string, BindingHandle> m_binding_handles;
+    mutable std::vector<VkWriteDescriptorSet> m_active_write_sets;
 
     VkDescriptorSetLayout create_descriptor_set_layout();
     std::vector<VkWriteDescriptorSet> create_write_descriptor_sets();
@@ -50,7 +52,7 @@ class DescriptorSetLayout
 
     void reset_writes();
 
-    [[nodiscard]] std::vector<VkWriteDescriptorSet> get_write_descriptor_sets() const;
+    [[nodiscard]] std::span<const VkWriteDescriptorSet> get_write_descriptor_sets() const;
 
     DescriptorSetLayout&
     write_combined_image_sampler(VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle);

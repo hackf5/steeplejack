@@ -5,7 +5,6 @@
 #include "render_pass.h"
 
 #include <string>
-#include <vector>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
