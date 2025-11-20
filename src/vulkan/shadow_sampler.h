@@ -12,8 +12,6 @@ class ShadowSampler
     const Device& m_device;
     const VkSampler m_sampler;
 
-    [[nodiscard]] VkSampler create_sampler() const;
-
   public:
     explicit ShadowSampler(const Device& device);
     ~ShadowSampler();
@@ -23,9 +21,6 @@ class ShadowSampler
     ShadowSampler(ShadowSampler&&) = delete;
     ShadowSampler& operator=(ShadowSampler&&) = delete;
 
-    [[nodiscard]] VkSampler vk() const
-    {
-        return m_sampler;
-    }
+    [[nodiscard]] VkSampler vk() const;
 };
 } // namespace steeplejack

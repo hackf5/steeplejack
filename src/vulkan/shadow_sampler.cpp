@@ -6,15 +6,9 @@
 
 using namespace steeplejack;
 
-ShadowSampler::ShadowSampler(const Device& device) : m_device(device), m_sampler(create_sampler()) {}
-
-ShadowSampler::~ShadowSampler()
+namespace
 {
-    spdlog::info("Destroying ShadowSampler");
-    vkDestroySampler(m_device.vk(), m_sampler, nullptr);
-}
-
-VkSampler ShadowSampler::create_sampler() const
+[[nodiscard]] VkSampler create_sampler(const Device& device)
 {
     spdlog::info("Creating ShadowSampler");
 
@@ -36,10 +30,24 @@ VkSampler ShadowSampler::create_sampler() const
     sampler_info.maxLod = 0.0F;
 
     VkSampler sampler = nullptr;
-    if (vkCreateSampler(m_device.vk(), &sampler_info, nullptr, &sampler) != VK_SUCCESS)
+    if (vkCreateSampler(device.vk(), &sampler_info, nullptr, &sampler) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create shadow sampler");
     }
 
     return sampler;
+}
+} // namespace
+
+ShadowSampler::ShadowSampler(const Device& device) : m_device(device), m_sampler(create_sampler(device)) {}
+
+ShadowSampler::~ShadowSampler()
+{
+    spdlog::info("Destroying ShadowSampler");
+    vkDestroySampler(m_device.vk(), m_sampler, nullptr);
+}
+
+VkSampler ShadowSampler::vk() const
+{
+    return m_sampler;
 }
