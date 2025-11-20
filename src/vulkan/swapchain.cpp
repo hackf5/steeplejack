@@ -96,3 +96,49 @@ Swapchain::~Swapchain()
 
     vkb::destroy_swapchain(m_swapchain);
 }
+
+VkSwapchainKHR Swapchain::vk() const
+{
+    return m_swapchain.swapchain;
+}
+
+VkExtent2D Swapchain::extent() const
+{
+    return m_swapchain.extent;
+}
+
+float Swapchain::aspect_ratio() const
+{
+    return static_cast<float>(m_swapchain.extent.width) / static_cast<float>(m_swapchain.extent.height);
+}
+
+uint32_t Swapchain::image_count() const
+{
+    return m_swapchain.image_count;
+}
+
+VkFormat Swapchain::image_format() const
+{
+    return m_swapchain.image_format;
+}
+
+const VkImage& Swapchain::image(size_t image_index) const
+{
+    return m_swapchain_images[image_index];
+}
+
+const VkImageView& Swapchain::image_view(size_t image_index) const
+{
+    return m_swapchain_image_views[image_index];
+}
+
+VkSemaphore Swapchain::render_finished(size_t image_index) const
+{
+    return m_render_finished[image_index];
+}
+
+void Swapchain::clip(VkCommandBuffer command_buffer) const
+{
+    vkCmdSetViewport(command_buffer, 0, 1, &m_viewport);
+    vkCmdSetScissor(command_buffer, 0, 1, &m_scissor);
+}
