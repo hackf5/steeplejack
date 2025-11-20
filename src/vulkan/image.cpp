@@ -36,12 +36,9 @@ Image::~Image()
     }
 }
 
-Image::Image(Image&& other) noexcept : m_device(other.m_device), m_image_info(other.m_image_info)
+Image::Image(Image&& other) noexcept :
+    m_device(other.m_device), m_image_info(other.m_image_info), m_allocation_info(other.m_allocation_info)
 {
-    m_allocation_info.image = other.m_allocation_info.image;
-    m_allocation_info.allocation = other.m_allocation_info.allocation;
-    m_allocation_info.info = other.m_allocation_info.info;
-
     other.m_allocation_info.image = nullptr;
     other.m_allocation_info.allocation = nullptr;
 }

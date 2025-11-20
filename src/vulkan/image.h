@@ -31,7 +31,7 @@ class Image
 
     const Device* m_device;
     ImageInfo m_image_info;
-    AllocationInfo m_allocation_info;
+    AllocationInfo m_allocation_info{};
 
     AllocationInfo create_allocation_info();
 
