@@ -6,21 +6,10 @@
 
 using namespace steeplejack;
 
-ShadowRenderPass::ShadowRenderPass(const Device& device, VkFormat depth_format) :
-    m_device(device), m_render_pass(create_render_pass(depth_format))
+namespace
 {
-}
-
-ShadowRenderPass::~ShadowRenderPass()
+[[nodiscard]] VkRenderPass create_render_pass(const Device& device, VkFormat depth_format)
 {
-    spdlog::info("Destroying Shadow Render Pass");
-    vkDestroyRenderPass(m_device.vk(), m_render_pass, nullptr);
-}
-
-VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
-{
-    spdlog::info("Creating Shadow Render Pass");
-
     VkAttachmentDescription depth_attachment = {};
     depth_attachment.format = depth_format;
     depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
@@ -49,12 +38,25 @@ VkRenderPass ShadowRenderPass::create_render_pass(VkFormat depth_format) const
     render_pass_info.dependencyCount = 0;
 
     VkRenderPass render_pass = nullptr;
-    if (vkCreateRenderPass(m_device.vk(), &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
+    if (vkCreateRenderPass(device.vk(), &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create render pass");
     }
 
     return render_pass;
+}
+} // namespace
+
+ShadowRenderPass::ShadowRenderPass(const Device& device, VkFormat depth_format) :
+    m_device(device), m_render_pass(create_render_pass(device, depth_format))
+{
+    spdlog::info("Creating Shadow Render Pass");
+}
+
+ShadowRenderPass::~ShadowRenderPass()
+{
+    spdlog::info("Destroying Shadow Render Pass");
+    vkDestroyRenderPass(m_device.vk(), m_render_pass, nullptr);
 }
 
 RenderPassScope
@@ -74,4 +76,9 @@ ShadowRenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffe
     vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 
     return RenderPassScope(command_buffer);
+}
+
+VkRenderPass ShadowRenderPass::vk() const
+{
+    return m_render_pass;
 }
