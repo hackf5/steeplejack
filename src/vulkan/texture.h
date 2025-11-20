@@ -1,11 +1,11 @@
 #pragma once
 
-#include "device.h"
-#include "image.h"
-#include "image_view.h"
-#include "sampler.h"
+#include "vulkan/device.h"
+#include "vulkan/image.h"
+#include "vulkan/image_view.h"
+#include "vulkan/sampler.h"
+#include "vulkan/texture_types.h"
 
-#include <cstdint>
 #include <span>
 #include <string>
 #include <vma/vk_mem_alloc.h>
@@ -14,12 +14,6 @@
 namespace steeplejack
 {
 class AdhocQueues;
-
-enum class TextureColorSpace : std::uint8_t
-{
-    Srgb,
-    Linear
-};
 
 class Texture
 {

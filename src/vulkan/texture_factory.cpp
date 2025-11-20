@@ -1,7 +1,12 @@
 #include "vulkan/texture_factory.h"
 
+#include "vulkan/adhoc_queues.h"
+#include "vulkan/device.h"
+#include "vulkan/sampler.h"
 #include "spdlog/spdlog.h"
+#include "vulkan/texture.h"
 
+#include <array>
 #include <filesystem>
 #include <format>
 #include <tiny_gltf.h>
@@ -107,4 +112,28 @@ Texture* TextureFactory::operator[](const std::string& name)
     }
 
     return it->second.get();
+}
+
+bool TextureFactory::has(const std::string& name) const
+{
+    return m_textures.contains(name);
+}
+
+void TextureFactory::ensure_texture_rgba_1x1(
+    const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space)
+{
+    if (has(name))
+    {
+        return;
+    }
+
+    const std::array<std::byte, 4> px{std::byte{r}, std::byte{g}, std::byte{b}, std::byte{a}};
+    m_textures[name] = std::make_unique<Texture>(
+        m_device,
+        m_sampler,
+        m_adhoc_queues,
+        1,
+        1,
+        color_space,
+        std::span<const std::byte>(px.data(), px.size()));
 }
