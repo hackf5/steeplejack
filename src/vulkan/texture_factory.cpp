@@ -15,13 +15,12 @@ TextureFactory::TextureFactory(const Device& device, const Sampler& sampler, con
 {
 }
 
-void TextureFactory::load_texture(
-    const std::string& name, const std::string& texture_name, TextureColorSpace color_space)
+void TextureFactory::load(const std::string& name, const std::string& texture_name, TextureColorSpace color_space)
 {
     m_textures[name] = std::make_unique<Texture>(m_device, m_sampler, m_adhoc_queues, texture_name, color_space);
 }
 
-void TextureFactory::remove_texture(const std::string& name)
+void TextureFactory::remove(const std::string& name)
 {
     m_textures.erase(name);
 }
@@ -31,7 +30,7 @@ void TextureFactory::clear()
     m_textures.clear();
 }
 
-Texture* TextureFactory::operator[](const std::string& name)
+Texture* TextureFactory::at(const std::string& name)
 {
     auto it = m_textures.find(name);
     if (it == m_textures.end())
@@ -42,7 +41,7 @@ Texture* TextureFactory::operator[](const std::string& name)
     return it->second.get();
 }
 
-bool TextureFactory::has(const std::string& name) const
+bool TextureFactory::contains(const std::string& name) const
 {
     return m_textures.contains(name);
 }
@@ -50,7 +49,7 @@ bool TextureFactory::has(const std::string& name) const
 void TextureFactory::ensure_texture_rgba_1x1(
     const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space)
 {
-    if (has(name))
+    if (contains(name))
     {
         return;
     }

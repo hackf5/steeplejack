@@ -152,10 +152,10 @@ Material* MaterialFactory::operator[](const std::string& name)
 Material& MaterialFactory::create_unlit(const std::string& name, const std::string& texture_relpath)
 {
     auto tex_name = name + ".baseColor";
-    m_textures.load_texture(tex_name, texture_relpath, TextureColorSpace::Srgb);
+    m_textures.load(tex_name, texture_relpath, TextureColorSpace::Srgb);
 
     auto material = std::make_unique<Material>(m_device);
-    material->set_base_color(m_textures[tex_name]);
+    material->set_base_color(m_textures.at(tex_name));
 
     auto& ref = *material;
     m_materials[name] = std::move(material);
@@ -171,9 +171,9 @@ Material& MaterialFactory::create_unlit(const std::string& name, const std::stri
         kAlphaOpaque,
         TextureColorSpace::Linear);
     m_textures.ensure_texture_rgba_1x1(kDefaultEmissive, 0, 0, 0, kAlphaOpaque, TextureColorSpace::Srgb);
-    ref.set_normal(m_textures[kDefaultNormal]);
-    ref.set_metallic_roughness(m_textures[kDefaultMr]);
-    ref.set_emissive(m_textures[kDefaultEmissive]);
+    ref.set_normal(m_textures.at(kDefaultNormal));
+    ref.set_metallic_roughness(m_textures.at(kDefaultMr));
+    ref.set_emissive(m_textures.at(kDefaultEmissive));
     return ref;
 }
 
@@ -198,8 +198,8 @@ void MaterialFactory::load_texture_if_present(
     {
         spdlog::info("Material {} {} -> {}", name, suffix, *rel_image);
     }
-    m_textures.load_texture(tex_name, *rel_image, color_space);
-    std::forward<Setter>(setter)(m_textures[tex_name]);
+    m_textures.load(tex_name, *rel_image, color_space);
+    std::forward<Setter>(setter)(m_textures.at(tex_name));
 }
 
 void MaterialFactory::apply_defaults(Material& target)
@@ -213,14 +213,14 @@ void MaterialFactory::apply_defaults(Material& target)
         TextureColorSpace::Srgb);
     if (target.base_color() == nullptr)
     {
-        target.set_base_color(m_textures[kDefaultBaseColor]);
+        target.set_base_color(m_textures.at(kDefaultBaseColor));
     }
 
     m_textures
         .ensure_texture_rgba_1x1(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
     if (target.normal() == nullptr)
     {
-        target.set_normal(m_textures[kDefaultNormal]);
+        target.set_normal(m_textures.at(kDefaultNormal));
     }
 
     m_textures.ensure_texture_rgba_1x1(
@@ -232,7 +232,7 @@ void MaterialFactory::apply_defaults(Material& target)
         TextureColorSpace::Linear);
     if (target.metallic_roughness() == nullptr)
     {
-        target.set_metallic_roughness(m_textures[kDefaultMr]);
+        target.set_metallic_roughness(m_textures.at(kDefaultMr));
     }
 
     m_textures.ensure_texture_rgba_1x1(
@@ -244,7 +244,7 @@ void MaterialFactory::apply_defaults(Material& target)
         TextureColorSpace::Srgb);
     if (target.emissive() == nullptr)
     {
-        target.set_emissive(m_textures[kDefaultEmissive]);
+        target.set_emissive(m_textures.at(kDefaultEmissive));
     }
 }
 

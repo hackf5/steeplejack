@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <memory>
 #include <string>
 #include <unordered_map>
@@ -30,18 +31,15 @@ class TextureFactory
     TextureFactory& operator=(TextureFactory&&) = delete;
     ~TextureFactory() = default;
 
-    void load_texture(
-        const std::string& name,
-        const std::string& texture_name,
-        TextureColorSpace color_space);
+    void load(const std::string& name, const std::string& texture_name, TextureColorSpace color_space);
 
-    void remove_texture(const std::string& name);
+    [[nodiscard]] Texture* at(const std::string& name);
+
+    bool contains(const std::string& name) const;
+
+    void remove(const std::string& name);
 
     void clear();
-
-    Texture* operator[](const std::string& name);
-
-    bool has(const std::string& name) const;
 
     // Ensure a 1x1 RGBA texture exists with given color
     void ensure_texture_rgba_1x1(
