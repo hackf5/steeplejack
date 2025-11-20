@@ -161,16 +161,15 @@ Material& MaterialFactory::create_unlit(const std::string& name, const std::stri
     m_materials[name] = std::move(material);
 
     // Defaults for other maps
-    m_textures
-        .ensure_texture_rgba_1x1(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
-    m_textures.ensure_texture_rgba_1x1(
+    m_textures.ensure_fallback(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
+    m_textures.ensure_fallback(
         kDefaultMr,
         kMetallicMax,
         kRoughnessMax,
         kMetallicZero,
         kAlphaOpaque,
         TextureColorSpace::Linear);
-    m_textures.ensure_texture_rgba_1x1(kDefaultEmissive, 0, 0, 0, kAlphaOpaque, TextureColorSpace::Srgb);
+    m_textures.ensure_fallback(kDefaultEmissive, 0, 0, 0, kAlphaOpaque, TextureColorSpace::Srgb);
     ref.set_normal(m_textures.at(kDefaultNormal));
     ref.set_metallic_roughness(m_textures.at(kDefaultMr));
     ref.set_emissive(m_textures.at(kDefaultEmissive));
@@ -204,7 +203,7 @@ void MaterialFactory::load_texture_if_present(
 
 void MaterialFactory::apply_defaults(Material& target)
 {
-    m_textures.ensure_texture_rgba_1x1(
+    m_textures.ensure_fallback(
         kDefaultBaseColor,
         kChannelMax,
         kChannelMax,
@@ -216,14 +215,13 @@ void MaterialFactory::apply_defaults(Material& target)
         target.set_base_color(m_textures.at(kDefaultBaseColor));
     }
 
-    m_textures
-        .ensure_texture_rgba_1x1(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
+    m_textures.ensure_fallback(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
     if (target.normal() == nullptr)
     {
         target.set_normal(m_textures.at(kDefaultNormal));
     }
 
-    m_textures.ensure_texture_rgba_1x1(
+    m_textures.ensure_fallback(
         kDefaultMr,
         kMetallicMax,
         kRoughnessMax,
@@ -235,7 +233,7 @@ void MaterialFactory::apply_defaults(Material& target)
         target.set_metallic_roughness(m_textures.at(kDefaultMr));
     }
 
-    m_textures.ensure_texture_rgba_1x1(
+    m_textures.ensure_fallback(
         kDefaultEmissive,
         kChannelMin,
         kChannelMin,

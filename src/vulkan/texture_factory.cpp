@@ -46,7 +46,7 @@ bool TextureFactory::contains(const std::string& name) const
     return m_textures.contains(name);
 }
 
-void TextureFactory::ensure_texture_rgba_1x1(
+void TextureFactory::ensure_fallback(
     const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space)
 {
     if (contains(name))

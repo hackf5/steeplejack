@@ -33,6 +33,9 @@ class TextureFactory
 
     void load(const std::string& name, const std::string& texture_name, TextureColorSpace color_space);
 
+    void
+    ensure_fallback(const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space);
+
     [[nodiscard]] Texture* at(const std::string& name);
 
     bool contains(const std::string& name) const;
@@ -40,9 +43,5 @@ class TextureFactory
     void remove(const std::string& name);
 
     void clear();
-
-    // Ensure a 1x1 RGBA texture exists with given color
-    void ensure_texture_rgba_1x1(
-        const std::string& name, uint8_t r, uint8_t g, uint8_t b, uint8_t a, TextureColorSpace color_space);
 };
 } // namespace steeplejack
