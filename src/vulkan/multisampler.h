@@ -25,9 +25,6 @@ class Multisampler
     Multisampler& operator=(Multisampler&&) = delete;
     ~Multisampler() = default;
 
-    [[nodiscard]] VkImageView image_view() const
-    {
-        return m_image_view.vk();
-    }
+    [[nodiscard]] VkImageView image_view() const;
 };
 } // namespace steeplejack

@@ -15,3 +15,8 @@ Multisampler::Multisampler(const Device& device, const Swapchain& swapchain) :
     m_image_view(device, m_image, VK_IMAGE_ASPECT_COLOR_BIT)
 {
 }
+
+VkImageView Multisampler::image_view() const
+{
+    return m_image_view.vk();
+}
