@@ -63,7 +63,8 @@ namespace
     return pipeline;
 }
 
-[[nodiscard]] PFN_vkCmdPushDescriptorSetKHR fetch_vkCmdPushDescriptorSetKHR(const Device& device) // NOLINT(readability-identifier-naming)
+[[nodiscard]] PFN_vkCmdPushDescriptorSetKHR
+fetch_vkCmdPushDescriptorSetKHR(const Device& device) // NOLINT(readability-identifier-naming)
 {
     auto result =
         reinterpret_cast<PFN_vkCmdPushDescriptorSetKHR>(vkGetDeviceProcAddr(device.vk(), "vkCmdPushDescriptorSetKHR"));

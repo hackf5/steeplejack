@@ -2,8 +2,8 @@
 
 #include "spdlog/spdlog.h"
 
-#include <fstream>
 #include <format>
+#include <fstream>
 #include <string_view>
 
 using namespace steeplejack;
