@@ -6,15 +6,9 @@
 
 using namespace steeplejack;
 
-Sampler::Sampler(const Device& device) : m_device(device), m_sampler(create_sampler()) {}
-
-Sampler::~Sampler()
+namespace
 {
-    spdlog::info("Destroying Sampler");
-    vkDestroySampler(m_device.vk(), m_sampler, nullptr);
-}
-
-VkSampler Sampler::create_sampler() const
+[[nodiscard]] VkSampler create_sampler(const Device& device)
 {
     spdlog::info("Creating Sampler");
 
@@ -26,7 +20,7 @@ VkSampler Sampler::create_sampler() const
     sampler_info.addressModeV = VK_SAMPLER_ADDRESS_MODE_REPEAT;
     sampler_info.addressModeW = VK_SAMPLER_ADDRESS_MODE_REPEAT;
     sampler_info.anisotropyEnable = VK_TRUE;
-    sampler_info.maxAnisotropy = m_device.properties().limits.maxSamplerAnisotropy;
+    sampler_info.maxAnisotropy = device.properties().limits.maxSamplerAnisotropy;
     sampler_info.borderColor = VK_BORDER_COLOR_INT_OPAQUE_BLACK;
     sampler_info.unnormalizedCoordinates = VK_FALSE;
     sampler_info.compareEnable = VK_FALSE;
@@ -37,10 +31,24 @@ VkSampler Sampler::create_sampler() const
     sampler_info.maxLod = 0.0F;
 
     VkSampler sampler = nullptr;
-    if (vkCreateSampler(m_device.vk(), &sampler_info, nullptr, &sampler) != VK_SUCCESS)
+    if (vkCreateSampler(device.vk(), &sampler_info, nullptr, &sampler) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create sampler");
     }
 
     return sampler;
+}
+} // namespace
+
+Sampler::Sampler(const Device& device) : m_device(device), m_sampler(create_sampler(device)) {}
+
+Sampler::~Sampler()
+{
+    spdlog::info("Destroying Sampler");
+    vkDestroySampler(m_device.vk(), m_sampler, nullptr);
+}
+
+VkSampler Sampler::vk() const
+{
+    return m_sampler;
 }

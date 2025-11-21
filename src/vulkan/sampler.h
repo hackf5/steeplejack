@@ -12,8 +12,6 @@ class Sampler
     const Device& m_device;
     const VkSampler m_sampler;
 
-    [[nodiscard]] VkSampler create_sampler() const;
-
   public:
     explicit Sampler(const Device& device);
     ~Sampler();
@@ -23,9 +21,6 @@ class Sampler
     Sampler(Sampler&&) = delete;
     Sampler& operator=(Sampler&&) = delete;
 
-    [[nodiscard]] VkSampler vk() const
-    {
-        return m_sampler;
-    }
+    [[nodiscard]] VkSampler vk() const;
 };
 } // namespace steeplejack
