@@ -3,24 +3,16 @@
 #include "spdlog/spdlog.h"
 
 #include <fstream>
+#include <format>
 #include <string_view>
 
 using namespace steeplejack;
 
-ShaderModule::ShaderModule(const Device& device, std::string_view name) :
-    m_device(device), m_name(std::string(name)), m_shader_module(create_shader_module())
+namespace
 {
-}
-
-ShaderModule::~ShaderModule()
+[[nodiscard]] std::vector<char> read_file(std::string_view name)
 {
-    spdlog::info("Destroying Shader Module: {}", m_name);
-    vkDestroyShaderModule(m_device.vk(), m_shader_module, nullptr);
-}
-
-std::vector<char> ShaderModule::read_file(std::string_view name)
-{
-    auto file_name = "shaders/" + std::string(name) + ".spv";
+    auto file_name = std::format("shaders/{}.spv", name);
     std::ifstream file(file_name, std::ios::ate | std::ios::binary);
 
     if (!file.is_open())
@@ -37,12 +29,11 @@ std::vector<char> ShaderModule::read_file(std::string_view name)
 
     return buffer;
 }
-
-VkShaderModule ShaderModule::create_shader_module() const
+[[nodiscard]] VkShaderModule create_shader_module(const Device& device, std::string_view name)
 {
-    spdlog::info("Creating Shader Module: {}", m_name);
+    spdlog::info("Creating Shader Module: {}", name);
 
-    auto code = read_file(m_name);
+    auto code = read_file(name);
 
     VkShaderModuleCreateInfo shader_module_info{};
     shader_module_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
@@ -50,10 +41,32 @@ VkShaderModule ShaderModule::create_shader_module() const
     shader_module_info.pCode = reinterpret_cast<const uint32_t*>(code.data());
 
     VkShaderModule shader_module = nullptr;
-    if (vkCreateShaderModule(m_device.vk(), &shader_module_info, nullptr, &shader_module) != VK_SUCCESS)
+    if (vkCreateShaderModule(device.vk(), &shader_module_info, nullptr, &shader_module) != VK_SUCCESS)
     {
-        throw std::runtime_error("Failed to create shader module for " + m_name + " shader");
+        throw std::runtime_error("Failed to create shader module for " + std::string(name) + " shader");
     }
 
     return shader_module;
+}
+} // namespace
+
+ShaderModule::ShaderModule(const Device& device, std::string_view name) :
+    m_device(device), m_name(std::string(name)), m_shader_module(create_shader_module(device, name))
+{
+}
+
+ShaderModule::~ShaderModule()
+{
+    spdlog::info("Destroying Shader Module: {}", m_name);
+    vkDestroyShaderModule(m_device.vk(), m_shader_module, nullptr);
+}
+
+const std::string& ShaderModule::name() const
+{
+    return m_name;
+}
+
+VkShaderModule ShaderModule::vk() const
+{
+    return m_shader_module;
 }

@@ -10,14 +10,8 @@ class ShaderModule
 {
   private:
     const Device& m_device;
-
     const std::string m_name;
-
     VkShaderModule m_shader_module;
-
-    static std::vector<char> read_file(std::string_view name);
-
-    [[nodiscard]] VkShaderModule create_shader_module() const;
 
   public:
     ShaderModule(const Device& device, std::string_view name);
@@ -28,14 +22,8 @@ class ShaderModule
     ShaderModule(ShaderModule&&) = delete;
     ShaderModule& operator=(ShaderModule&&) = delete;
 
-    [[nodiscard]] const std::string& name() const
-    {
-        return m_name;
-    }
+    [[nodiscard]] const std::string& name() const;
 
-    [[nodiscard]] VkShaderModule vk() const
-    {
-        return m_shader_module;
-    }
+    [[nodiscard]] VkShaderModule vk() const;
 };
 } // namespace steeplejack
