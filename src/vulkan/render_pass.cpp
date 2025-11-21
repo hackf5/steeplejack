@@ -7,24 +7,15 @@
 
 using namespace steeplejack;
 
-RenderPass::RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer) :
-    m_device(device), m_swapchain(swapchain), m_render_pass(create_render_pass(depth_buffer))
+namespace
 {
-}
-
-RenderPass::~RenderPass()
-{
-    spdlog::info("Destroying Render Pass");
-    vkDestroyRenderPass(m_device.vk(), m_render_pass, nullptr);
-}
-
-VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) const
+[[nodiscard]] VkRenderPass create_render_pass(const Device& device, const Swapchain& swapchain, VkFormat depth_format)
 {
     spdlog::info("Creating Render Pass");
 
     VkAttachmentDescription color_attachment = {};
-    color_attachment.format = m_swapchain.image_format();
-    color_attachment.samples = m_device.msaa_samples();
+    color_attachment.format = swapchain.image_format();
+    color_attachment.samples = device.msaa_samples();
     color_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     color_attachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
     color_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -37,8 +28,8 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) con
     color_attachment_ref.layout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
 
     VkAttachmentDescription depth_attachment = {};
-    depth_attachment.format = depth_buffer.format();
-    depth_attachment.samples = m_device.msaa_samples();
+    depth_attachment.format = depth_format;
+    depth_attachment.samples = device.msaa_samples();
     depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
     depth_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
@@ -51,7 +42,7 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) con
     depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
     VkAttachmentDescription color_attachment_resolve{};
-    color_attachment_resolve.format = m_swapchain.image_format();
+    color_attachment_resolve.format = swapchain.image_format();
     color_attachment_resolve.samples = VK_SAMPLE_COUNT_1_BIT;
     color_attachment_resolve.loadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
     color_attachment_resolve.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -93,12 +84,24 @@ VkRenderPass RenderPass::create_render_pass(const DepthBuffer& depth_buffer) con
     render_pass_info.pDependencies = &dependency;
 
     VkRenderPass render_pass = nullptr;
-    if (vkCreateRenderPass(m_device.vk(), &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
+    if (vkCreateRenderPass(device.vk(), &render_pass_info, nullptr, &render_pass) != VK_SUCCESS)
     {
         throw std::runtime_error("Failed to create render pass");
     }
 
     return render_pass;
+}
+} // namespace
+
+RenderPass::RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer) :
+    m_device(device), m_swapchain(swapchain), m_render_pass(create_render_pass(device, swapchain, depth_buffer.format()))
+{
+}
+
+RenderPass::~RenderPass()
+{
+    spdlog::info("Destroying Render Pass");
+    vkDestroyRenderPass(m_device.vk(), m_render_pass, nullptr);
 }
 
 RenderPassScope RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer) const
@@ -120,3 +123,8 @@ RenderPassScope RenderPass::begin(VkCommandBuffer command_buffer, VkFramebuffer 
 
     return RenderPassScope(command_buffer);
 };
+
+VkRenderPass RenderPass::vk() const
+{
+    return m_render_pass;
+}

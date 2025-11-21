@@ -16,8 +16,6 @@ class RenderPass
 
     const VkRenderPass m_render_pass;
 
-    [[nodiscard]] VkRenderPass create_render_pass(const DepthBuffer& depth_buffer) const;
-
   public:
     RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer);
     ~RenderPass();
@@ -27,10 +25,7 @@ class RenderPass
     RenderPass(RenderPass&&) = delete;
     RenderPass& operator=(RenderPass&&) = delete;
 
-    [[nodiscard]] VkRenderPass vk() const
-    {
-        return m_render_pass;
-    }
+    [[nodiscard]] VkRenderPass vk() const;
 
     RenderPassScope begin(VkCommandBuffer command_buffer, VkFramebuffer framebuffer) const;
 };
