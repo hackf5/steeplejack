@@ -14,6 +14,8 @@ enum class AlphaMode : std::uint8_t
     Blend
 };
 
+class MaterialFactory;
+
 class Material
 {
   private:
@@ -40,7 +42,7 @@ class Material
     UniformBlock m_uniform_block{glm::vec4(1.0F)};
 
   public:
-    explicit Material(const Device& device) : m_uniform_buffers(device, sizeof(UniformBlock)) {}
+    explicit Material(const Device& device);
 
     Material(const Material&) = delete;
     Material& operator=(const Material&) = delete;
@@ -48,90 +50,30 @@ class Material
     Material& operator=(Material&&) = delete;
     ~Material() = default;
 
-    // Base color
-    [[nodiscard]] Texture* base_color() const
-    {
-        return m_base_color;
-    }
-    void set_base_color(Texture* tex)
-    {
-        m_base_color = tex;
-    }
+    [[nodiscard]] Texture* base_color() const;
+    [[nodiscard]] Texture* normal() const;
+    [[nodiscard]] Texture* metallic_roughness() const;
+    [[nodiscard]] Texture* emissive() const;
 
-    [[nodiscard]] Texture* normal() const
-    {
-        return m_normal;
-    }
-    void set_normal(Texture* tex)
-    {
-        m_normal = tex;
-    }
+    [[nodiscard]] const glm::vec4& base_color_factor() const;
+    [[nodiscard]] float alpha_cutoff() const;
+    [[nodiscard]] AlphaMode alpha_mode() const;
+    [[nodiscard]] bool double_sided() const;
 
-    [[nodiscard]] Texture* metallic_roughness() const
-    {
-        return m_metallic_roughness;
-    }
-    void set_metallic_roughness(Texture* tex)
-    {
-        m_metallic_roughness = tex;
-    }
+    void flush(uint32_t frame_index);
 
-    [[nodiscard]] Texture* emissive() const
-    {
-        return m_emissive;
-    }
-    void set_emissive(Texture* tex)
-    {
-        m_emissive = tex;
-    }
+    VkDescriptorBufferInfo* descriptor(uint32_t frame_index);
 
-    // Factors
-    [[nodiscard]] const glm::vec4& base_color_factor() const
-    {
-        return m_base_color_factor;
-    }
-    glm::vec4& base_color_factor()
-    {
-        return m_base_color_factor;
-    }
+  private:
+    void set_alpha_mode(AlphaMode mode);
+    void set_alpha_cutoff(float value);
+    void set_base_color_factor(const glm::vec4& value);
+    void set_base_color(Texture* tex);
+    void set_normal(Texture* tex);
+    void set_metallic_roughness(Texture* tex);
+    void set_emissive(Texture* tex);
+    void set_double_sided(bool value);
 
-    [[nodiscard]] float alpha_cutoff() const
-    {
-        return m_alpha_cutoff;
-    }
-    float& alpha_cutoff()
-    {
-        return m_alpha_cutoff;
-    }
-
-    [[nodiscard]] AlphaMode alpha_mode() const
-    {
-        return m_alpha_mode;
-    }
-    void set_alpha_mode(AlphaMode mode)
-    {
-        m_alpha_mode = mode;
-    }
-
-    [[nodiscard]] bool double_sided() const
-    {
-        return m_double_sided;
-    }
-    void set_double_sided(bool value)
-    {
-        m_double_sided = value;
-    }
-
-    // UBO interface
-    void flush(uint32_t frame_index)
-    {
-        m_uniform_block.baseColorFactor = m_base_color_factor;
-        m_uniform_buffers[frame_index].copy_from(m_uniform_block);
-    }
-
-    VkDescriptorBufferInfo* descriptor(uint32_t frame_index)
-    {
-        return m_uniform_buffers[frame_index].descriptor();
-    }
+    friend class MaterialFactory;
 };
 } // namespace steeplejack

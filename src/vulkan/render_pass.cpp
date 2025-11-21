@@ -94,7 +94,9 @@ namespace
 } // namespace
 
 RenderPass::RenderPass(const Device& device, const Swapchain& swapchain, const DepthBuffer& depth_buffer) :
-    m_device(device), m_swapchain(swapchain), m_render_pass(create_render_pass(device, swapchain, depth_buffer.format()))
+    m_device(device),
+    m_swapchain(swapchain),
+    m_render_pass(create_render_pass(device, swapchain, depth_buffer.format()))
 {
 }
 

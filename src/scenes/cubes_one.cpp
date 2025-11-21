@@ -5,9 +5,7 @@
 
 #include <algorithm>
 #include <cstddef>
-#include <functional>
 #include <imgui.h>
-#include <numeric>
 
 using namespace steeplejack;
 
@@ -114,7 +112,7 @@ CubesOne::face_t CubesOne::create_face(uint32_t face)
 
 void CubesOne::load(const Device& device, MaterialFactory& material_factory, GraphicsBuffers& graphics_buffers)
 {
-    auto& mat = material_factory.load_gltf_material("rock", "rock_wall_15_1k/rock_wall_15_1k.gltf");
+    auto& mat = material_factory.load_gltf("rock", "rock_wall_15_1k/rock_wall_15_1k.gltf");
 
     graphics_buffers.load_vertexes(m_vertexes);
     graphics_buffers.load_indexes(m_indexes);

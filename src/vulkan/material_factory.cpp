@@ -69,36 +69,6 @@ const tinygltf::Material& get_gltf_material(const tinygltf::Model& model, int ma
     return model.materials.at(static_cast<size_t>(material_index));
 }
 
-void apply_pbr_factors(Material& target, const tinygltf::Material& source)
-{
-    if (source.pbrMetallicRoughness.baseColorFactor.size() == 4)
-    {
-        target.base_color_factor() = glm::vec4(
-            static_cast<float>(source.pbrMetallicRoughness.baseColorFactor.at(0)),
-            static_cast<float>(source.pbrMetallicRoughness.baseColorFactor.at(1)),
-            static_cast<float>(source.pbrMetallicRoughness.baseColorFactor.at(2)),
-            static_cast<float>(source.pbrMetallicRoughness.baseColorFactor.at(3)));
-    }
-    target.alpha_cutoff() = static_cast<float>(source.alphaCutoff);
-}
-
-void apply_alpha_mode(Material& target, const tinygltf::Material& source)
-{
-    target.set_double_sided(source.doubleSided);
-    if (source.alphaMode == "MASK")
-    {
-        target.set_alpha_mode(AlphaMode::Mask);
-    }
-    else if (source.alphaMode == "BLEND")
-    {
-        target.set_alpha_mode(AlphaMode::Blend);
-    }
-    else
-    {
-        target.set_alpha_mode(AlphaMode::Opaque);
-    }
-}
-
 template <typename TexInfo>
 std::optional<std::string> resolve_rel_image(
     const tinygltf::Model& model, const TexInfo& tex_info, const std::string& gltf_relpath, const fs::path& full_path)
@@ -120,6 +90,7 @@ std::optional<std::string> resolve_rel_image(
     const fs::path rel_dir = fs::path(gltf_relpath).parent_path();
     return (rel_dir / image.uri).generic_string();
 }
+
 } // namespace
 
 using namespace steeplejack;
@@ -139,70 +110,20 @@ void MaterialFactory::remove(const std::string& name)
     m_materials.erase(name);
 }
 
-Material* MaterialFactory::operator[](const std::string& name)
+Material& MaterialFactory::at(const std::string& name)
 {
     auto it = m_materials.find(name);
     if (it == m_materials.end())
     {
         throw std::runtime_error(std::format("Material {} not found", name));
     }
-    return it->second.get();
+    return *it->second;
 }
 
-Material& MaterialFactory::create_unlit(const std::string& name, const std::string& texture_relpath)
+Material& MaterialFactory::load_gltf(const std::string& name, const std::string& gltf_relpath, int material_index)
 {
-    auto tex_name = name + ".baseColor";
-    m_textures.load(tex_name, texture_relpath, TextureColorSpace::Srgb);
+    namespace fs = std::filesystem;
 
-    auto material = std::make_unique<Material>(m_device);
-    material->set_base_color(m_textures.at(tex_name));
-
-    auto& ref = *material;
-    m_materials[name] = std::move(material);
-
-    // Defaults for other maps
-    m_textures.ensure_fallback(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
-    m_textures.ensure_fallback(
-        kDefaultMr,
-        kMetallicMax,
-        kRoughnessMax,
-        kMetallicZero,
-        kAlphaOpaque,
-        TextureColorSpace::Linear);
-    m_textures.ensure_fallback(kDefaultEmissive, 0, 0, 0, kAlphaOpaque, TextureColorSpace::Srgb);
-    ref.set_normal(m_textures.at(kDefaultNormal));
-    ref.set_metallic_roughness(m_textures.at(kDefaultMr));
-    ref.set_emissive(m_textures.at(kDefaultEmissive));
-    return ref;
-}
-
-template <typename TexInfo, typename Setter>
-void MaterialFactory::load_texture_if_present(
-    const tinygltf::Model& model,
-    const std::string& name,
-    const std::string& gltf_relpath,
-    const TexInfo& tex_info,
-    const std::string& suffix,
-    TextureColorSpace color_space,
-    Setter&& setter) const
-{
-    auto rel_image =
-        resolve_rel_image(model, tex_info, gltf_relpath, std::filesystem::path("assets/textures") / gltf_relpath);
-    if (!rel_image)
-    {
-        return;
-    }
-    const auto tex_name = name + "." + suffix;
-    if (color_space == TextureColorSpace::Srgb)
-    {
-        spdlog::info("Material {} {} -> {}", name, suffix, *rel_image);
-    }
-    m_textures.load(tex_name, *rel_image, color_space);
-    std::forward<Setter>(setter)(m_textures.at(tex_name));
-}
-
-void MaterialFactory::apply_defaults(Material& target)
-{
     m_textures.ensure_fallback(
         kDefaultBaseColor,
         kChannelMax,
@@ -210,16 +131,8 @@ void MaterialFactory::apply_defaults(Material& target)
         kChannelMax,
         kAlphaOpaque,
         TextureColorSpace::Srgb);
-    if (target.base_color() == nullptr)
-    {
-        target.set_base_color(m_textures.at(kDefaultBaseColor));
-    }
 
     m_textures.ensure_fallback(kDefaultNormal, kNormalR, kNormalG, kNormalB, kAlphaOpaque, TextureColorSpace::Linear);
-    if (target.normal() == nullptr)
-    {
-        target.set_normal(m_textures.at(kDefaultNormal));
-    }
 
     m_textures.ensure_fallback(
         kDefaultMr,
@@ -228,10 +141,6 @@ void MaterialFactory::apply_defaults(Material& target)
         kMetallicZero,
         kAlphaOpaque,
         TextureColorSpace::Linear);
-    if (target.metallic_roughness() == nullptr)
-    {
-        target.set_metallic_roughness(m_textures.at(kDefaultMr));
-    }
 
     m_textures.ensure_fallback(
         kDefaultEmissive,
@@ -240,16 +149,6 @@ void MaterialFactory::apply_defaults(Material& target)
         kChannelMin,
         kAlphaOpaque,
         TextureColorSpace::Srgb);
-    if (target.emissive() == nullptr)
-    {
-        target.set_emissive(m_textures.at(kDefaultEmissive));
-    }
-}
-
-Material&
-MaterialFactory::load_gltf_material(const std::string& name, const std::string& gltf_relpath, int material_index)
-{
-    namespace fs = std::filesystem;
 
     const fs::path full_path = fs::path("assets/textures") / gltf_relpath;
 
@@ -258,43 +157,83 @@ MaterialFactory::load_gltf_material(const std::string& name, const std::string& 
 
     auto material = std::make_unique<Material>(m_device);
 
-    apply_pbr_factors(*material, mat);
-    apply_alpha_mode(*material, mat);
+    static const std::unordered_map<std::string, AlphaMode> alpha_modes{
+        {"MASK", AlphaMode::Mask},
+        {"BLEND", AlphaMode::Blend},
+    };
+    const auto alpha_it = alpha_modes.find(mat.alphaMode);
+    material->set_alpha_mode(alpha_it != alpha_modes.end() ? alpha_it->second : AlphaMode::Opaque);
+    material->set_double_sided(mat.doubleSided);
+    material->set_alpha_cutoff(static_cast<float>(mat.alphaCutoff));
 
-    load_texture_if_present(
-        model,
-        name,
-        gltf_relpath,
+    if (mat.pbrMetallicRoughness.baseColorFactor.size() == 4)
+    {
+        material->set_base_color_factor(
+            glm::vec4(
+                static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(0)),
+                static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(1)),
+                static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(2)),
+                static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(3))));
+    }
+
+    auto load_texture = [&](const auto& tex_info,
+                            const std::string& suffix,
+                            TextureColorSpace color_space,
+                            const std::string& default_name,
+                            Texture* (Material::*getter)() const,
+                            void (Material::*setter)(Texture*))
+    {
+        auto rel_image =
+            resolve_rel_image(model, tex_info, gltf_relpath, std::filesystem::path("assets/textures") / gltf_relpath);
+
+        if (rel_image)
+        {
+            const auto tex_name = name + "." + suffix;
+            if (color_space == TextureColorSpace::Srgb)
+            {
+                spdlog::info("Material {} {} -> {}", name, suffix, *rel_image);
+            }
+            m_textures.load(tex_name, *rel_image, color_space);
+            (material.get()->*setter)(m_textures.at(tex_name));
+        }
+
+        if ((material.get()->*getter)() == nullptr)
+        {
+            (material.get()->*setter)(m_textures.at(default_name));
+        }
+    };
+
+    load_texture(
         mat.pbrMetallicRoughness.baseColorTexture,
         "baseColor",
         TextureColorSpace::Srgb,
-        [&](Texture* tex) { material->set_base_color(tex); });
-    load_texture_if_present(
-        model,
-        name,
-        gltf_relpath,
+        kDefaultBaseColor,
+        &Material::base_color,
+        &Material::set_base_color);
+
+    load_texture(
         mat.normalTexture,
         "normal",
         TextureColorSpace::Linear,
-        [&](Texture* tex) { material->set_normal(tex); });
-    load_texture_if_present(
-        model,
-        name,
-        gltf_relpath,
+        kDefaultNormal,
+        &Material::normal,
+        &Material::set_normal);
+
+    load_texture(
         mat.pbrMetallicRoughness.metallicRoughnessTexture,
         "metallicRoughness",
         TextureColorSpace::Linear,
-        [&](Texture* tex) { material->set_metallic_roughness(tex); });
-    load_texture_if_present(
-        model,
-        name,
-        gltf_relpath,
+        kDefaultMr,
+        &Material::metallic_roughness,
+        &Material::set_metallic_roughness);
+
+    load_texture(
         mat.emissiveTexture,
         "emissive",
         TextureColorSpace::Srgb,
-        [&](Texture* tex) { material->set_emissive(tex); });
-
-    apply_defaults(*material);
+        kDefaultEmissive,
+        &Material::emissive,
+        &Material::set_emissive);
 
     auto& ref = *material;
     m_materials[name] = std::move(material);
