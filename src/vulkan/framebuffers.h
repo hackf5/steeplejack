@@ -1,15 +1,16 @@
 #pragma once
 
-#include "depth_buffer.h"
-#include "device.h"
 #include "multisampler.h"
-#include "render_pass.h"
-#include "swapchain.h"
 
 #include <vector>
 
 namespace steeplejack
 {
+class Swapchain;
+class RenderPass;
+class DepthBuffer;
+class Device;
+
 class Framebuffers
 {
   private:
@@ -17,9 +18,6 @@ class Framebuffers
     const Multisampler m_multisampler;
 
     const std::vector<VkFramebuffer> m_framebuffers;
-
-    std::vector<VkFramebuffer>
-    create_framebuffers(const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer);
 
   public:
     Framebuffers(
@@ -34,9 +32,6 @@ class Framebuffers
     Framebuffers(Framebuffers&&) = delete;
     Framebuffers& operator=(Framebuffers&&) = delete;
 
-    [[nodiscard]] VkFramebuffer get(uint32_t image_index) const
-    {
-        return m_framebuffers[image_index];
-    }
+    [[nodiscard]] VkFramebuffer at(uint32_t image_index) const;
 };
 } // namespace steeplejack

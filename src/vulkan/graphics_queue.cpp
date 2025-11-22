@@ -152,7 +152,7 @@ GraphicsQueue::prepare_framebuffer(uint32_t current_frame, const Swapchain& swap
 
     m_render_finished_semaphore = swapchain.render_finished(m_image_index);
 
-    return framebuffers.get(m_image_index);
+    return framebuffers.at(m_image_index);
 }
 
 VkCommandBuffer GraphicsQueue::begin_command() const

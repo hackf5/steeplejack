@@ -1,31 +1,23 @@
 #include "framebuffers.h"
 
+#include "depth_buffer.h"
+#include "render_pass.h"
 #include "spdlog/spdlog.h"
+#include "swapchain.h"
 
 #include <array>
 #include <stdexcept>
 
 using namespace steeplejack;
 
-Framebuffers::Framebuffers(
-    const Device& device, const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer) :
-    m_device(device),
-    m_multisampler(device, swapchain),
-    m_framebuffers(create_framebuffers(swapchain, render_pass, depth_buffer))
+namespace
 {
-}
-
-Framebuffers::~Framebuffers()
-{
-    spdlog::info("Destroying Framebuffers");
-    for (auto* framebuffer : m_framebuffers)
-    {
-        vkDestroyFramebuffer(m_device.vk(), framebuffer, nullptr);
-    }
-}
-
-std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
-    const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer)
+std::vector<VkFramebuffer> create_framebuffers(
+    const Device& device,
+    const Multisampler& multisampler,
+    const Swapchain& swapchain,
+    const RenderPass& render_pass,
+    const DepthBuffer& depth_buffer)
 {
     spdlog::info("Creating Framebuffers");
 
@@ -35,7 +27,7 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
     for (size_t i = 0; i < swapchain.image_count(); i++)
     {
         auto attachments = std::array<VkImageView, 3>{
-            m_multisampler.image_view(),
+            multisampler.image_view(),
             depth_buffer.image_view(),
             swapchain.image_view(i),
         };
@@ -50,7 +42,7 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
         framebuffer_info.layers = 1;
 
         VkFramebuffer framebuffer = nullptr;
-        if (vkCreateFramebuffer(m_device.vk(), &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
+        if (vkCreateFramebuffer(device.vk(), &framebuffer_info, nullptr, &framebuffer) != VK_SUCCESS)
         {
             throw std::runtime_error("Failed to create framebuffer");
         }
@@ -59,4 +51,27 @@ std::vector<VkFramebuffer> Framebuffers::create_framebuffers(
     }
 
     return framebuffers;
+}
+} // namespace
+
+Framebuffers::~Framebuffers()
+{
+    spdlog::info("Destroying Framebuffers");
+    for (auto* framebuffer : m_framebuffers)
+    {
+        vkDestroyFramebuffer(m_device.vk(), framebuffer, nullptr);
+    }
+}
+
+Framebuffers::Framebuffers(
+    const Device& device, const Swapchain& swapchain, const RenderPass& render_pass, const DepthBuffer& depth_buffer) :
+    m_device(device),
+    m_multisampler(device, swapchain),
+    m_framebuffers(create_framebuffers(device, m_multisampler, swapchain, render_pass, depth_buffer))
+{
+}
+
+VkFramebuffer Framebuffers::at(uint32_t image_index) const
+{
+    return m_framebuffers[image_index];
 }
