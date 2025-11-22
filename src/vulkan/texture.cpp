@@ -38,7 +38,8 @@ Buffer create_staging_buffer(const Device& device, const std::string& name, int&
 void transition_image_layout(
     Image& image, const AdhocQueues& adhoc_queues, VkImageLayout old_layout, VkImageLayout new_layout)
 {
-    VkCommandBuffer command_buffer = adhoc_queues.graphics().begin();
+    VkPipelineStageFlags source_stage = 0;
+    VkPipelineStageFlags destination_stage = 0;
 
     VkImageMemoryBarrier barrier = {};
     barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER;
@@ -52,9 +53,6 @@ void transition_image_layout(
     barrier.subresourceRange.levelCount = 1;
     barrier.subresourceRange.baseArrayLayer = 0;
     barrier.subresourceRange.layerCount = 1;
-
-    VkPipelineStageFlags source_stage = 0;
-    VkPipelineStageFlags destination_stage = 0;
 
     if (old_layout == VK_IMAGE_LAYOUT_UNDEFINED && new_layout == VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL)
     {
@@ -78,48 +76,60 @@ void transition_image_layout(
         throw std::invalid_argument("Unsupported layout transition");
     }
 
-    vkCmdPipelineBarrier(command_buffer, source_stage, destination_stage, 0, 0, nullptr, 0, nullptr, 1, &barrier);
-
-    adhoc_queues.graphics().submit_and_wait();
+    adhoc_queues.graphics().run(
+        [&](VkCommandBuffer command_buffer)
+        {
+            vkCmdPipelineBarrier(
+                command_buffer,
+                source_stage,
+                destination_stage,
+                0,
+                0,
+                nullptr,
+                0,
+                nullptr,
+                1,
+                &barrier);
+        });
 }
 
 void copy_staging_buffer_to_image(const Buffer& staging_buffer, const AdhocQueues& adhoc_queues, Image& image)
 {
-    VkCommandBuffer command_buffer = adhoc_queues.transfer().begin();
+    adhoc_queues.transfer().run(
+        [&](VkCommandBuffer command_buffer)
+        {
+            VkImageSubresourceLayers subresource = {};
+            subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            subresource.mipLevel = 0;
+            subresource.baseArrayLayer = 0;
+            subresource.layerCount = 1;
 
-    VkImageSubresourceLayers subresource = {};
-    subresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
-    subresource.mipLevel = 0;
-    subresource.baseArrayLayer = 0;
-    subresource.layerCount = 1;
+            VkOffset3D offset = {};
+            offset.x = 0;
+            offset.y = 0;
+            offset.z = 0;
 
-    VkOffset3D offset = {};
-    offset.x = 0;
-    offset.y = 0;
-    offset.z = 0;
+            VkExtent3D extent = {};
+            extent.width = image.image_info().width;
+            extent.height = image.image_info().height;
+            extent.depth = 1;
 
-    VkExtent3D extent = {};
-    extent.width = image.image_info().width;
-    extent.height = image.image_info().height;
-    extent.depth = 1;
+            VkBufferImageCopy region = {};
+            region.bufferOffset = 0;
+            region.bufferRowLength = 0;
+            region.bufferImageHeight = 0;
+            region.imageSubresource = subresource;
+            region.imageOffset = offset;
+            region.imageExtent = extent;
 
-    VkBufferImageCopy region = {};
-    region.bufferOffset = 0;
-    region.bufferRowLength = 0;
-    region.bufferImageHeight = 0;
-    region.imageSubresource = subresource;
-    region.imageOffset = offset;
-    region.imageExtent = extent;
-
-    vkCmdCopyBufferToImage(
-        command_buffer,
-        staging_buffer.vk(),
-        image.vk(),
-        VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
-        1,
-        &region);
-
-    adhoc_queues.transfer().submit_and_wait();
+            vkCmdCopyBufferToImage(
+                command_buffer,
+                staging_buffer.vk(),
+                image.vk(),
+                VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+                1,
+                &region);
+        });
 }
 
 Image create_image(

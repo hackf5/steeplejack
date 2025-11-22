@@ -130,3 +130,12 @@ void AdhocQueue::submit_and_wait() const
         throw std::runtime_error("Failed to wait for queue to become idle");
     }
 }
+
+void AdhocQueue::run(const std::function<void(VkCommandBuffer)>& record) const
+{
+    auto* command_buffer = begin();
+
+    record(command_buffer);
+
+    submit_and_wait();
+}

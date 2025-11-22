@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <functional>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
@@ -32,6 +33,9 @@ class AdhocQueue
     AdhocQueue(AdhocQueue&&) = delete;
     AdhocQueue& operator=(AdhocQueue&&) = delete;
 
+    void run(const std::function<void(VkCommandBuffer)>& record) const;
+
+  private:
     [[nodiscard]] VkCommandBuffer begin() const;
     void submit_and_wait() const;
 };

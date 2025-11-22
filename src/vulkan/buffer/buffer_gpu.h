@@ -29,13 +29,13 @@ class BufferGPU : public Buffer
 
     void copy_from(const BufferHost& buffer) const
     {
-        auto* command_buffer = m_adhoc_queues->transfer().begin();
-
-        VkBufferCopy copy_region = {};
-        copy_region.size = buffer.size();
-        vkCmdCopyBuffer(command_buffer, buffer.vk(), this->vk(), 1, &copy_region);
-
-        m_adhoc_queues->transfer().submit_and_wait();
+        m_adhoc_queues->transfer().run(
+            [&](VkCommandBuffer command_buffer)
+            {
+                VkBufferCopy copy_region = {};
+                copy_region.size = buffer.size();
+                vkCmdCopyBuffer(command_buffer, buffer.vk(), this->vk(), 1, &copy_region);
+            });
     }
 
     template <typename TIter> void copy_from(TIter begin, TIter end) const
