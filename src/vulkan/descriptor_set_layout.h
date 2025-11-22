@@ -1,7 +1,6 @@
 #pragma once
 
 #include "config/descriptor_layout_config.h"
-#include "vulkan/device.h"
 
 #include <array>
 #include <span>
@@ -13,8 +12,11 @@
 
 namespace steeplejack
 {
+class Device;
+
 using config::DescriptorBindingDefinition;
 using config::DescriptorLayoutDefinition;
+
 class DescriptorSetLayout
 {
   public:
@@ -30,13 +32,12 @@ class DescriptorSetLayout
     const DescriptorLayoutDefinition& m_layout_definition;
     const VkDescriptorSetLayout m_descriptor_set_layout;
     const std::array<VkDescriptorSetLayout, 1> m_descriptor_set_layouts;
+
     std::vector<VkWriteDescriptorSet> m_write_descriptor_sets;
     std::vector<size_t> m_binding_to_write_index;
     std::unordered_map<std::string, BindingHandle> m_binding_handles;
-    mutable std::vector<VkWriteDescriptorSet> m_active_write_sets;
 
-    VkDescriptorSetLayout create_descriptor_set_layout();
-    std::vector<VkWriteDescriptorSet> create_write_descriptor_sets();
+    mutable std::vector<VkWriteDescriptorSet> m_active_write_sets;
 
   public:
     DescriptorSetLayout(const Device& device, std::string_view layout_name);
@@ -50,13 +51,11 @@ class DescriptorSetLayout
     [[nodiscard]] VkPipelineLayout create_pipeline_layout() const;
     [[nodiscard]] const BindingHandle& binding_handle(std::string_view name) const;
 
-    void reset_writes();
-
     [[nodiscard]] std::span<const VkWriteDescriptorSet> get_write_descriptor_sets() const;
 
-    DescriptorSetLayout&
+    void
     write_combined_image_sampler(VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle);
-
-    DescriptorSetLayout& write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle);
+    void write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle);
+    void reset_writes();
 };
 } // namespace steeplejack

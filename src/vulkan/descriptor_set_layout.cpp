@@ -1,5 +1,6 @@
 #include "descriptor_set_layout.h"
 
+#include "device.h"
 #include "spdlog/spdlog.h"
 
 #include <algorithm>
@@ -12,12 +13,70 @@ using namespace steeplejack;
 using config::DescriptorBindingDefinition;
 using config::DescriptorLayoutConfig;
 
+namespace
+{
+VkDescriptorSetLayout create_descriptor_set_layout(
+    const Device& device, const config::DescriptorLayoutDefinition& layout_definition)
+{
+    std::vector<VkDescriptorSetLayoutBinding> bindings;
+    bindings.reserve(layout_definition.bindings.size());
+    for (const auto& binding_info : layout_definition.bindings)
+    {
+        VkDescriptorSetLayoutBinding binding = {};
+        binding.binding = binding_info.binding;
+        binding.descriptorType = binding_info.type;
+        binding.descriptorCount = binding_info.count;
+        binding.stageFlags = binding_info.stage_flags;
+        binding.pImmutableSamplers = nullptr;
+        bindings.push_back(binding);
+    }
+
+    VkDescriptorSetLayoutCreateInfo layout_info = {};
+    layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
+    layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR;
+    layout_info.bindingCount = static_cast<uint32_t>(bindings.size());
+    layout_info.pBindings = bindings.data();
+
+    VkDescriptorSetLayout layout = nullptr;
+    if (vkCreateDescriptorSetLayout(device.vk(), &layout_info, nullptr, &layout) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create descriptor set layout");
+    }
+
+    return layout;
+}
+
+std::vector<VkWriteDescriptorSet> create_write_descriptor_sets(
+    const config::DescriptorLayoutDefinition& layout_definition)
+{
+    std::vector<VkWriteDescriptorSet> write_descriptor_sets;
+    write_descriptor_sets.reserve(layout_definition.bindings.size());
+
+    for (const auto& binding_info : layout_definition.bindings)
+    {
+        VkWriteDescriptorSet write_descriptor_set = {};
+        write_descriptor_set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        write_descriptor_set.dstSet = nullptr;
+        write_descriptor_set.dstBinding = binding_info.binding;
+        write_descriptor_set.dstArrayElement = 0;
+        write_descriptor_set.descriptorType = binding_info.type;
+        write_descriptor_set.descriptorCount = binding_info.count;
+        write_descriptor_set.pBufferInfo = nullptr;
+        write_descriptor_set.pImageInfo = nullptr;
+        write_descriptor_set.pTexelBufferView = nullptr;
+        write_descriptor_sets.push_back(write_descriptor_set);
+    }
+
+    return write_descriptor_sets;
+}
+} // namespace
+
 DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view layout_name) :
     m_device(device),
     m_layout_definition(DescriptorLayoutConfig::instance().require_layout(layout_name)),
-    m_descriptor_set_layout(create_descriptor_set_layout()),
+    m_descriptor_set_layout(create_descriptor_set_layout(device, m_layout_definition)),
     m_descriptor_set_layouts({m_descriptor_set_layout}),
-    m_write_descriptor_sets(create_write_descriptor_sets()),
+    m_write_descriptor_sets(create_write_descriptor_sets(m_layout_definition)),
     m_active_write_sets(m_write_descriptor_sets.size())
 {
     spdlog::info("Creating Descriptor Set Layout '{}'", layout_name);
@@ -67,56 +126,6 @@ VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
     return pipeline_layout;
 }
 
-VkDescriptorSetLayout DescriptorSetLayout::create_descriptor_set_layout()
-{
-    std::vector<VkDescriptorSetLayoutBinding> bindings;
-    for (const auto& binding_info : m_layout_definition.bindings)
-    {
-        VkDescriptorSetLayoutBinding binding = {};
-        binding.binding = binding_info.binding;
-        binding.descriptorType = binding_info.type;
-        binding.descriptorCount = binding_info.count;
-        binding.stageFlags = binding_info.stage_flags;
-        binding.pImmutableSamplers = nullptr;
-        bindings.push_back(binding);
-    }
-
-    VkDescriptorSetLayoutCreateInfo layout_info = {};
-    layout_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_SET_LAYOUT_CREATE_INFO;
-    layout_info.flags = VK_DESCRIPTOR_SET_LAYOUT_CREATE_PUSH_DESCRIPTOR_BIT_KHR;
-    layout_info.bindingCount = static_cast<uint32_t>(bindings.size());
-    layout_info.pBindings = bindings.data();
-
-    VkDescriptorSetLayout layout = nullptr;
-    if (vkCreateDescriptorSetLayout(m_device.vk(), &layout_info, nullptr, &layout) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create descriptor set layout");
-    }
-
-    return layout;
-}
-
-std::vector<VkWriteDescriptorSet> DescriptorSetLayout::create_write_descriptor_sets()
-{
-    std::vector<VkWriteDescriptorSet> write_descriptor_sets;
-    for (const auto& binding_info : m_layout_definition.bindings)
-    {
-        VkWriteDescriptorSet write_descriptor_set = {};
-        write_descriptor_set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        write_descriptor_set.dstSet = nullptr;
-        write_descriptor_set.dstBinding = binding_info.binding;
-        write_descriptor_set.dstArrayElement = 0;
-        write_descriptor_set.descriptorType = binding_info.type;
-        write_descriptor_set.descriptorCount = binding_info.count;
-        write_descriptor_set.pBufferInfo = nullptr;
-        write_descriptor_set.pImageInfo = nullptr;
-        write_descriptor_set.pTexelBufferView = nullptr;
-        write_descriptor_sets.push_back(write_descriptor_set);
-    }
-
-    return write_descriptor_sets;
-}
-
 const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(std::string_view name) const
 {
     auto it = m_binding_handles.find(std::string(name));
@@ -128,24 +137,20 @@ const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(st
     return it->second;
 }
 
-DescriptorSetLayout& DescriptorSetLayout::write_combined_image_sampler(
+void DescriptorSetLayout::write_combined_image_sampler(
     VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle)
 {
     auto& write_descriptor_set = m_write_descriptor_sets[binding_handle.write_index];
     write_descriptor_set.dstBinding = binding_handle.binding;
     write_descriptor_set.pImageInfo = image_info;
-
-    return *this;
 }
 
-DescriptorSetLayout&
+void
 DescriptorSetLayout::write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle)
 {
     auto& write_descriptor_set = m_write_descriptor_sets[binding_handle.write_index];
     write_descriptor_set.dstBinding = binding_handle.binding;
     write_descriptor_set.pBufferInfo = buffer_info;
-
-    return *this;
 }
 
 void DescriptorSetLayout::reset_writes()
