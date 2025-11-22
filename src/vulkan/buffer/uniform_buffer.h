@@ -23,8 +23,8 @@ class UniformBuffer
     UniformBuffer& operator=(UniformBuffer&&) = delete;
     ~UniformBuffer() = default;
 
-    BufferHost& operator[](size_t index);
+    BufferHost& at(size_t frame_index);
 
-    const BufferHost& operator[](size_t index) const;
+    [[nodiscard]] const BufferHost& at(size_t frame_index) const;
 };
 } // namespace steeplejack

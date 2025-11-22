@@ -17,7 +17,7 @@ inline void flush_model_ubos(entt::registry& reg, const Device& device, ModelUbo
         auto& t = view.get<Transform>(e);
         auto* u = cache.ensure(e, device);
         ModelUbo::Block blk{.model = t.world};
-        (*u->buffer)[frame_index].copy_from(blk);
+        u->buffer->at(frame_index).copy_from(blk);
     }
 }
 
@@ -47,12 +47,14 @@ flush_camera_ubo(entt::registry& reg, const Device& device, CameraUboCache& cach
 {
     entt::entity cam_e = find_main_camera(reg);
     if (cam_e == entt::null)
+    {
         return nullptr;
+    }
 
     auto& c = reg.get<Camera>(cam_e);
     auto* cu = cache.ensure(cam_e, device);
     CameraUbo::Block blk{.proj = c.proj, .view = c.view};
-    (*cu->buffer)[frame_index].copy_from(blk);
+    cu->buffer->at(frame_index).copy_from(blk);
     return cu;
 }
 } // namespace steeplejack::ecs

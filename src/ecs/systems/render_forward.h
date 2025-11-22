@@ -47,7 +47,7 @@ inline void render_forward(ecs::Scene& scene, VkCommandBuffer cmd, uint32_t fram
         // Model UBO at binding 1
         if (auto* mu = scene.model_ubos.get(it.entity))
         {
-            layout.write_uniform_buffer((*mu->buffer)[frame_index].descriptor(), model_handle);
+            layout.write_uniform_buffer(mu->buffer->at(frame_index).descriptor(), model_handle);
         }
 
         // Material descriptors (UBO at 3; textures at 2/4/5/6)

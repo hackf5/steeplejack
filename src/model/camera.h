@@ -137,7 +137,7 @@ class Camera
     void flush(uint32_t frame_index)
     {
         update();
-        m_uniform_buffers[frame_index].copy_from(m_uniform_block);
+        m_uniform_buffers.at(frame_index).copy_from(m_uniform_block);
     }
 
     void bind(uint32_t frame_index, GraphicsPipeline& pipeline)
@@ -148,7 +148,7 @@ class Camera
             m_cached_layout = &layout;
             m_camera_handle = layout.binding_handle("camera");
         }
-        layout.write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), m_camera_handle);
+        layout.write_uniform_buffer(m_uniform_buffers.at(frame_index).descriptor(), m_camera_handle);
     }
 };
 } // namespace steeplejack

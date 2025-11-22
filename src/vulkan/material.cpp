@@ -87,10 +87,10 @@ void Material::set_double_sided(bool value)
 void Material::flush(uint32_t frame_index)
 {
     m_uniform_block.baseColorFactor = m_base_color_factor;
-    m_uniform_buffers[frame_index].copy_from(m_uniform_block);
+    m_uniform_buffers.at(frame_index).copy_from(m_uniform_block);
 }
 
 VkDescriptorBufferInfo* Material::descriptor(uint32_t frame_index)
 {
-    return m_uniform_buffers[frame_index].descriptor();
+    return m_uniform_buffers.at(frame_index).descriptor();
 }

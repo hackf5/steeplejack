@@ -84,11 +84,11 @@ void Lights::flush(uint32_t frame_index)
     }
 
     // Update lights UBO
-    auto& light_buffer = m_lights_buffer[frame_index];
+    auto& light_buffer = m_lights_buffer.at(frame_index);
     light_buffer.copy_from(m_lights);
 
     // Update spotlight matrices UBO
-    auto& matrix_buffer = m_matrices_buffer[frame_index];
+    auto& matrix_buffer = m_matrices_buffer.at(frame_index);
     matrix_buffer.copy_from(m_matrices);
 }
 
@@ -112,11 +112,11 @@ void Lights::bind(DescriptorSetLayout& layout, uint32_t frame_index)
     }
 
     // Bind lights UBO
-    auto& light_buffer = m_lights_buffer[frame_index];
+    auto& light_buffer = m_lights_buffer.at(frame_index);
     layout.write_uniform_buffer(light_buffer.descriptor(), m_scene_lights_handle);
 
     // Bind spotlight matrices UBO
-    auto& matrix_buffer = m_matrices_buffer[frame_index];
+    auto& matrix_buffer = m_matrices_buffer.at(frame_index);
     layout.write_uniform_buffer(matrix_buffer.descriptor(), m_scene_spots_handle);
 }
 

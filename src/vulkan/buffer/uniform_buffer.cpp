@@ -20,12 +20,12 @@ auto create_buffers(const Device& device, VkDeviceSize size)
 
 UniformBuffer::UniformBuffer(const Device& device, VkDeviceSize size) : m_buffers(create_buffers(device, size)) {}
 
-BufferHost& UniformBuffer::operator[](size_t index)
+BufferHost& UniformBuffer::at(size_t frame_index)
 {
-    return *m_buffers.at(index);
+    return *m_buffers.at(frame_index);
 }
 
-const BufferHost& UniformBuffer::operator[](size_t index) const
+const BufferHost& UniformBuffer::at(size_t frame_index) const
 {
-    return *m_buffers.at(index);
+    return *m_buffers.at(frame_index);
 }

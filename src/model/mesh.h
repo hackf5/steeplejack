@@ -84,7 +84,7 @@ class Mesh
 
     void flush(uint32_t frame_index)
     {
-        m_uniform_buffers[frame_index].copy_from(m_uniform_block);
+        m_uniform_buffers.at(frame_index).copy_from(m_uniform_block);
         if (m_material != nullptr)
         {
             m_material->flush(frame_index);
@@ -99,7 +99,7 @@ class Mesh
             cache_shadow_bindings(layout);
         }
 
-        layout.write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), m_shadow_model_handle);
+        layout.write_uniform_buffer(m_uniform_buffers.at(frame_index).descriptor(), m_shadow_model_handle);
 
         pipeline.push_descriptor_set(command_buffer);
 
@@ -117,7 +117,7 @@ class Mesh
             cache_graphics_bindings(layout);
         }
 
-        layout.write_uniform_buffer(m_uniform_buffers[frame_index].descriptor(), m_model_handle);
+        layout.write_uniform_buffer(m_uniform_buffers.at(frame_index).descriptor(), m_model_handle);
 
         if (m_material != nullptr)
         {

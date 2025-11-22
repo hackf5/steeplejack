@@ -50,7 +50,7 @@ template <typename T> class UniformBufferArray : public UniformBuffer
 
     void copy_from_at(const T& value, size_t item_index, size_t frame_index)
     {
-        BufferHost& buffer = (*this)[frame_index];
+        BufferHost& buffer = this->at(frame_index);
         buffer.copy_from_at(value, m_stride * static_cast<VkDeviceSize>(item_index));
     };
 
@@ -58,7 +58,7 @@ template <typename T> class UniformBufferArray : public UniformBuffer
     {
         auto key = std::pair<size_t, size_t>{item_index, frame_index};
         auto& info = m_descriptors[key]; // default-constructs if missing
-        const BufferHost& buffer = (*this)[frame_index];
+        const BufferHost& buffer = this->at(frame_index);
         info.buffer = buffer.vk();
         info.offset = m_stride * static_cast<VkDeviceSize>(item_index);
         info.range = sizeof(T);
