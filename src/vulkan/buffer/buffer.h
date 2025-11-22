@@ -1,13 +1,13 @@
 #pragma once
 
-#include "vulkan/device.h"
-
 #include <span>
 #include <vma/vk_mem_alloc.h>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
+class Device;
+
 class Buffer
 {
   private:
@@ -34,10 +34,7 @@ class Buffer
     [[nodiscard]] VkDescriptorBufferInfo create_descriptor_info() const;
 
   protected:
-    [[nodiscard]] std::span<std::byte> mapped_span() const
-    {
-        return {static_cast<std::byte*>(m_allocation_info.info.pMappedData), static_cast<size_t>(m_buffer_size)};
-    }
+    [[nodiscard]] std::span<std::byte> mapped_span() const;
 
   public:
     Buffer(
@@ -53,24 +50,12 @@ class Buffer
     Buffer(Buffer&&) noexcept;
     Buffer& operator=(Buffer&&) = delete;
 
-    [[nodiscard]] VkBuffer vk() const
-    {
-        return m_allocation_info.buffer;
-    }
+    [[nodiscard]] VkBuffer vk() const;
 
-    [[nodiscard]] const VkBuffer* vk_ptr() const
-    {
-        return &m_allocation_info.buffer;
-    }
+    [[nodiscard]] const VkBuffer* vk_ptr() const;
 
-    [[nodiscard]] VkDeviceSize size() const
-    {
-        return m_buffer_size;
-    }
+    [[nodiscard]] VkDeviceSize size() const;
 
-    VkDescriptorBufferInfo* descriptor()
-    {
-        return &m_descriptor;
-    }
+    VkDescriptorBufferInfo* descriptor();
 };
 } // namespace steeplejack

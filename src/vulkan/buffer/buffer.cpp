@@ -1,5 +1,7 @@
 #include "buffer.h"
 
+#include "vulkan/device.h"
+
 using namespace steeplejack;
 
 Buffer::Buffer(
@@ -68,4 +70,29 @@ VkDescriptorBufferInfo Buffer::create_descriptor_info() const
 {
     // Range must be <= buffer size; use requested buffer size rather than allocation size
     return {.buffer = m_allocation_info.buffer, .offset = 0, .range = m_buffer_size};
+}
+
+std::span<std::byte> Buffer::mapped_span() const
+{
+    return {static_cast<std::byte*>(m_allocation_info.info.pMappedData), static_cast<size_t>(m_buffer_size)};
+}
+
+VkBuffer Buffer::vk() const
+{
+    return m_allocation_info.buffer;
+}
+
+const VkBuffer* Buffer::vk_ptr() const
+{
+    return &m_allocation_info.buffer;
+}
+
+VkDeviceSize Buffer::size() const
+{
+    return m_buffer_size;
+}
+
+VkDescriptorBufferInfo* Buffer::descriptor()
+{
+    return &m_descriptor;
 }
