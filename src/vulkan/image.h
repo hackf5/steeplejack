@@ -21,7 +21,6 @@ class Image
         uint32_t array_layers;
     };
 
-  private:
     struct AllocationInfo
     {
         VkImage image;
@@ -29,11 +28,10 @@ class Image
         VmaAllocationInfo info;
     };
 
+  private:
     const Device* m_device;
     ImageInfo m_image_info;
     AllocationInfo m_allocation_info{};
-
-    AllocationInfo create_allocation_info();
 
   public:
     Image(
@@ -52,14 +50,8 @@ class Image
     Image(Image&&) noexcept;
     Image& operator=(Image&&) = delete;
 
-    [[nodiscard]] VkImage vk() const
-    {
-        return m_allocation_info.image;
-    }
+    [[nodiscard]] VkImage vk() const;
 
-    [[nodiscard]] const ImageInfo& image_info() const
-    {
-        return m_image_info;
-    }
+    [[nodiscard]] const ImageInfo& image_info() const;
 };
 } // namespace steeplejack

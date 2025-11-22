@@ -19,23 +19,20 @@ class MaterialFactory;
 class Material
 {
   private:
-    // Textures (extend beyond base pass)
     Texture* m_base_color = nullptr;         // sRGB
     Texture* m_normal = nullptr;             // linear
     Texture* m_metallic_roughness = nullptr; // linear (ORM or MR)
     Texture* m_emissive = nullptr;           // sRGB
 
-    // Factors (subset for first step)
     glm::vec4 m_base_color_factor{1.0F, 1.0F, 1.0F, 1.0F};
     float m_alpha_cutoff = 0.5F; // for Mask
     AlphaMode m_alpha_mode = AlphaMode::Opaque;
     bool m_double_sided = false;
 
-    // UBO for material params
     struct UniformBlock
     {
         glm::vec4 baseColorFactor;
-        // Room for more later (metallic/roughness/emissive)
+        // others need to be added here
     };
 
     UniformBuffer m_uniform_buffers;
