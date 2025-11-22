@@ -6,13 +6,92 @@
 
 using namespace steeplejack;
 
+namespace
+{
+[[nodiscard]] VkCommandPool create_command_pool(const Device& device)
+{
+    spdlog::info("Creating Graphics Command Pool");
+
+    VkCommandPoolCreateInfo create_info{};
+    create_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+    create_info.queueFamilyIndex = device.graphics_queue_index();
+    create_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
+
+    VkCommandPool command_pool = nullptr;
+    if (vkCreateCommandPool(device.vk(), &create_info, nullptr, &command_pool) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to create command pool");
+    }
+
+    return command_pool;
+}
+
+[[nodiscard]] std::vector<VkCommandBuffer> create_command_buffers(const Device& device, VkCommandPool command_pool)
+{
+    spdlog::info("Creating Command Buffers");
+
+    VkCommandBufferAllocateInfo allocate_info{};
+    allocate_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
+    allocate_info.commandPool = command_pool;
+    allocate_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
+    allocate_info.commandBufferCount = Device::kMaxFramesInFlight;
+
+    std::vector<VkCommandBuffer> command_buffers(allocate_info.commandBufferCount);
+    if (vkAllocateCommandBuffers(device.vk(), &allocate_info, command_buffers.data()) != VK_SUCCESS)
+    {
+        throw std::runtime_error("Failed to allocate command buffers");
+    }
+
+    return command_buffers;
+}
+
+[[nodiscard]] std::vector<VkSemaphore> create_semaphores(const Device& device, size_t count)
+{
+    spdlog::info("Creating {} Semaphores", count);
+
+    std::vector<VkSemaphore> semaphores(count);
+    for (auto& semaphore : semaphores)
+    {
+        VkSemaphoreCreateInfo create_info{};
+        create_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
+
+        if (vkCreateSemaphore(device.vk(), &create_info, nullptr, &semaphore) != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to create semaphore");
+        }
+    }
+
+    return semaphores;
+}
+
+[[nodiscard]] std::vector<VkFence> create_fences(const Device& device)
+{
+    spdlog::info("Creating Fences");
+
+    std::vector<VkFence> fences(Device::kMaxFramesInFlight);
+    for (auto& fence : fences)
+    {
+        VkFenceCreateInfo create_info{};
+        create_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
+        create_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
+
+        if (vkCreateFence(device.vk(), &create_info, nullptr, &fence) != VK_SUCCESS)
+        {
+            throw std::runtime_error("Failed to create fence");
+        }
+    }
+
+    return fences;
+}
+} // namespace
+
 GraphicsQueue::GraphicsQueue(const Device& device) :
     m_device(device),
     m_graphics_queue(device.graphics_queue()),
-    m_command_pool(create_command_pool()),
-    m_command_buffers(create_command_buffers()),
-    m_image_available(create_semaphores(Device::kMaxFramesInFlight)),
-    m_in_flight_fences(create_fences())
+    m_command_pool(create_command_pool(device)),
+    m_command_buffers(create_command_buffers(device, m_command_pool)),
+    m_image_available(create_semaphores(device, Device::kMaxFramesInFlight)),
+    m_in_flight_fences(create_fences(device))
 {
 }
 
@@ -31,82 +110,6 @@ GraphicsQueue::~GraphicsQueue()
     }
 
     vkDestroyCommandPool(m_device.vk(), m_command_pool, nullptr);
-}
-
-VkCommandPool GraphicsQueue::create_command_pool()
-{
-    spdlog::info("Creating Graphics Command Pool");
-
-    VkCommandPoolCreateInfo create_info{};
-    create_info.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-    create_info.queueFamilyIndex = m_device.graphics_queue_index();
-    create_info.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
-
-    VkCommandPool command_pool = nullptr;
-    if (vkCreateCommandPool(m_device.vk(), &create_info, nullptr, &command_pool) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to create command pool");
-    }
-
-    return command_pool;
-}
-
-std::vector<VkCommandBuffer> GraphicsQueue::create_command_buffers()
-{
-    spdlog::info("Creating Command Buffers");
-
-    VkCommandBufferAllocateInfo allocate_info{};
-    allocate_info.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
-    allocate_info.commandPool = m_command_pool;
-    allocate_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-    allocate_info.commandBufferCount = Device::kMaxFramesInFlight;
-
-    std::vector<VkCommandBuffer> command_buffers(allocate_info.commandBufferCount);
-    if (vkAllocateCommandBuffers(m_device.vk(), &allocate_info, command_buffers.data()) != VK_SUCCESS)
-    {
-        throw std::runtime_error("Failed to allocate command buffers");
-    }
-
-    return command_buffers;
-}
-
-std::vector<VkSemaphore> GraphicsQueue::create_semaphores(size_t count)
-{
-    spdlog::info("Creating {} Semaphores", count);
-
-    std::vector<VkSemaphore> semaphores(count);
-    for (auto& semaphore : semaphores)
-    {
-        VkSemaphoreCreateInfo create_info{};
-        create_info.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
-
-        if (vkCreateSemaphore(m_device.vk(), &create_info, nullptr, &semaphore) != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to create semaphore");
-        }
-    }
-
-    return semaphores;
-}
-
-std::vector<VkFence> GraphicsQueue::create_fences()
-{
-    spdlog::info("Creating Fences");
-
-    std::vector<VkFence> fences(Device::kMaxFramesInFlight);
-    for (auto& fence : fences)
-    {
-        VkFenceCreateInfo create_info{};
-        create_info.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
-        create_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
-
-        if (vkCreateFence(m_device.vk(), &create_info, nullptr, &fence) != VK_SUCCESS)
-        {
-            throw std::runtime_error("Failed to create fence");
-        }
-    }
-
-    return fences;
 }
 
 VkFramebuffer
