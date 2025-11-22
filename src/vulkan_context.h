@@ -23,7 +23,6 @@
 #include "vulkan/window.h"
 
 #include <memory>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <unordered_map>
@@ -56,148 +55,52 @@ class VulkanContext
     std::unique_ptr<Gui> m_gui;
 
   public:
-    VulkanContext() = default;
+    VulkanContext();
+    ~VulkanContext();
 
     VulkanContext(const VulkanContext&) = delete;
     VulkanContext& operator=(const VulkanContext&) = delete;
     VulkanContext(VulkanContext&&) = delete;
     VulkanContext& operator=(VulkanContext&&) = delete;
-    ~VulkanContext() = default;
 
-    Window& window()
-    {
-        return *m_window;
-    }
+    Window& window();
 
-    const Device& device() const
-    {
-        return *m_device;
-    }
+    const Device& device() const;
 
-    const AdhocQueues& adhoc_queues() const
-    {
-        return *m_adhoc_queues;
-    }
+    const AdhocQueues& adhoc_queues() const;
 
-    GraphicsQueue& graphics_queue()
-    {
-        return *m_graphics_queue;
-    }
-    [[nodiscard]] const GraphicsQueue& graphics_queue() const
-    {
-        return *m_graphics_queue;
-    }
+    GraphicsQueue& graphics_queue();
+    [[nodiscard]] const GraphicsQueue& graphics_queue() const;
 
-    [[nodiscard]] DescriptorSetLayout& descriptor_set_layout(std::string_view name)
-    {
-        auto it = m_descriptor_set_layouts.find(std::string(name));
-        if (it == m_descriptor_set_layouts.end())
-        {
-            throw std::runtime_error("Descriptor set layout not found: " + std::string(name));
-        }
-        return *it->second;
-    }
+    [[nodiscard]] DescriptorSetLayout& descriptor_set_layout(std::string_view name);
+    [[nodiscard]] const DescriptorSetLayout& descriptor_set_layout(std::string_view name) const;
 
-    [[nodiscard]] const DescriptorSetLayout& descriptor_set_layout(std::string_view name) const
-    {
-        auto it = m_descriptor_set_layouts.find(std::string(name));
-        if (it == m_descriptor_set_layouts.end())
-        {
-            throw std::runtime_error("Descriptor set layout not found: " + std::string(name));
-        }
-        return *it->second;
-    }
+    GraphicsBuffers& graphics_buffers();
+    [[nodiscard]] const GraphicsBuffers& graphics_buffers() const;
 
-    [[nodiscard]] const GraphicsBuffers& graphics_buffers() const
-    {
-        return *m_graphics_buffers;
-    }
-    GraphicsBuffers& graphics_buffers()
-    {
-        return *m_graphics_buffers;
-    }
+    [[nodiscard]] const Sampler& sampler() const;
+    [[nodiscard]] const ShadowSampler& shadow_sampler() const;
 
-    [[nodiscard]] const Sampler& sampler() const
-    {
-        return *m_sampler;
-    }
+    TextureFactory& texture_factory();
+    MaterialFactory& material_factory();
 
-    [[nodiscard]] const ShadowSampler& shadow_sampler() const
-    {
-        return *m_shadow_sampler;
-    }
+    ShadowMapArray& shadow_mapping();
+    ShadowFramebuffers& shadow_framebuffers();
+    ShadowRenderPass& shadow_render_pass();
+    ShadowPipeline& shadow_pipeline();
 
-    TextureFactory& texture_factory()
-    {
-        return *m_texture_factory;
-    }
+    [[nodiscard]] const RenderScene& render_scene() const;
+    RenderScene& render_scene();
 
-    MaterialFactory& material_factory()
-    {
-        return *m_material_factory;
-    }
+    [[nodiscard]] const Swapchain& swapchain() const;
+    [[nodiscard]] const RenderPass& render_pass() const;
+    [[nodiscard]] const Framebuffers& framebuffers() const;
 
-    ShadowMapArray& shadow_mapping()
-    {
-        return *m_shadow_mapping;
-    }
+    GraphicsPipeline& graphics_pipeline();
+    [[nodiscard]] const GraphicsPipeline& graphics_pipeline() const;
 
-    ShadowFramebuffers& shadow_framebuffers()
-    {
-        return *m_shadow_framebuffers;
-    }
-
-    ShadowRenderPass& shadow_render_pass()
-    {
-        return *m_shadow_render_pass;
-    }
-
-    ShadowPipeline& shadow_pipeline()
-    {
-        return *m_shadow_pipeline;
-    }
-
-    [[nodiscard]] const RenderScene& render_scene() const
-    {
-        return *m_render_scene;
-    }
-    RenderScene& render_scene()
-    {
-        return *m_render_scene;
-    }
-
-    [[nodiscard]] const Swapchain& swapchain() const
-    {
-        return *m_swapchain;
-    }
-
-    [[nodiscard]] const RenderPass& render_pass() const
-    {
-        return *m_render_pass;
-    }
-
-    [[nodiscard]] const Framebuffers& framebuffers() const
-    {
-        return *m_framebuffers;
-    }
-
-    [[nodiscard]] const GraphicsPipeline& graphics_pipeline() const
-    {
-        return *m_graphics_pipeline;
-    }
-    GraphicsPipeline& graphics_pipeline()
-    {
-        return *m_graphics_pipeline;
-    }
-
-    [[nodiscard]] const Gui& gui() const
-    {
-        return *m_gui;
-    }
-    Gui& gui()
-    {
-        return *m_gui;
-    }
+    Gui& gui();
+    [[nodiscard]] const Gui& gui() const;
 
     friend class VulkanContextBuilder;
 };

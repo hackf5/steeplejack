@@ -1,5 +1,24 @@
 #include "vulkan_context_builder.h"
 
+#include "gui/gui.h"
+#include "scenes/render_scene.h"
+#include "vulkan/depth_buffer.h"
+#include "vulkan/descriptor_set_layout.h"
+#include "vulkan/device.h"
+#include "vulkan/framebuffers.h"
+#include "vulkan/graphics_buffers.h"
+#include "vulkan/graphics_queue.h"
+#include "vulkan/material_factory.h"
+#include "vulkan/sampler.h"
+#include "vulkan/shadow_framebuffers.h"
+#include "vulkan/shadow_map_array.h"
+#include "vulkan/shadow_pipeline.h"
+#include "vulkan/shadow_render_pass.h"
+#include "vulkan/shadow_sampler.h"
+#include "vulkan/swapchain.h"
+#include "vulkan/texture_factory.h"
+#include "vulkan/window.h"
+
 #include <stdexcept>
 #include <string>
 
