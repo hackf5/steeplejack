@@ -1,24 +1,21 @@
 #pragma once
 
-#include "device.h"
-
 #include <cstdint>
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
+class Device;
+
+enum AdhocQueueFamily : std::uint8_t
+{
+    Graphics,
+    Present,
+    Transfer
+};
+
 class AdhocQueue
 {
-  public:
-    enum QueueFamily : std::uint8_t
-    {
-        Graphics,
-        Present,
-        Transfer
-    };
-
-    AdhocQueue(const Device& device, QueueFamily family);
-
   private:
     const Device& m_device;
 
@@ -26,12 +23,8 @@ class AdhocQueue
     const VkCommandPool m_command_pool;
     const VkCommandBuffer m_command_buffer;
 
-    [[nodiscard]] VkQueue get_queue(QueueFamily family) const;
-    [[nodiscard]] uint32_t get_queue_index(QueueFamily family) const;
-    VkCommandPool create_command_pool(QueueFamily family);
-    VkCommandBuffer create_command_buffer();
-
   public:
+    AdhocQueue(const Device& device, AdhocQueueFamily family);
     ~AdhocQueue();
 
     AdhocQueue(const AdhocQueue&) = delete;
@@ -52,9 +45,9 @@ class AdhocQueues
 
   public:
     explicit AdhocQueues(const Device& device) :
-        m_transfer_queue(device, AdhocQueue::Transfer),
-        m_graphics_queue(device, AdhocQueue::Graphics),
-        m_present_queue(device, AdhocQueue::Present)
+        m_transfer_queue(device, AdhocQueueFamily::Transfer),
+        m_graphics_queue(device, AdhocQueueFamily::Graphics),
+        m_present_queue(device, AdhocQueueFamily::Present)
     {
     }
 
