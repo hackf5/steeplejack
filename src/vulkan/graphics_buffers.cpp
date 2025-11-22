@@ -13,21 +13,15 @@ GraphicsBuffers::GraphicsBuffers(const Device& device, const AdhocQueues& adhoc_
 
 void GraphicsBuffers::load_vertexes(std::span<const Vertex> vertexes)
 {
-    m_vertex_buffer = std::make_unique<BufferGPU>(
-        m_device,
-        m_adhoc_queues,
-        total_bytes(vertexes),
-        VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
+    m_vertex_buffer =
+        std::make_unique<BufferGPU>(m_device, m_adhoc_queues, total_bytes(vertexes), VK_BUFFER_USAGE_VERTEX_BUFFER_BIT);
     m_vertex_buffer->copy_from(vertexes);
 }
 
 void GraphicsBuffers::load_indexes(std::span<const Vertex::Index> indexes)
 {
-    m_index_buffer = std::make_unique<BufferGPU>(
-        m_device,
-        m_adhoc_queues,
-        total_bytes(indexes),
-        VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
+    m_index_buffer =
+        std::make_unique<BufferGPU>(m_device, m_adhoc_queues, total_bytes(indexes), VK_BUFFER_USAGE_INDEX_BUFFER_BIT);
     m_index_buffer->copy_from(indexes);
 }
 
