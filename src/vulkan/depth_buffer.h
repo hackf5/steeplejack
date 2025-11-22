@@ -1,14 +1,15 @@
 #pragma once
 
-#include "device.h"
-#include "image.h"
-#include "image_view.h"
-#include "swapchain.h"
+#include "vulkan/image.h"
+#include "vulkan/image_view.h"
 
 #include <vulkan/vulkan.h>
 
 namespace steeplejack
 {
+class Device;
+class Swapchain;
+
 class DepthBuffer
 {
   private:
@@ -24,14 +25,7 @@ class DepthBuffer
     DepthBuffer& operator=(DepthBuffer&&) = delete;
     ~DepthBuffer() = default;
 
-    [[nodiscard]] VkImageView image_view() const
-    {
-        return m_image_view.vk();
-    }
-
-    [[nodiscard]] VkFormat format() const
-    {
-        return m_image.image_info().format;
-    }
+    [[nodiscard]] VkImageView image_view() const;
+    [[nodiscard]] VkFormat format() const;
 };
 } // namespace steeplejack

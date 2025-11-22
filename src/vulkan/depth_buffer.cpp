@@ -1,5 +1,8 @@
 #include "depth_buffer.h"
 
+#include "device.h"
+#include "swapchain.h"
+
 using namespace steeplejack;
 
 DepthBuffer::DepthBuffer(const Device& device, const Swapchain& swapchain) :
@@ -13,4 +16,14 @@ DepthBuffer::DepthBuffer(const Device& device, const Swapchain& swapchain) :
         device.msaa_samples()),
     m_image_view(device, m_image, VK_IMAGE_ASPECT_DEPTH_BIT)
 {
+}
+
+VkImageView DepthBuffer::image_view() const
+{
+    return m_image_view.vk();
+}
+
+VkFormat DepthBuffer::format() const
+{
+    return m_image.image_info().format;
 }
