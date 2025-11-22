@@ -53,8 +53,7 @@ class DescriptorSetLayout
 
     [[nodiscard]] std::span<const VkWriteDescriptorSet> get_write_descriptor_sets() const;
 
-    void
-    write_combined_image_sampler(VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle);
+    void write_combined_image_sampler(VkDescriptorImageInfo* image_info, const BindingHandle& binding_handle);
     void write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle);
     void reset_writes();
 };

@@ -135,7 +135,7 @@ VkPhysicalDeviceProperties Device::properties() const
 
 VkSampleCountFlagBits Device::msaa_samples() const
 {
-    VkSampleCountFlags counts = m_device.physical_device.properties.limits.framebufferColorSampleCounts &
+    VkSampleCountFlags const counts = m_device.physical_device.properties.limits.framebufferColorSampleCounts &
         m_device.physical_device.properties.limits.framebufferDepthSampleCounts;
 
     static constexpr std::array<VkSampleCountFlagBits, 6> kPreferredCounts = {

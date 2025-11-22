@@ -15,8 +15,8 @@ using config::DescriptorLayoutConfig;
 
 namespace
 {
-VkDescriptorSetLayout create_descriptor_set_layout(
-    const Device& device, const config::DescriptorLayoutDefinition& layout_definition)
+VkDescriptorSetLayout
+create_descriptor_set_layout(const Device& device, const config::DescriptorLayoutDefinition& layout_definition)
 {
     std::vector<VkDescriptorSetLayoutBinding> bindings;
     bindings.reserve(layout_definition.bindings.size());
@@ -46,8 +46,8 @@ VkDescriptorSetLayout create_descriptor_set_layout(
     return layout;
 }
 
-std::vector<VkWriteDescriptorSet> create_write_descriptor_sets(
-    const config::DescriptorLayoutDefinition& layout_definition)
+std::vector<VkWriteDescriptorSet>
+create_write_descriptor_sets(const config::DescriptorLayoutDefinition& layout_definition)
 {
     std::vector<VkWriteDescriptorSet> write_descriptor_sets;
     write_descriptor_sets.reserve(layout_definition.bindings.size());
@@ -145,8 +145,7 @@ void DescriptorSetLayout::write_combined_image_sampler(
     write_descriptor_set.pImageInfo = image_info;
 }
 
-void
-DescriptorSetLayout::write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle)
+void DescriptorSetLayout::write_uniform_buffer(VkDescriptorBufferInfo* buffer_info, const BindingHandle& binding_handle)
 {
     auto& write_descriptor_set = m_write_descriptor_sets[binding_handle.write_index];
     write_descriptor_set.dstBinding = binding_handle.binding;
