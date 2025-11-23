@@ -8,12 +8,13 @@
 const int kMaxSpots = 8;
 
 layout(binding = 2) uniform sampler2D inSampler;  // baseColor
-layout(binding = 4) uniform sampler2D inNormal;   // normal (unused)
-layout(binding = 5) uniform sampler2D inMR;       // metallic-roughness (unused)
+layout(binding = 4) uniform sampler2D inNormal;   // normal
+layout(binding = 5) uniform sampler2D inMR;       // metallic-roughness
 layout(binding = 6) uniform sampler2D inEmissive; // emissive
 
 layout(binding = 3, std140) uniform MaterialParams {
     vec4 baseColorFactor;
+    vec4 materialFactors; // x: metallic factor, y: roughness factor, z: normal scale
 };
 
 layout(binding = 7, std140) uniform SceneLights {
@@ -37,11 +38,37 @@ layout(location = 3) in vec3 inWorldNormal;
 layout(location = 0) out vec4 outColor;
 
 void main() {
-    vec4 baseCol = texture(inSampler, inUV) * baseColorFactor;
+    vec4 baseSample = texture(inSampler, inUV) * baseColorFactor;
+    vec3 baseColor = baseSample.rgb;
+    float alpha = baseSample.a;
     vec3 emissiveCol = texture(inEmissive, inUV).rgb;
-    vec3 ambient = baseCol.rgb * ambientColor * ambientIntensity;
 
+    vec3 mrSample = texture(inMR, inUV).rgb;
+    float metallic = clamp(mrSample.b * materialFactors.x, 0.0, 1.0);
+    float roughness = clamp(mrSample.g * materialFactors.y, 0.04, 1.0);
+    float normalScale = materialFactors.z;
+
+    // Build TBN from partial derivatives to support normal mapping without per-vertex tangents
     vec3 N = normalize(inWorldNormal);
+    vec3 dp1 = dFdx(inWorldPos);
+    vec3 dp2 = dFdy(inWorldPos);
+    vec2 duv1 = dFdx(inUV);
+    vec2 duv2 = dFdy(inUV);
+    vec3 tangent = dp1 * duv2.y - dp2 * duv1.y;
+    if (dot(tangent, tangent) < 1e-8) {
+        vec3 axis = (abs(N.y) > 0.9) ? vec3(1.0, 0.0, 0.0) : vec3(0.0, 1.0, 0.0);
+        tangent = normalize(cross(N, axis));
+    }
+    vec3 T = normalize(tangent);
+    vec3 B = normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+    vec3 nTex = texture(inNormal, inUV).xyz * 2.0 - 1.0;
+    nTex.xy *= normalScale;
+    N = normalize(TBN * nTex);
+
+    vec3 V = normalize(-inWorldPos); // approximate view direction (camera at origin)
+
+    vec3 ambient = baseColor * ambientColor * ambientIntensity * (1.0 - metallic);
 
     // Debug modes: 0=none, 1=cone (selected), 2=NdotL (selected), 3=shadow vis (selected), 4=normals, 5=normals pass/fail
     int dbgMode = int(floor(debugParams.y + 0.5));
@@ -94,6 +121,7 @@ void main() {
     }
 
     vec3 diffuseSum = vec3(0.0);
+    vec3 specSum = vec3(0.0);
     for (int i = 0; i < kMaxSpots; ++i) {
         if (!spots[i].enable) {
             continue;
@@ -112,8 +140,28 @@ void main() {
             }
         }
 
-        diffuseSum += vis * lambertDiffuse(spots[i], N, inWorldPos, baseCol.rgb);
+        vec3 Ls = normalize(spots[i].position - inWorldPos);
+        vec3 Lf = -Ls;
+        vec3 Df = normalize(spots[i].direction);
+        float ndotl = max(dot(N, Ls), 0.0);
+        float cosAng = dot(Df, Lf);
+        float cone = smoothstep(min(spots[i].outerCos, spots[i].innerCos), max(spots[i].outerCos, spots[i].innerCos), cosAng);
+        float dist = length(inWorldPos - spots[i].position);
+        float range = max(spots[i].range, 1e-3);
+        float r = dist / range;
+        float att = 1.0 / (1.0 + r * r);
+        vec3 radiance = spots[i].color * (spots[i].intensity * cone * att);
+
+        if (ndotl > 0.0) {
+            vec3 F0 = mix(vec3(0.04), baseColor, metallic);
+            vec3 H = normalize(Ls + V);
+            float ndoth = max(dot(N, H), 0.0);
+            float specPower = pow(ndoth, mix(128.0, 1.0, roughness));
+            vec3 specColor = mix(vec3(0.04), baseColor, metallic);
+            specSum += vis * specColor * specPower * ndotl * radiance;
+            diffuseSum += vis * (1.0 - metallic) * baseColor * ndotl * radiance;
+        }
     }
 
-    outColor = vec4(ambient + diffuseSum + emissiveCol, baseCol.a);
+    outColor = vec4(ambient + diffuseSum + specSum + emissiveCol, alpha);
 }

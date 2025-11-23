@@ -87,10 +87,26 @@ void Material::set_double_sided(bool value)
 void Material::flush(uint32_t frame_index)
 {
     m_uniform_block.baseColorFactor = m_base_color_factor;
+    m_uniform_block.factors = glm::vec4(m_metallic_factor, m_roughness_factor, m_normal_scale, 0.0F);
     m_uniform_buffers.at(frame_index).copy_from(m_uniform_block);
 }
 
 VkDescriptorBufferInfo* Material::descriptor(uint32_t frame_index)
 {
     return m_uniform_buffers.at(frame_index).descriptor();
+}
+
+void Material::set_metallic_factor(float value)
+{
+    m_metallic_factor = value;
+}
+
+void Material::set_roughness_factor(float value)
+{
+    m_roughness_factor = value;
+}
+
+void Material::set_normal_scale(float value)
+{
+    m_normal_scale = value;
 }

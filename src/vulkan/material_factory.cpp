@@ -175,6 +175,9 @@ Material& MaterialFactory::load_gltf(const std::string& name, const std::string&
                 static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(2)),
                 static_cast<float>(mat.pbrMetallicRoughness.baseColorFactor.at(3))));
     }
+    material->set_metallic_factor(static_cast<float>(mat.pbrMetallicRoughness.metallicFactor));
+    material->set_roughness_factor(static_cast<float>(mat.pbrMetallicRoughness.roughnessFactor));
+    material->set_normal_scale(static_cast<float>(mat.normalTexture.scale));
 
     auto load_texture = [&](const auto& tex_info,
                             const std::string& suffix,

@@ -25,6 +25,9 @@ class Material
     Texture* m_emissive = nullptr;           // sRGB
 
     glm::vec4 m_base_color_factor{1.0F, 1.0F, 1.0F, 1.0F};
+    float m_metallic_factor = 1.0F;
+    float m_roughness_factor = 1.0F;
+    float m_normal_scale = 1.0F;
     float m_alpha_cutoff = 0.5F; // for Mask
     AlphaMode m_alpha_mode = AlphaMode::Opaque;
     bool m_double_sided = false;
@@ -32,11 +35,11 @@ class Material
     struct UniformBlock
     {
         glm::vec4 baseColorFactor;
-        // others need to be added here
+        glm::vec4 factors; // x: metallic factor, y: roughness factor, z: normal scale
     };
 
     UniformBuffer m_uniform_buffers;
-    UniformBlock m_uniform_block{glm::vec4(1.0F)};
+    UniformBlock m_uniform_block{.baseColorFactor = glm::vec4(1.0F), .factors = glm::vec4(1.0F)};
 
   public:
     explicit Material(const Device& device);
@@ -70,6 +73,9 @@ class Material
     void set_metallic_roughness(Texture* tex);
     void set_emissive(Texture* tex);
     void set_double_sided(bool value);
+    void set_metallic_factor(float value);
+    void set_roughness_factor(float value);
+    void set_normal_scale(float value);
 
     friend class MaterialFactory;
 };
