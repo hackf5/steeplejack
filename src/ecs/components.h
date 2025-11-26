@@ -27,12 +27,12 @@ using MaterialId = std::uint32_t;
 // Transform (data-only). World/local are maintained by systems.
 struct Transform
 {
-    glm::vec3 t{0.0f};
-    glm::quat r{1.0f, 0.0f, 0.0f, 0.0f};
-    glm::vec3 s{1.0f};
+    glm::vec3 t{0.0F};
+    glm::quat r{1.0F, 0.0F, 0.0F, 0.0F};
+    glm::vec3 s{1.0F};
 
-    glm::mat4 local{1.0f};
-    glm::mat4 world{1.0f};
+    glm::mat4 local{1.0F};
+    glm::mat4 world{1.0F};
 
     bool dirty{true};
 };
@@ -52,7 +52,7 @@ struct RenderMesh
 {
     GeometryId geometry{0};
     // Index ranges for draw calls (references into shared buffers)
-    std::vector<DrawRange> draws{};
+    std::vector<DrawRange> draws;
 
     // Whether this object casts a shadow
     bool casts_shadow{true};
@@ -67,15 +67,15 @@ struct MaterialRef
 // Camera parameters (plus cached matrices)
 struct Camera
 {
-    glm::vec3 position{0.0f};
-    glm::vec3 target{0.0f};
-    float fov{45.0f};
-    float aspect{1.0f};
-    float clip_near{0.1f};
-    float clip_far{10.0f};
+    glm::vec3 position{0.0F};
+    glm::vec3 target{0.0F};
+    float fov{45.0F};
+    float aspect{1.0F};
+    float clip_near{0.1F};
+    float clip_far{10.0F};
 
-    glm::mat4 view{1.0f};
-    glm::mat4 proj{1.0f};
+    glm::mat4 view{1.0F};
+    glm::mat4 proj{1.0F};
 
     bool dirty{true};
 };
@@ -83,8 +83,8 @@ struct Camera
 // Ambient light (single instance is typical)
 struct Ambient
 {
-    glm::vec3 color{1.0f};
-    float intensity{0.1f};
+    glm::vec3 color{1.0F};
+    float intensity{0.1F};
 };
 
 // Spotlight definition. Optionally also a shadow caster with fixed index.
@@ -92,21 +92,21 @@ struct SpotLight
 {
     bool enable{false};
 
-    glm::vec3 position{0.0f};
-    float intensity{1.0f};
+    glm::vec3 position{0.0F};
+    float intensity{1.0F};
 
-    glm::vec3 direction{0.0f, 0.0f, -1.0f};
-    float innerCos{glm::cos(glm::radians(15.0f))};
+    glm::vec3 direction{0.0F, 0.0F, -1.0F};
+    float innerCos{glm::cos(glm::radians(15.0F))};
 
-    glm::vec3 color{1.0f};
-    float outerCos{glm::cos(glm::radians(25.0f))};
+    glm::vec3 color{1.0F};
+    float outerCos{glm::cos(glm::radians(25.0F))};
 
-    float range{6.0f};
+    float range{6.0F};
     int shadow_index{-1}; // index into shadow map array; -1 = not assigned
     bool casts_shadow{false};
 
     // Cached spotlight matrix for rendering
-    glm::mat4 viewProj{1.0f};
+    glm::mat4 viewProj{1.0F};
 };
 
 // Tags & metadata
@@ -120,7 +120,7 @@ struct ShadowReceiver
 
 struct Name
 {
-    std::string value{};
+    std::string value;
 };
 
 } // namespace ecs
