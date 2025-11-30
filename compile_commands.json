@@ -7,36 +7,6 @@
 },
 {
   "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\config\\descriptor_layout_config.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\config\\descriptor_layout_config.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/config/descriptor_layout_config.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/config/descriptor_layout_config.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\gui\\gui.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\gui\\gui.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/gui/gui.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/gui/gui.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\model\\lights.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\model\\lights.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/model/lights.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/model/lights.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\scenes\\cubes_one.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\scenes\\cubes_one.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/scenes/cubes_one.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/scenes/cubes_one.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\util\\runtime_paths.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\util\\runtime_paths.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/util/runtime_paths.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/util/runtime_paths.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\vulkan\\adhoc_queue.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\vulkan\\adhoc_queue.cpp",
   "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/vulkan/adhoc_queue.cpp",
   "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/vulkan/adhoc_queue.cpp.obj"
@@ -235,6 +205,78 @@
 },
 {
   "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\gui\\gui.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\gui\\gui.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/gui/gui.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/gui/gui.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\model\\lights.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\model\\lights.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/model/lights.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/model/lights.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\scenes\\cubes_one.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\scenes\\cubes_one.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/scenes/cubes_one.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/scenes/cubes_one.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\scenes\\ecs_cubes_one_scene.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\scenes\\ecs_cubes_one_scene.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/scenes/ecs_cubes_one_scene.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/scenes/ecs_cubes_one_scene.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\config\\descriptor_layout_config.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\config\\descriptor_layout_config.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/config/descriptor_layout_config.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/config/descriptor_layout_config.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\util\\runtime_paths.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\util\\runtime_paths.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/util/runtime_paths.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/util/runtime_paths.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\ecs\\ecs.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\ecs\\ecs.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/ecs/ecs.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/ecs/ecs.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\renderer\\backend.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\renderer\\backend.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/renderer/backend.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/renderer/backend.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\renderer\\backend_builder.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\renderer\\backend_builder.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/renderer/backend_builder.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/renderer/backend_builder.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\renderer\\scene_backend.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\renderer\\scene_backend.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/renderer/scene_backend.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/renderer/scene_backend.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\renderer\\scene_backend_builder.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\renderer\\scene_backend_builder.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/renderer/scene_backend_builder.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/renderer/scene_backend_builder.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\tiny_gltf.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\tiny_gltf.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/tiny_gltf.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/tiny_gltf.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\vulkan_context.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\vulkan_context.cpp",
   "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/vulkan_context.cpp",
   "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/vulkan_context.cpp.obj"
@@ -250,18 +292,6 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\vulkan_engine.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\vulkan_engine.cpp",
   "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/vulkan_engine.cpp",
   "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/vulkan_engine.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\ecs\\ecs.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\ecs\\ecs.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/ecs/ecs.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/ecs/ecs.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\tiny_gltf.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\tiny_gltf.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/tiny_gltf.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/tiny_gltf.cpp.obj"
 },
 {
   "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
