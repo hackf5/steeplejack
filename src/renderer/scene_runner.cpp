@@ -1,13 +1,25 @@
 #include "renderer/scene_runner.h"
 
-namespace steeplejack::renderer
+using namespace steeplejack::renderer;
+
+SceneRunner::SceneRunner(Backend& backend) : m_backend(&backend) {}
+
+Backend& SceneRunner::backend()
 {
-SceneBackend* SceneRunner::backend()
-{
-    return m_backend.get();
+    return *m_backend;
 }
-const SceneBackend* SceneRunner::backend() const
+
+const Backend& SceneRunner::backend() const
 {
-    return m_backend.get();
+    return *m_backend;
 }
-} // namespace steeplejack::renderer
+
+SceneBackend& SceneRunner::scene_backend()
+{
+    return *m_scene_backend;
+}
+
+const SceneBackend& SceneRunner::scene_backend() const
+{
+    return *m_scene_backend;
+}

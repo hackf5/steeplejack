@@ -12,14 +12,17 @@ namespace steeplejack::renderer
 class SceneRunner
 {
   private:
-    std::unique_ptr<SceneBackend> m_backend;
+    Backend* m_backend;
+    std::unique_ptr<SceneBackend> m_scene_backend;
 
   protected:
-    [[nodiscard]] SceneBackend* backend();
-    [[nodiscard]] const SceneBackend* backend() const;
+    [[nodiscard]] Backend& backend();
+    [[nodiscard]] const Backend& backend() const;
+    [[nodiscard]] SceneBackend& scene_backend();
+    [[nodiscard]] const SceneBackend& scene_backend() const;
 
   public:
-    SceneRunner() = default;
+    explicit SceneRunner(Backend& backend);
     virtual ~SceneRunner() = default;
 
     SceneRunner(const SceneRunner&) = delete;
@@ -27,9 +30,9 @@ class SceneRunner
     SceneRunner(SceneRunner&&) = delete;
     SceneRunner& operator=(SceneRunner&&) = delete;
 
-    virtual void load_resources(const Backend& backend) = 0;
+    virtual void load_resources() = 0;
 
-    virtual void build_backend(const Backend& backend) = 0;
+    virtual void build_scene_backend() = 0;
 
     virtual void update(const FrameContext& frame) = 0;
 
