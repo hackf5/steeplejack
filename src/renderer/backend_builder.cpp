@@ -44,26 +44,29 @@ std::unique_ptr<Backend> BackendBuilder::build()
     backend->m_adhoc_queues = std::make_unique<AdhocQueues>(*backend->m_device);
     backend->m_graphics_queue = std::make_unique<GraphicsQueue>(*backend->m_device);
 
-    backend->m_graphics_buffers =
-        std::make_unique<GraphicsBuffers>(*backend->m_device, *backend->m_adhoc_queues);
+    backend->m_graphics_buffers = std::make_unique<GraphicsBuffers>(*backend->m_device, *backend->m_adhoc_queues);
     backend->m_sampler = std::make_unique<Sampler>(*backend->m_device);
     backend->m_shadow_sampler = std::make_unique<ShadowSampler>(*backend->m_device);
     backend->m_texture_factory =
         std::make_unique<TextureFactory>(*backend->m_device, *backend->m_sampler, *backend->m_adhoc_queues);
-    backend->m_material_factory =
-        std::make_unique<MaterialFactory>(*backend->m_device, *backend->m_texture_factory);
+    backend->m_material_factory = std::make_unique<MaterialFactory>(*backend->m_device, *backend->m_texture_factory);
 
     backend->m_shadow_mapping = std::make_unique<ShadowMapArray>(*backend->m_device, *backend->m_adhoc_queues, 8);
     backend->m_shadow_render_pass = std::make_unique<ShadowRenderPass>(*backend->m_device);
     backend->m_shadow_framebuffers = std::make_unique<ShadowFramebuffers>(
-        *backend->m_device, *backend->m_shadow_mapping, *backend->m_shadow_render_pass);
+        *backend->m_device,
+        *backend->m_shadow_mapping,
+        *backend->m_shadow_render_pass);
 
     backend->m_swapchain = std::make_unique<Swapchain>(*backend->m_device);
     backend->m_depth_buffer = std::make_unique<DepthBuffer>(*backend->m_device, *backend->m_swapchain);
     backend->m_render_pass =
         std::make_unique<RenderPass>(*backend->m_device, *backend->m_swapchain, *backend->m_depth_buffer);
     backend->m_framebuffers = std::make_unique<Framebuffers>(
-        *backend->m_device, *backend->m_swapchain, *backend->m_render_pass, *backend->m_depth_buffer);
+        *backend->m_device,
+        *backend->m_swapchain,
+        *backend->m_render_pass,
+        *backend->m_depth_buffer);
 
     return backend;
 }

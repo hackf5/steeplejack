@@ -1,8 +1,8 @@
 // GPU UBO caches for ECS entities (camera and model)
 #pragma once
 
-#include "vulkan/buffer/uniform_buffer.h"
 #include "glm_config.hpp"
+#include "vulkan/buffer/uniform_buffer.h"
 
 #include <entt/entt.hpp>
 #include <memory>

@@ -2,11 +2,6 @@
 
 using namespace steeplejack;
 
-GameEngine::GameEngine(std::unique_ptr<renderer::Backend> backend) :
-    m_backend(std::move(backend))
-{
-}
+GameEngine::GameEngine(std::unique_ptr<renderer::Backend> backend) : m_backend(std::move(backend)) {}
 
-void GameEngine::run()
-{
-}
+void GameEngine::run() {}

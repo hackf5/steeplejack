@@ -28,4 +28,3 @@ class BackendBuilder
     std::unique_ptr<Backend> build();
 };
 } // namespace steeplejack::renderer
-
