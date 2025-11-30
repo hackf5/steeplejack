@@ -1,0 +1,39 @@
+name = "minimal"
+
+[shaders]
+vertex = "shader.minimal.vert"
+fragment = "shader.minimal.frag"
+
+[vertex_input]
+[[vertex_input.bindings]]
+name = "vertex"
+binding = 0
+stride = 32
+input_rate = "vertex"
+
+[[vertex_input.attributes]]
+name = "position"
+binding = 0
+location = 0
+format = "R32G32B32_SFLOAT"
+offset = 0
+
+[[vertex_input.attributes]]
+name = "uv"
+binding = 0
+location = 1
+format = "R32G32_SFLOAT"
+offset = 24
+
+[descriptor_layout]
+[[descriptor_layout.bindings]]
+name = "camera"
+binding = 0
+type = "uniform_buffer"
+stage_flags = ["vertex"]
+
+[[descriptor_layout.bindings]]
+name = "model"
+binding = 1
+type = "uniform_buffer"
+stage_flags = ["vertex"]

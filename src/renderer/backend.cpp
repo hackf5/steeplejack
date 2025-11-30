@@ -137,3 +137,14 @@ const DepthBuffer& Backend::depth_buffer() const
 {
     return *m_depth_buffer;
 }
+
+void Backend::rebuild_swapchain()
+{
+    m_window->wait_resize();
+    m_device->wait_idle();
+
+    m_swapchain = std::make_unique<Swapchain>(*m_device);
+    m_depth_buffer = std::make_unique<DepthBuffer>(*m_device, *m_swapchain);
+    m_render_pass = std::make_unique<RenderPass>(*m_device, *m_swapchain, *m_depth_buffer);
+    m_framebuffers = std::make_unique<Framebuffers>(*m_device, *m_swapchain, *m_render_pass, *m_depth_buffer);
+}

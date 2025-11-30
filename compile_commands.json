@@ -229,6 +229,12 @@
 },
 {
   "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\config\\pipeline_config.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\config\\pipeline_config.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/config/pipeline_config.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/config/pipeline_config.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\util\\runtime_paths.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\util\\runtime_paths.cpp",
   "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/util/runtime_paths.cpp",
   "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/util/runtime_paths.cpp.obj"

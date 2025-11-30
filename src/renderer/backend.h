@@ -84,6 +84,8 @@ class Backend
     [[nodiscard]] DepthBuffer& depth_buffer();
     [[nodiscard]] const DepthBuffer& depth_buffer() const;
 
+    void rebuild_swapchain();
+
     friend class BackendBuilder;
 };
 } // namespace renderer
