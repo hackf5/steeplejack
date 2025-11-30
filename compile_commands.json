@@ -223,12 +223,6 @@
 },
 {
   "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\scenes\\ecs_cubes_one_scene.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\scenes\\ecs_cubes_one_scene.cpp",
-  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/scenes/ecs_cubes_one_scene.cpp",
-  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/scenes/ecs_cubes_one_scene.cpp.obj"
-},
-{
-  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\config\\descriptor_layout_config.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\config\\descriptor_layout_config.cpp",
   "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/config/descriptor_layout_config.cpp",
   "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/config/descriptor_layout_config.cpp.obj"
@@ -268,6 +262,12 @@
   "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\renderer\\scene_backend_builder.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\renderer\\scene_backend_builder.cpp",
   "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/renderer/scene_backend_builder.cpp",
   "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/renderer/scene_backend_builder.cpp.obj"
+},
+{
+  "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe -DFMT_SHARED -DGLFW_DLL -DSPDLOG_COMPILED_LIB -DSPDLOG_FMT_EXTERNAL -DSPDLOG_SHARED_LIB -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/include -IC:/msys64/home/brian/repos/github/hackf5/steeplejack/src -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include -isystem C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/vcpkg_installed/x64-mingw-dynamic/include/vma -O0 -g3 -fno-omit-frame-pointer -std=c++23 -std=gnu++23 -Wall -Wextra -Wpedantic -o CMakeFiles\\steeplejack_engine.dir\\src\\renderer\\scene_runner.cpp.obj -c C:\\msys64\\home\\brian\\repos\\github\\hackf5\\steeplejack\\src\\renderer\\scene_runner.cpp",
+  "file": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/src/renderer/scene_runner.cpp",
+  "output": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug/CMakeFiles/steeplejack_engine.dir/src/renderer/scene_runner.cpp.obj"
 },
 {
   "directory": "C:/msys64/home/brian/repos/github/hackf5/steeplejack/build/ucrt/debug",

@@ -19,6 +19,8 @@ SceneBackend::SceneBackend(
 {
 }
 
+SceneBackend::~SceneBackend() = default;
+
 DescriptorSetLayout& SceneBackend::descriptor_set_layout() const
 {
     return *m_descriptor_set_layout;

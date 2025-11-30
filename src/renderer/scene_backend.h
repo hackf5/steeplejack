@@ -12,7 +12,6 @@ class ShadowPipeline;
 
 namespace renderer
 {
-// Per-scene render backend (descriptor set layouts + pipelines).
 class SceneBackend
 {
   private:
@@ -32,7 +31,7 @@ class SceneBackend
     SceneBackend& operator=(const SceneBackend&) = delete;
     SceneBackend(SceneBackend&&) = delete;
     SceneBackend& operator=(SceneBackend&&) = delete;
-    ~SceneBackend() = default;
+    ~SceneBackend();
 
     [[nodiscard]] DescriptorSetLayout& descriptor_set_layout() const;
     [[nodiscard]] GraphicsPipeline& graphics_pipeline() const;
