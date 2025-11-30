@@ -22,6 +22,8 @@ class GameEngine
     GameEngine& operator=(GameEngine&&) = delete;
     ~GameEngine() = default;
 
+    void set_scene(std::unique_ptr<renderer::SceneRunner> scene);
+
     void run();
 };
 } // namespace steeplejack

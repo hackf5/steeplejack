@@ -19,24 +19,12 @@ struct FrameContext
     float delta_seconds{0.0F};
 };
 
-struct ShadowContext
-{
-    ShadowFramebuffers* framebuffers{nullptr};
-    ShadowMapArray* shadow_maps{nullptr};
-    ShadowRenderPass* render_pass{nullptr};
-    VkViewport viewport{};
-    VkRect2D scissor{};
-};
-
 // Rendering context for a frame; scenes own pass ordering and can use shadow context as needed.
 struct RenderContext
 {
-    VkCommandBuffer command_buffer{VK_NULL_HANDLE};
-    VkFramebuffer framebuffer{VK_NULL_HANDLE};
-    VkViewport viewport{};
-    VkRect2D scissor{};
+    VkCommandBuffer command_buffer{nullptr};
+    VkFramebuffer framebuffer{nullptr};
     uint32_t frame_index{0};
-    ShadowContext shadow{};
 };
 } // namespace renderer
 } // namespace steeplejack
