@@ -1,6 +1,6 @@
 #pragma once
 
-#include "config/descriptor_layout_config.h"
+#include "config/pipeline_config.h"
 
 #include <array>
 #include <span>
@@ -14,9 +14,6 @@ namespace steeplejack
 {
 class Device;
 
-using config::DescriptorBindingDefinition;
-using config::DescriptorLayoutDefinition;
-
 class DescriptorSetLayout
 {
   public:
@@ -29,7 +26,6 @@ class DescriptorSetLayout
 
   private:
     const Device& m_device;
-    const DescriptorLayoutDefinition& m_layout_definition;
     const VkDescriptorSetLayout m_descriptor_set_layout;
     const std::array<VkDescriptorSetLayout, 1> m_descriptor_set_layouts;
 
@@ -40,7 +36,8 @@ class DescriptorSetLayout
     mutable std::vector<VkWriteDescriptorSet> m_active_write_sets;
 
   public:
-    DescriptorSetLayout(const Device& device, std::string_view layout_name);
+    DescriptorSetLayout(const Device& device, std::string_view layout_name); // legacy path, currently unsupported
+    DescriptorSetLayout(const Device& device, std::span<const config::DescriptorBinding> bindings);
     ~DescriptorSetLayout();
 
     DescriptorSetLayout(const DescriptorSetLayout&) = delete;
@@ -49,7 +46,7 @@ class DescriptorSetLayout
     DescriptorSetLayout& operator=(DescriptorSetLayout&&) = delete;
 
     [[nodiscard]] VkPipelineLayout create_pipeline_layout() const;
-    [[nodiscard]] const BindingHandle& binding_handle(std::string_view name) const;
+    [[nodiscard]] const BindingHandle& binding_handle(std::string name) const;
 
     [[nodiscard]] std::span<const VkWriteDescriptorSet> get_write_descriptor_sets() const;
 

@@ -48,9 +48,11 @@ class PipelineConfig
 
     std::unordered_map<std::string, PipelineDefinition> m_pipelines;
 
-  public:
     static PipelineConfig& instance();
 
-    PipelineDefinition require_pipeline(const std::string& name) const;
+    PipelineDefinition require_impl(const std::string& name) const;
+
+  public:
+    static PipelineDefinition require(const std::string& name);
 };
 } // namespace steeplejack::config

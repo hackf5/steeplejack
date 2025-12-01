@@ -10,23 +10,52 @@
 #include <string>
 
 using namespace steeplejack;
-using config::DescriptorBindingDefinition;
-using config::DescriptorLayoutConfig;
+using config::DescriptorBinding;
 
 namespace
 {
+VkDescriptorType parse_descriptor_type(const std::string& type)
+{
+    if (type == "uniform_buffer")
+    {
+        return VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+    }
+    if (type == "combined_image_sampler")
+    {
+        return VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    }
+    throw std::runtime_error("Unsupported descriptor type: " + type);
+}
+
+VkShaderStageFlags parse_stage_flags(const std::vector<std::string>& flags)
+{
+    VkShaderStageFlags result = 0;
+    for (const auto& f : flags)
+    {
+        if (f == "vertex")
+        {
+            result |= VK_SHADER_STAGE_VERTEX_BIT;
+        }
+        else if (f == "fragment")
+        {
+            result |= VK_SHADER_STAGE_FRAGMENT_BIT;
+        }
+    }
+    return result;
+}
+
 VkDescriptorSetLayout
-create_descriptor_set_layout(const Device& device, const config::DescriptorLayoutDefinition& layout_definition)
+create_descriptor_set_layout(const Device& device, std::span<const config::DescriptorBinding> bindings_def)
 {
     std::vector<VkDescriptorSetLayoutBinding> bindings;
-    bindings.reserve(layout_definition.bindings.size());
-    for (const auto& binding_info : layout_definition.bindings)
+    bindings.reserve(bindings_def.size());
+    for (const auto& binding_info : bindings_def)
     {
         VkDescriptorSetLayoutBinding binding = {};
         binding.binding = binding_info.binding;
-        binding.descriptorType = binding_info.type;
-        binding.descriptorCount = binding_info.count;
-        binding.stageFlags = binding_info.stage_flags;
+        binding.descriptorType = parse_descriptor_type(binding_info.type);
+        binding.descriptorCount = 1;
+        binding.stageFlags = parse_stage_flags(binding_info.stage_flags);
         binding.pImmutableSamplers = nullptr;
         bindings.push_back(binding);
     }
@@ -47,20 +76,20 @@ create_descriptor_set_layout(const Device& device, const config::DescriptorLayou
 }
 
 std::vector<VkWriteDescriptorSet>
-create_write_descriptor_sets(const config::DescriptorLayoutDefinition& layout_definition)
+create_write_descriptor_sets(std::span<const config::DescriptorBinding> bindings_def)
 {
     std::vector<VkWriteDescriptorSet> write_descriptor_sets;
-    write_descriptor_sets.reserve(layout_definition.bindings.size());
+    write_descriptor_sets.reserve(bindings_def.size());
 
-    for (const auto& binding_info : layout_definition.bindings)
+    for (const auto& binding_info : bindings_def)
     {
         VkWriteDescriptorSet write_descriptor_set = {};
         write_descriptor_set.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         write_descriptor_set.dstSet = nullptr;
         write_descriptor_set.dstBinding = binding_info.binding;
         write_descriptor_set.dstArrayElement = 0;
-        write_descriptor_set.descriptorType = binding_info.type;
-        write_descriptor_set.descriptorCount = binding_info.count;
+        write_descriptor_set.descriptorType = parse_descriptor_type(binding_info.type);
+        write_descriptor_set.descriptorCount = 1;
         write_descriptor_set.pBufferInfo = nullptr;
         write_descriptor_set.pImageInfo = nullptr;
         write_descriptor_set.pTexelBufferView = nullptr;
@@ -71,38 +100,45 @@ create_write_descriptor_sets(const config::DescriptorLayoutDefinition& layout_de
 }
 } // namespace
 
-DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view layout_name) :
+DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view /*layout_name*/) :
     m_device(device),
-    m_layout_definition(DescriptorLayoutConfig::instance().require_layout(layout_name)),
-    m_descriptor_set_layout(create_descriptor_set_layout(device, m_layout_definition)),
+    m_descriptor_set_layout(nullptr),
+    m_descriptor_set_layouts({m_descriptor_set_layout})
+{
+    throw std::runtime_error("Legacy descriptor set layouts are no longer supported");
+}
+
+DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::span<const DescriptorBinding> bindings) :
+    m_device(device),
+    m_descriptor_set_layout(create_descriptor_set_layout(device, bindings)),
     m_descriptor_set_layouts({m_descriptor_set_layout}),
-    m_write_descriptor_sets(create_write_descriptor_sets(m_layout_definition)),
+    m_write_descriptor_sets(create_write_descriptor_sets(bindings)),
     m_active_write_sets(m_write_descriptor_sets.size())
 {
-    spdlog::info("Creating Descriptor Set Layout '{}'", layout_name);
+    spdlog::info("Creating Descriptor Set Layout (span)");
 
     uint32_t max_binding = 0;
-    for (const auto& binding : m_layout_definition.bindings)
+    for (const auto& binding : bindings)
     {
         max_binding = std::max(max_binding, binding.binding);
     }
     m_binding_to_write_index.assign(static_cast<size_t>(max_binding) + 1, std::numeric_limits<size_t>::max());
 
-    for (size_t i = 0; i < m_layout_definition.bindings.size(); ++i)
+    for (size_t i = 0; i < bindings.size(); ++i)
     {
-        const auto& binding = m_layout_definition.bindings[i];
+        const auto& binding = bindings[i];
         m_binding_to_write_index[binding.binding] = i;
         BindingHandle handle{};
         handle.binding = binding.binding;
         handle.write_index = i;
-        handle.type = binding.type;
+        handle.type = parse_descriptor_type(binding.type);
         m_binding_handles.emplace(binding.name, handle);
     }
 }
 
 DescriptorSetLayout::~DescriptorSetLayout()
 {
-    spdlog::info("Destroying Descriptor Set Layout '{}'", m_layout_definition.name);
+    spdlog::info("Destroying Descriptor Set Layout");
     vkDestroyDescriptorSetLayout(m_device.vk(), m_descriptor_set_layout, nullptr);
 }
 
@@ -126,13 +162,12 @@ VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
     return pipeline_layout;
 }
 
-const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(std::string_view name) const
+const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(std::string name) const
 {
-    auto it = m_binding_handles.find(std::string(name));
+    auto it = m_binding_handles.find(name);
     if (it == m_binding_handles.end())
     {
-        throw std::runtime_error(
-            "Descriptor binding '" + std::string(name) + "' not found in layout '" + m_layout_definition.name + "'");
+        throw std::runtime_error("Descriptor binding '" + name + "' not found");
     }
     return it->second;
 }

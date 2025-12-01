@@ -99,6 +99,11 @@ ShadowPipeline::~ShadowPipeline()
     vkDestroyPipelineLayout(m_device.vk(), m_pipeline_layout, nullptr);
 }
 
+VkPipelineLayout ShadowPipeline::layout() const
+{
+    return m_pipeline_layout;
+}
+
 DescriptorSetLayout& ShadowPipeline::descriptor_set_layout() const
 {
     return m_descriptor_set_layout;

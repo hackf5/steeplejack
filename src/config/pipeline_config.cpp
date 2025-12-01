@@ -156,7 +156,7 @@ PipelineConfig& PipelineConfig::instance()
     return inst;
 }
 
-PipelineDefinition PipelineConfig::require_pipeline(const std::string& name) const
+PipelineDefinition PipelineConfig::require_impl(const std::string& name) const
 {
     auto it = m_pipelines.find(name);
     if (it == m_pipelines.end())
@@ -164,4 +164,9 @@ PipelineDefinition PipelineConfig::require_pipeline(const std::string& name) con
         throw std::runtime_error("Pipeline config not found: " + name);
     }
     return it->second;
+}
+
+PipelineDefinition PipelineConfig::require(const std::string& name)
+{
+    return instance().require_impl(name);
 }
