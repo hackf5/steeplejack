@@ -21,7 +21,7 @@ fetch_vkCmdPushDescriptorSetKHR(const Device& device) // NOLINT(readability-iden
 } // namespace
 
 BasePipeline::BasePipeline(
-    const Device& device, const std::string& pipeline_name, const create_pipeline_func& create_pipeline) :
+    const Device& device, const std::string& pipeline_name, const CreatePipeline& create_pipeline) :
     m_device(device),
     vkCmdPushDescriptorSetKHR(fetch_vkCmdPushDescriptorSetKHR(device)),
     m_pipeline_definition(config::PipelineConfig::require(pipeline_name)),

@@ -1,10 +1,8 @@
-#include "vulkan/pipeline/shadow_pipeline.h"
+#include "vulkan/pipeline/graphics_pipeline.h"
 
 #include "config/pipeline_config.h"
 #include "vulkan/pipeline/utils.h"
-#include "vulkan/pipeline/base_pipeline.h"
 #include "vulkan/shader_module.h"
-#include "vulkan/shadow_render_pass.h"
 
 #include <stdexcept>
 #include <vector>
@@ -12,8 +10,8 @@
 using namespace steeplejack;
 using namespace steeplejack::pipeline;
 
-ShadowPipeline::ShadowPipeline(
-    const Device& device, const ShadowRenderPass& render_pass, const std::string& pipeline_name) :
+GraphicsPipeline::GraphicsPipeline(
+    const Device& device, const RenderPass& render_pass, const std::string& pipeline_name) :
     BasePipeline(
         device,
         pipeline_name,
@@ -55,17 +53,24 @@ ShadowPipeline::ShadowPipeline(
 
             auto input_assembly_state = pipeline::create_input_assembly_state();
             auto viewport_state = pipeline::create_dynamic_viewport_state();
-            auto rasterization_state = pipeline::create_shadow_rasterization_state();
+            auto rasterization_state = pipeline::create_rasterization_state();
 
-            auto dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR, VK_DYNAMIC_STATE_DEPTH_BIAS};
+            VkPipelineMultisampleStateCreateInfo multisampling_state = {};
+            multisampling_state.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
+            multisampling_state.sampleShadingEnable = VK_FALSE;
+            multisampling_state.rasterizationSamples = device.msaa_samples();
+
+            VkPipelineColorBlendAttachmentState color_blend_attachment = {};
+            color_blend_attachment.blendEnable = VK_FALSE;
+            color_blend_attachment.colorWriteMask = static_cast<VkColorComponentFlags>(
+                VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT |
+                VK_COLOR_COMPONENT_A_BIT);
+            auto color_blend_state = pipeline::create_color_blend_state(color_blend_attachment);
+
+            auto dynamic_states = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
             auto dynamic_state = pipeline::create_dynamic_state(dynamic_states);
 
             auto depth_stencil_state = pipeline::create_depth_stencil_state();
-
-            VkPipelineMultisampleStateCreateInfo multisample_state = {};
-            multisample_state.sType = VK_STRUCTURE_TYPE_PIPELINE_MULTISAMPLE_STATE_CREATE_INFO;
-            multisample_state.rasterizationSamples = VK_SAMPLE_COUNT_1_BIT;
-            multisample_state.sampleShadingEnable = VK_FALSE;
 
             VkGraphicsPipelineCreateInfo pipeline_info = {};
             pipeline_info.sType = VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO;
@@ -75,8 +80,8 @@ ShadowPipeline::ShadowPipeline(
             pipeline_info.pInputAssemblyState = &input_assembly_state;
             pipeline_info.pViewportState = &viewport_state;
             pipeline_info.pRasterizationState = &rasterization_state;
-            pipeline_info.pMultisampleState = &multisample_state;
-            pipeline_info.pColorBlendState = nullptr;
+            pipeline_info.pMultisampleState = &multisampling_state;
+            pipeline_info.pColorBlendState = &color_blend_state;
             pipeline_info.pDynamicState = &dynamic_state;
             pipeline_info.pDepthStencilState = &depth_stencil_state;
             pipeline_info.layout = layout;
@@ -87,7 +92,7 @@ ShadowPipeline::ShadowPipeline(
             VkPipeline pipeline = VK_NULL_HANDLE;
             if (vkCreateGraphicsPipelines(device.vk(), nullptr, 1, &pipeline_info, nullptr, &pipeline) != VK_SUCCESS)
             {
-                throw std::runtime_error("Failed to create shadow pipeline");
+                throw std::runtime_error("Failed to create graphics pipeline");
             }
             return pipeline;
         })

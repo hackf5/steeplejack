@@ -1,5 +1,3 @@
-// NOLINTBEGIN
-
 #pragma once
 
 #include "config/pipeline_config.h"
@@ -25,9 +23,9 @@ class BasePipeline
     VkPipeline m_pipeline{nullptr};
 
   protected:
-    using create_pipeline_func = std::function<VkPipeline(const config::PipelineDefinition&, VkPipelineLayout)>;
+    using CreatePipeline = std::function<VkPipeline(const config::PipelineDefinition&, VkPipelineLayout)>;
 
-    BasePipeline(const Device& device, const std::string& pipeline_name, const create_pipeline_func& create_pipeline);
+    BasePipeline(const Device& device, const std::string& pipeline_name, const CreatePipeline& create_pipeline);
 
   public:
     virtual ~BasePipeline();
@@ -47,5 +45,3 @@ class BasePipeline
     void push_descriptor_set(VkCommandBuffer command_buffer) const;
 };
 } // namespace steeplejack::pipeline
-
-// NOLINTEND
