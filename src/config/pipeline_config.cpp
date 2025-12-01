@@ -1,8 +1,8 @@
 #include "config/pipeline_config.h"
 
-#include <toml++/toml.h>
 #include <filesystem>
 #include <stdexcept>
+#include <toml++/toml.h>
 
 using namespace steeplejack::config;
 
@@ -29,7 +29,7 @@ std::vector<std::string> to_strings(const toml::array* arr)
 std::vector<DescriptorBinding> parse_descriptor_bindings(const toml::table& tbl)
 {
     std::vector<DescriptorBinding> bindings;
-    if (const auto *arr = tbl.get_as<toml::array>("bindings"))
+    if (const auto* arr = tbl.get_as<toml::array>("bindings"))
     {
         bindings.reserve(arr->size());
         for (const auto& item : *arr)
@@ -53,7 +53,7 @@ std::vector<DescriptorBinding> parse_descriptor_bindings(const toml::table& tbl)
 std::vector<VertexBinding> parse_vertex_bindings(const toml::table& tbl)
 {
     std::vector<VertexBinding> bindings;
-    if (const auto *arr = tbl.get_as<toml::array>("bindings"))
+    if (const auto* arr = tbl.get_as<toml::array>("bindings"))
     {
         bindings.reserve(arr->size());
         for (const auto& item : *arr)
@@ -76,7 +76,7 @@ std::vector<VertexBinding> parse_vertex_bindings(const toml::table& tbl)
 std::vector<VertexAttribute> parse_vertex_attributes(const toml::table& tbl)
 {
     std::vector<VertexAttribute> attributes;
-    if (const auto *arr = tbl.get_as<toml::array>("attributes"))
+    if (const auto* arr = tbl.get_as<toml::array>("attributes"))
     {
         attributes.reserve(arr->size());
         for (const auto& item : *arr)
@@ -105,19 +105,19 @@ PipelineDefinition parse_pipeline_file(const std::string& path)
     PipelineDefinition def{};
     def.name = tbl["name"].value_or("");
 
-    if (auto *shaders = tbl.get_as<toml::table>("shaders"))
+    if (auto* shaders = tbl.get_as<toml::table>("shaders"))
     {
         def.vertex_shader = shaders->operator[]("vertex").value_or("");
         def.fragment_shader = shaders->operator[]("fragment").value_or("");
     }
 
-    if (auto *vi = tbl.get_as<toml::table>("vertex_input"))
+    if (auto* vi = tbl.get_as<toml::table>("vertex_input"))
     {
         def.vertex_bindings = parse_vertex_bindings(*vi);
         def.vertex_attributes = parse_vertex_attributes(*vi);
     }
 
-    if (auto *dl = tbl.get_as<toml::table>("descriptor_layout"))
+    if (auto* dl = tbl.get_as<toml::table>("descriptor_layout"))
     {
         def.descriptor_bindings = parse_descriptor_bindings(*dl);
     }

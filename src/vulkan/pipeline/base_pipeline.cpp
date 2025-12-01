@@ -21,16 +21,13 @@ fetch_vkCmdPushDescriptorSetKHR(const Device& device) // NOLINT(readability-iden
 } // namespace
 
 BasePipeline::BasePipeline(
-    const Device& device,
-    const RenderPass& render_pass,
-    const std::string& pipeline_name,
-    const create_pipeline_func& create_pipeline) :
+    const Device& device, const std::string& pipeline_name, const create_pipeline_func& create_pipeline) :
     m_device(device),
     vkCmdPushDescriptorSetKHR(fetch_vkCmdPushDescriptorSetKHR(device)),
     m_pipeline_definition(config::PipelineConfig::require(pipeline_name)),
     m_descriptor_set_layout(device, m_pipeline_definition.descriptor_bindings),
     m_pipeline_layout(m_descriptor_set_layout.create_pipeline_layout()),
-    m_pipeline(create_pipeline(device, m_pipeline_definition, render_pass))
+    m_pipeline(create_pipeline(m_pipeline_definition, m_pipeline_layout))
 {
 }
 

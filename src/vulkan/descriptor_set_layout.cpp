@@ -75,8 +75,7 @@ create_descriptor_set_layout(const Device& device, std::span<const config::Descr
     return layout;
 }
 
-std::vector<VkWriteDescriptorSet>
-create_write_descriptor_sets(std::span<const config::DescriptorBinding> bindings_def)
+std::vector<VkWriteDescriptorSet> create_write_descriptor_sets(std::span<const config::DescriptorBinding> bindings_def)
 {
     std::vector<VkWriteDescriptorSet> write_descriptor_sets;
     write_descriptor_sets.reserve(bindings_def.size());
@@ -101,9 +100,7 @@ create_write_descriptor_sets(std::span<const config::DescriptorBinding> bindings
 } // namespace
 
 DescriptorSetLayout::DescriptorSetLayout(const Device& device, std::string_view /*layout_name*/) :
-    m_device(device),
-    m_descriptor_set_layout(nullptr),
-    m_descriptor_set_layouts({m_descriptor_set_layout})
+    m_device(device), m_descriptor_set_layout(nullptr), m_descriptor_set_layouts({m_descriptor_set_layout})
 {
     throw std::runtime_error("Legacy descriptor set layouts are no longer supported");
 }

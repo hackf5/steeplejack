@@ -5,7 +5,6 @@
 #include "config/pipeline_config.h"
 #include "vulkan/descriptor_set_layout.h"
 #include "vulkan/device.h"
-#include "vulkan/render_pass.h"
 
 #include <functional>
 #include <string>
@@ -26,14 +25,9 @@ class BasePipeline
     VkPipeline m_pipeline{nullptr};
 
   protected:
-    using create_pipeline_func =
-        std::function<VkPipeline(const Device&, const config::PipelineDefinition&, const RenderPass&)>;
+    using create_pipeline_func = std::function<VkPipeline(const config::PipelineDefinition&, VkPipelineLayout)>;
 
-    BasePipeline(
-        const Device& device,
-        const RenderPass& render_pass,
-        const std::string& pipeline_name,
-        const create_pipeline_func& create_pipeline);
+    BasePipeline(const Device& device, const std::string& pipeline_name, const create_pipeline_func& create_pipeline);
 
   public:
     virtual ~BasePipeline();

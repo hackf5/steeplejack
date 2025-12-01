@@ -33,7 +33,7 @@ class ShadowPipeline
     ShadowPipeline(ShadowPipeline&&) = delete;
     ShadowPipeline& operator=(ShadowPipeline&&) = delete;
 
-     [[nodiscard]] VkPipelineLayout layout() const;
+    [[nodiscard]] VkPipelineLayout layout() const;
 
     [[nodiscard]] DescriptorSetLayout& descriptor_set_layout() const;
 
