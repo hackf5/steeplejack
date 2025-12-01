@@ -1,5 +1,7 @@
 #include "renderer/scene_runner.h"
 
+#include <utility>
+
 using namespace steeplejack::renderer;
 
 SceneRunner::SceneRunner(Backend& backend) : m_backend(&backend) {}
@@ -7,6 +9,11 @@ SceneRunner::SceneRunner(Backend& backend) : m_backend(&backend) {}
 Backend& SceneRunner::backend()
 {
     return *m_backend;
+}
+
+void SceneRunner::set_scene_backend(std::unique_ptr<SceneBackend> scene_backend)
+{
+    m_scene_backend = std::move(scene_backend);
 }
 
 const Backend& SceneRunner::backend() const

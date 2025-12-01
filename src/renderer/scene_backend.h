@@ -6,26 +6,24 @@
 
 namespace steeplejack
 {
-class DescriptorSetLayout;
+namespace pipeline
+{
 class GraphicsPipeline;
 class ShadowPipeline;
+} // namespace pipeline
 
 namespace renderer
 {
 class SceneBackend
 {
   private:
-    std::unique_ptr<DescriptorSetLayout> m_descriptor_set_layout;
-    std::unique_ptr<GraphicsPipeline> m_graphics_pipeline;
-    std::unique_ptr<DescriptorSetLayout> m_shadow_descriptor_set_layout;
-    std::unique_ptr<ShadowPipeline> m_shadow_pipeline;
+    std::unique_ptr<pipeline::GraphicsPipeline> m_graphics_pipeline;
+    std::unique_ptr<pipeline::ShadowPipeline> m_shadow_pipeline;
 
   public:
     SceneBackend(
-        std::unique_ptr<DescriptorSetLayout> descriptor_set_layout,
-        std::unique_ptr<GraphicsPipeline> graphics_pipeline,
-        std::unique_ptr<DescriptorSetLayout> shadow_descriptor_set_layout,
-        std::unique_ptr<ShadowPipeline> shadow_pipeline);
+        std::unique_ptr<pipeline::GraphicsPipeline> graphics_pipeline,
+        std::unique_ptr<pipeline::ShadowPipeline> shadow_pipeline);
 
     SceneBackend(const SceneBackend&) = delete;
     SceneBackend& operator=(const SceneBackend&) = delete;
@@ -33,11 +31,9 @@ class SceneBackend
     SceneBackend& operator=(SceneBackend&&) = delete;
     ~SceneBackend();
 
-    [[nodiscard]] DescriptorSetLayout& descriptor_set_layout() const;
-    [[nodiscard]] GraphicsPipeline& graphics_pipeline() const;
+    [[nodiscard]] pipeline::GraphicsPipeline& graphics_pipeline() const;
     [[nodiscard]] bool has_shadow() const;
-    [[nodiscard]] DescriptorSetLayout* shadow_descriptor_set_layout() const;
-    [[nodiscard]] ShadowPipeline* shadow_pipeline() const;
+    [[nodiscard]] pipeline::ShadowPipeline* shadow_pipeline() const;
 };
 } // namespace renderer
 } // namespace steeplejack

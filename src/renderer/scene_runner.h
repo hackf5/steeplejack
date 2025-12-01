@@ -18,6 +18,8 @@ class SceneRunner
   protected:
     [[nodiscard]] Backend& backend();
     [[nodiscard]] const Backend& backend() const;
+
+    void set_scene_backend(std::unique_ptr<SceneBackend> scene_backend);
     [[nodiscard]] SceneBackend& scene_backend();
     [[nodiscard]] const SceneBackend& scene_backend() const;
 
