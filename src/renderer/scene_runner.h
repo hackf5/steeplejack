@@ -19,9 +19,10 @@ class SceneRunner
     [[nodiscard]] Backend& backend();
     [[nodiscard]] const Backend& backend() const;
 
-    void set_scene_backend(std::unique_ptr<SceneBackend> scene_backend);
     [[nodiscard]] SceneBackend& scene_backend();
     [[nodiscard]] const SceneBackend& scene_backend() const;
+
+    virtual std::unique_ptr<SceneBackend> build_scene_backend(renderer::SceneBackendBuilder& builder) = 0;
 
   public:
     explicit SceneRunner(Backend& backend);
@@ -34,9 +35,9 @@ class SceneRunner
 
     virtual void load_resources() = 0;
 
-    virtual void build_scene_backend() = 0;
+    virtual void build_scene_backend();
 
-    virtual void update(const FrameContext& frame) = 0;
+    virtual void update(const FrameContext& frame_ctx) = 0;
 
     virtual void render(const RenderContext& render_ctx) = 0;
 };
