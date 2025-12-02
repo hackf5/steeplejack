@@ -1,26 +1,26 @@
 #pragma once
 
 #include <memory>
+#include "vulkan/window.h"
+#include "vulkan/device.h"
+#include "vulkan/adhoc_queues.h"
+#include "vulkan/graphics_queue.h"
+#include "vulkan/graphics_buffers.h"
+#include "vulkan/sampler.h"
+#include "vulkan/shadow_sampler.h"
+#include "vulkan/texture_factory.h"
+#include "vulkan/material_factory.h"
+#include "vulkan/shadow_map_array.h"
+#include "vulkan/shadow_framebuffers.h"
+#include "vulkan/shadow_render_pass.h"
+#include "vulkan/swapchain.h"
+#include "vulkan/depth_buffer.h"
+#include "vulkan/render_pass.h"
+#include "vulkan/framebuffers.h"
+
 
 namespace steeplejack
 {
-class Window;
-class Device;
-class AdhocQueues;
-class GraphicsQueue;
-class GraphicsBuffers;
-class Sampler;
-class ShadowSampler;
-class TextureFactory;
-class MaterialFactory;
-class ShadowMapArray;
-class ShadowFramebuffers;
-class ShadowRenderPass;
-class Swapchain;
-class DepthBuffer;
-class RenderPass;
-class Framebuffers;
-
 namespace renderer
 {
 // Global render backend: owns core Vulkan objects for the ECS path.

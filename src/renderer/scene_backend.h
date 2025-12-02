@@ -3,16 +3,9 @@
 #pragma once
 
 #include <memory>
-
-namespace steeplejack
-{
-namespace pipeline
-{
-class GraphicsPipeline;
-class ShadowPipeline;
-} // namespace pipeline
-
-namespace renderer
+#include "vulkan/pipeline/graphics_pipeline.h"
+#include "vulkan/pipeline/shadow_pipeline.h"
+namespace steeplejack::renderer
 {
 class SceneBackend
 {
@@ -35,7 +28,6 @@ class SceneBackend
     [[nodiscard]] bool has_shadow() const;
     [[nodiscard]] pipeline::ShadowPipeline* shadow_pipeline() const;
 };
-} // namespace renderer
-} // namespace steeplejack
+} // namespace steeplejack::renderer
 
 // NOLINTEND

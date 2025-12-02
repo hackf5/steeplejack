@@ -2,19 +2,23 @@
 
 #include "renderer/contexts.h"
 #include "renderer/scene_runner.h"
+#include "scenes/minimal_scene_runner.h"
 #include "vulkan/device.h"
 #include "vulkan/graphics_queue.h"
 #include "vulkan/swapchain.h"
 #include "vulkan/window.h"
 
 #include <chrono>
+#include <memory>
 #include <stdexcept>
 
 using namespace steeplejack;
 using namespace steeplejack::renderer;
 
 GameEngine::GameEngine(std::unique_ptr<Backend> backend) :
-    m_backend(std::move(backend)), m_last_time(std::chrono::system_clock::now())
+    m_backend(std::move(backend)),
+    m_scene(std::make_unique<MinimalSceneRunner>(*m_backend)),
+    m_last_time(std::chrono::system_clock::now())
 {
 }
 
