@@ -182,8 +182,7 @@ Texture::Texture(
     m_name(std::move(name)),
     m_image(create_image(*m_device, m_name, adhoc_queues, color_space)),
     m_image_view(*m_device, m_image, VK_IMAGE_ASPECT_COLOR_BIT),
-    m_image_descriptor_info(create_image_descriptor_info(sampler, m_image_view)),
-    m_color_space(color_space)
+    m_image_descriptor_info(create_image_descriptor_info(sampler, m_image_view))
 {
 }
 Texture::Texture(
@@ -204,8 +203,7 @@ Texture::Texture(
         VK_IMAGE_USAGE_SAMPLED_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT,
         VK_IMAGE_TILING_OPTIMAL),
     m_image_view(*m_device, m_image, VK_IMAGE_ASPECT_COLOR_BIT),
-    m_image_descriptor_info(create_image_descriptor_info(sampler, m_image_view)),
-    m_color_space(color_space)
+    m_image_descriptor_info(create_image_descriptor_info(sampler, m_image_view))
 {
     // Transition, upload, transition
     transition_image_layout(m_image, adhoc_queues, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);

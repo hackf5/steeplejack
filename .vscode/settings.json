@@ -82,6 +82,7 @@
     "TINYGLTF",
     "ucrt",
     "vcpkg",
+    "vfov",
     "Woxel",
     "woxels"
   ],

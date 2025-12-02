@@ -48,7 +48,7 @@ namespace
 
 ImageView::ImageView(
     const Device& device, const Image& image, VkImageAspectFlags aspect_mask, std::optional<uint32_t> base_layer) :
-    m_device(device), m_image(image), m_image_view(create_image_view(device, image, aspect_mask, base_layer))
+    m_device(device), m_image_view(create_image_view(device, image, aspect_mask, base_layer))
 {
 }
 

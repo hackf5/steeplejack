@@ -12,7 +12,6 @@ namespace steeplejack
 class Multisampler
 {
   private:
-    const Device& m_device;
     const Image m_image;
     const ImageView m_image_view;
 

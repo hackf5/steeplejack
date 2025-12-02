@@ -12,7 +12,6 @@ class ImageView
 {
   private:
     const Device& m_device;
-    const Image& m_image;
     const VkImageView m_image_view;
 
   public:

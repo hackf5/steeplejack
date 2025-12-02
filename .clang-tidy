@@ -30,6 +30,8 @@ Checks: >
   # Vulkan allowances (tighten later if desired)
   ,-cppcoreguidelines-pro-type-reinterpret-cast
   ,-cppcoreguidelines-pro-type-vararg
+  # GLM exposes vector swizzles via unions; accessing .x/.y is intentional.
+  ,-cppcoreguidelines-pro-type-union-access
 
   # Reenable later once config is implemented
   ,-cppcoreguidelines-avoid-magic-numbers

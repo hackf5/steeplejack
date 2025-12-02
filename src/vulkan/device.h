@@ -11,8 +11,6 @@ class Window;
 class Device
 {
   private:
-    const Window& m_window;
-
     const vkb::Instance m_instance;
     const VkSurfaceKHR m_surface;
     const vkb::Device m_device;

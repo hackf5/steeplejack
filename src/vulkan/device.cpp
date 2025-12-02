@@ -97,7 +97,6 @@ VkQueue create_queue(const vkb::Device& device, vkb::QueueType queue_type)
 } // namespace
 
 Device::Device(const Window& window, bool enable_validation_layers) :
-    m_window(window),
     m_instance(create_instance(enable_validation_layers)),
     m_surface(create_surface(window, m_instance.instance)),
     m_device(create_device(m_instance, m_surface)),

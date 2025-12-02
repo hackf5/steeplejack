@@ -3,7 +3,6 @@
 using namespace steeplejack;
 
 Multisampler::Multisampler(const Device& device, const Swapchain& swapchain) :
-    m_device(device),
     m_image(
         device,
         swapchain.extent().width,

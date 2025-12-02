@@ -29,7 +29,6 @@ class Texture
     Image m_image;
     const ImageView m_image_view;
     VkDescriptorImageInfo m_image_descriptor_info;
-    const TextureColorSpace m_color_space;
 
   public:
     Texture(

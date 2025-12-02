@@ -30,7 +30,6 @@ namespace
 
 ShadowMapArray::ShadowMapArray(
     const Device& device, const AdhocQueues& adhoc_queues, uint32_t layers, uint32_t resolution, VkFormat format) :
-    m_device(device),
     m_adhoc_queues(adhoc_queues),
     m_image(
         device,

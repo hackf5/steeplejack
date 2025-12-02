@@ -14,7 +14,6 @@ namespace steeplejack
 class ShadowMapArray
 {
   private:
-    const Device& m_device;
     const AdhocQueues& m_adhoc_queues;
     const Image m_image;
     const ImageView m_array_image_view;
