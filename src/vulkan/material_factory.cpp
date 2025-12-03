@@ -110,19 +110,26 @@ void MaterialFactory::remove(const std::string& name)
     m_materials.erase(name);
 }
 
-Material& MaterialFactory::at(const std::string& name)
-{
-    auto it = m_materials.find(name);
-    if (it == m_materials.end())
-    {
-        throw std::runtime_error(std::format("Material {} not found", name));
-    }
-    return *it->second;
-}
-
 Material& MaterialFactory::load_gltf(const std::string& name, const std::string& gltf_relpath, int material_index)
 {
     namespace fs = std::filesystem;
+
+    if (auto it = m_materials.find(name); it != m_materials.end())
+    {
+        Material& existing = *it->second;
+        if (existing.gltf_relpath() == gltf_relpath && existing.material_index() == material_index)
+        {
+            return existing;
+        }
+
+        throw std::runtime_error(std::format(
+            "Material {} already loaded from {} index {}, requested {} index {}",
+            name,
+            existing.gltf_relpath(),
+            existing.material_index(),
+            gltf_relpath,
+            material_index));
+    }
 
     m_textures.ensure_fallback(
         kDefaultBaseColor,
@@ -156,6 +163,9 @@ Material& MaterialFactory::load_gltf(const std::string& name, const std::string&
     const auto& mat = get_gltf_material(model, material_index, full_path);
 
     auto material = std::make_unique<Material>(m_device);
+    material->m_name = name;
+    material->m_gltf_relpath = gltf_relpath;
+    material->m_material_index = material_index;
 
     static const std::unordered_map<std::string, AlphaMode> alpha_modes{
         {"MASK", AlphaMode::Mask},

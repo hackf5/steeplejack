@@ -33,7 +33,6 @@ class MaterialFactory
     ~MaterialFactory() = default;
 
     Material& load_gltf(const std::string& name, const std::string& gltf_relpath, int material_index = 0);
-    Material& at(const std::string& name);
     void remove(const std::string& name);
     void clear();
 };

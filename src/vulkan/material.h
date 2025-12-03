@@ -5,6 +5,8 @@
 #include "vulkan/device.h"
 #include "vulkan/texture.h"
 
+#include <string>
+
 namespace steeplejack
 {
 enum class AlphaMode : std::uint8_t
@@ -19,6 +21,10 @@ class MaterialFactory;
 class Material
 {
   private:
+    std::string m_name;
+    std::string m_gltf_relpath;
+    int m_material_index = 0;
+
     Texture* m_base_color = nullptr;         // sRGB
     Texture* m_normal = nullptr;             // linear
     Texture* m_metallic_roughness = nullptr; // linear (ORM or MR)
@@ -54,6 +60,10 @@ class Material
     [[nodiscard]] Texture* normal() const;
     [[nodiscard]] Texture* metallic_roughness() const;
     [[nodiscard]] Texture* emissive() const;
+
+    [[nodiscard]] const std::string& name() const { return m_name; }
+    [[nodiscard]] const std::string& gltf_relpath() const { return m_gltf_relpath; }
+    [[nodiscard]] int material_index() const { return m_material_index; }
 
     [[nodiscard]] const glm::vec4& base_color_factor() const;
     [[nodiscard]] float alpha_cutoff() const;
