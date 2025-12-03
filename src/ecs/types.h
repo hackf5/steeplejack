@@ -1,10 +1,11 @@
 #pragma once
 
-#include <cstdint>
+#include <entt/entity/entity.hpp>
+#include <entt/entity/fwd.hpp>
 
 namespace steeplejack::ecs
 {
-using EntityId = std::uint32_t;
+using EntityId = entt::entity;
 
-constexpr EntityId kInvalidEntity = 0;
+constexpr EntityId kInvalidEntity = entt::null;
 } // namespace steeplejack::ecs
