@@ -46,7 +46,7 @@ class DescriptorSetLayout
     DescriptorSetLayout& operator=(DescriptorSetLayout&&) = delete;
 
     [[nodiscard]] VkPipelineLayout create_pipeline_layout() const;
-    [[nodiscard]] const BindingHandle& binding_handle(std::string name) const;
+    [[nodiscard]] const BindingHandle& binding_handle(const std::string& name) const;
 
     [[nodiscard]] std::span<const VkWriteDescriptorSet> get_write_descriptor_sets() const;
 

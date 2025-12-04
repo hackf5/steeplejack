@@ -159,7 +159,7 @@ VkPipelineLayout DescriptorSetLayout::create_pipeline_layout() const
     return pipeline_layout;
 }
 
-const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(std::string name) const
+const DescriptorSetLayout::BindingHandle& DescriptorSetLayout::binding_handle(const std::string& name) const
 {
     auto it = m_binding_handles.find(name);
     if (it == m_binding_handles.end())

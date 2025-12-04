@@ -97,7 +97,7 @@ void Gui::begin_frame()
     ImGui::NewFrame();
 
     ImGui::Begin("Info", nullptr, ImGuiWindowFlags_None);
-    ImGui::Text("FPS: %d", m_framerate.fps());
+    ImGui::Text("FPS: %d", m_framerate.fps()); // NOLINT(cppcoreguidelines-pro-type-vararg)
     ImGui::End();
 }
 
