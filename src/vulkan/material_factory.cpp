@@ -122,13 +122,14 @@ Material& MaterialFactory::load_gltf(const std::string& name, const std::string&
             return existing;
         }
 
-        throw std::runtime_error(std::format(
-            "Material {} already loaded from {} index {}, requested {} index {}",
-            name,
-            existing.gltf_relpath(),
-            existing.material_index(),
-            gltf_relpath,
-            material_index));
+        throw std::runtime_error(
+            std::format(
+                "Material {} already loaded from {} index {}, requested {} index {}",
+                name,
+                existing.gltf_relpath(),
+                existing.material_index(),
+                gltf_relpath,
+                material_index));
     }
 
     m_textures.ensure_fallback(

@@ -22,7 +22,10 @@ struct MeshHandle
 
     static constexpr std::uint32_t kInvalidId = 0;
 
-    [[nodiscard]] bool valid() const { return id != kInvalidId; }
+    [[nodiscard]] bool valid() const
+    {
+        return id != kInvalidId;
+    }
 };
 
 struct MeshView

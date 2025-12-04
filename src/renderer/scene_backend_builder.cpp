@@ -44,7 +44,5 @@ std::unique_ptr<SceneBackend> SceneBackendBuilder::build()
             *m_shadow_pipeline_name);
     }
 
-    return std::make_unique<SceneBackend>(
-        std::move(graphics_pipeline),
-        std::move(shadow_pipeline));
+    return std::make_unique<SceneBackend>(std::move(graphics_pipeline), std::move(shadow_pipeline));
 }

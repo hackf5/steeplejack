@@ -1,6 +1,6 @@
 #pragma once
 
-# include "glm_config.hpp"
+#include "glm_config.hpp"
 
 namespace steeplejack::ecs
 {
@@ -44,11 +44,9 @@ struct CameraMatrices
 };
 
 // Builds camera matrices without API-specific clip adjustments (renderer can flip/offset as needed).
-[[nodiscard]] CameraMatrices make_camera_matrices(const Camera& camera,
-                                                  const glm::mat4& world_from_camera,
-                                                  float aspect_override = 0.0F);
+[[nodiscard]] CameraMatrices
+make_camera_matrices(const Camera& camera, const glm::mat4& world_from_camera, float aspect_override = 0.0F);
 
-[[nodiscard]] CameraMatrices make_camera_matrices(const Camera& camera,
-                                                  const CameraPose& pose,
-                                                  float aspect_override = 0.0F);
+[[nodiscard]] CameraMatrices
+make_camera_matrices(const Camera& camera, const CameraPose& pose, float aspect_override = 0.0F);
 } // namespace steeplejack::ecs

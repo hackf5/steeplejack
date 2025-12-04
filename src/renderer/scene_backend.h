@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <memory>
 #include "vulkan/pipeline/graphics_pipeline.h"
 #include "vulkan/pipeline/shadow_pipeline.h"
+
+#include <memory>
 namespace steeplejack::renderer
 {
 class SceneBackend

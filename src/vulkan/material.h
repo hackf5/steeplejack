@@ -61,9 +61,18 @@ class Material
     [[nodiscard]] Texture* metallic_roughness() const;
     [[nodiscard]] Texture* emissive() const;
 
-    [[nodiscard]] const std::string& name() const { return m_name; }
-    [[nodiscard]] const std::string& gltf_relpath() const { return m_gltf_relpath; }
-    [[nodiscard]] int material_index() const { return m_material_index; }
+    [[nodiscard]] const std::string& name() const
+    {
+        return m_name;
+    }
+    [[nodiscard]] const std::string& gltf_relpath() const
+    {
+        return m_gltf_relpath;
+    }
+    [[nodiscard]] int material_index() const
+    {
+        return m_material_index;
+    }
 
     [[nodiscard]] const glm::vec4& base_color_factor() const;
     [[nodiscard]] float alpha_cutoff() const;
